@@ -3,6 +3,7 @@ import { Box, Heading, Text } from '@chakra-ui/react'
 import PrimitivesDemoScreen from '@/features/input/demo/PrimitivesDemoScreen'
 import { DrillScreen } from '@/features/drill'
 import { ChallengeScreen } from '@/features/challenge'
+import { TechniqueCardScreen } from '@/features/technique-card'
 
 // HashRouter is intentional: the app deploys to GitHub Pages, which serves
 // static files and cannot rewrite arbitrary paths to /index.html. Switching
@@ -29,7 +30,7 @@ export default function AppRouter() {
         <Route path="/topic/:techniqueId" element={<Placeholder name="Topic" />} />
         <Route
           path="/topic/:techniqueId/technique"
-          element={<Placeholder name="Technique Card" />}
+          element={<TechniqueCardScreen />}
         />
         <Route path="/topic/:techniqueId/drill" element={<DrillScreen />} />
         <Route

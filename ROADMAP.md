@@ -1079,15 +1079,15 @@ Use this checklist to track completion and PR readiness per phase.
 - [x] Pass/fail tests
 - **Status:** `Done`
 
-### Phase 8 ⏳
-- [ ] Technique card slide viewer
-- [ ] Content schema defined
-- [ ] All 25 technique cards authored
-- [ ] "Got it" unlock gate
-- [ ] Reference access from session
-- [ ] Content validation
-- [ ] Slide navigation tests
-- **Status:** `Pending`
+### Phase 8 ✅
+- [x] Technique card slide viewer
+- [x] Content schema defined
+- [x] All 25 technique cards authored
+- [x] "Got it" unlock gate
+- [x] Reference access from session
+- [x] Content validation
+- [x] Slide navigation tests
+- **Status:** `Done`
 
 ### Phase 9 ⏳
 - [ ] Topic detail layout
@@ -1193,4 +1193,4 @@ Use this checklist to track completion and PR readiness per phase.
 
 ---
 
-**Status:** Phases 0–7 complete. Starting Phase 8 (Technique Card UI).
+**Status:** Phases 0–8 complete. Starting Phase 9 (Topic Node Detail Screen).

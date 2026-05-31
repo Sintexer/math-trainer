@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Box, Heading, Stack, Text } from '@chakra-ui/react'
+import { Box, Button, Heading, HStack, Stack, Text } from '@chakra-ui/react'
 import type { Problem } from '@/shared/types'
 import {
   AnswerFeedback,
@@ -7,6 +7,7 @@ import {
   SessionProgress,
   Timer,
 } from '@/features/input'
+import { TechniqueReferenceModal } from '@/features/technique-card'
 
 export interface ChallengeInSessionProps {
   problem: Problem
@@ -42,11 +43,22 @@ export function ChallengeInSession({
   onAdvance,
 }: ChallengeInSessionProps) {
   const elapsedMs = Math.max(0, totalDurationMs - Math.max(0, timeRemainingMs))
+  const [referenceOpen, setReferenceOpen] = useState(false)
 
   return (
     <Box p={{ base: 4, md: 8 }} maxW="640px" mx="auto">
       <Stack gap={6}>
-        <Timer remainingMs={timeRemainingMs} totalMs={totalDurationMs} />
+        <HStack justify="space-between" align="center">
+          <Timer remainingMs={timeRemainingMs} totalMs={totalDurationMs} />
+          <Button
+            size="sm"
+            variant="ghost"
+            aria-label="Open technique reference"
+            onClick={() => setReferenceOpen(true)}
+          >
+            ?
+          </Button>
+        </HStack>
 
         <SessionProgress attempted={attempted} correct={correct} elapsedMs={elapsedMs} />
 
@@ -97,6 +109,12 @@ export function ChallengeInSession({
           />
         </Box>
       </Stack>
+
+      <TechniqueReferenceModal
+        techniqueId={problem.techniqueId}
+        open={referenceOpen}
+        onClose={() => setReferenceOpen(false)}
+      />
     </Box>
   )
 }

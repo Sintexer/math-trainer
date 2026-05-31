@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Box, Heading, Stack, Text } from '@chakra-ui/react'
+import { Box, Button, Heading, HStack, Stack, Text } from '@chakra-ui/react'
 import type { Problem } from '@/shared/types'
 import { AnswerFeedback, AnswerInput, SessionProgress } from '@/features/input'
+import { TechniqueReferenceModal } from '@/features/technique-card'
 
 export interface DrillInSessionProps {
   problem: Problem
@@ -34,15 +35,26 @@ export function DrillInSession({
   onSubmit,
   onAdvance,
 }: DrillInSessionProps) {
+  const [referenceOpen, setReferenceOpen] = useState(false)
   return (
     <Box p={{ base: 4, md: 8 }} maxW="640px" mx="auto">
       <Stack gap={6}>
-        <SessionProgress
-          attempted={attempted}
-          correct={correct}
-          totalProblems={totalProblems}
-          elapsedMs={elapsedMs}
-        />
+        <HStack justify="space-between" align="center">
+          <SessionProgress
+            attempted={attempted}
+            correct={correct}
+            totalProblems={totalProblems}
+            elapsedMs={elapsedMs}
+          />
+          <Button
+            size="sm"
+            variant="ghost"
+            aria-label="Open technique reference"
+            onClick={() => setReferenceOpen(true)}
+          >
+            ?
+          </Button>
+        </HStack>
 
         <Box
           textAlign="center"
@@ -86,6 +98,12 @@ export function DrillInSession({
           />
         </Box>
       </Stack>
+
+      <TechniqueReferenceModal
+        techniqueId={problem.techniqueId}
+        open={referenceOpen}
+        onClose={() => setReferenceOpen(false)}
+      />
     </Box>
   )
 }

@@ -16,6 +16,12 @@ import {
 } from './techniques'
 import { constellationGraph } from './graph'
 
+export {
+  getAllTechniqueContent,
+  getTechniqueContent,
+  findTechniqueContent,
+} from './technique-content'
+
 // ── Compiled registry ──────────────────────────────────────────
 
 const allTechniques: Technique[] = [

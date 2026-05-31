@@ -7,7 +7,10 @@ export interface ChallengeEntryProps {
   challengePassed: boolean
   /** Whether the user has any prior drill sessions for this technique. */
   hasDrillHistory: boolean
+  /** Whether the user has marked the technique card as read. */
+  techniqueRead: boolean
   onStart: () => void
+  onReadTechnique: () => void
   onBack: () => void
 }
 
@@ -25,7 +28,9 @@ export function ChallengeEntry({
   stars,
   challengePassed,
   hasDrillHistory,
+  techniqueRead,
   onStart,
+  onReadTechnique,
   onBack,
 }: ChallengeEntryProps) {
   const { speedPerMin, accuracyPct } = technique.masteryThresholds
@@ -106,6 +111,26 @@ export function ChallengeEntry({
           <Star label="Range" filled={stars.range} />
         </HStack>
       </Stack>
+
+      {!techniqueRead && (
+        <Box
+          mb={4}
+          p={3}
+          borderRadius="md"
+          bg="orange.50"
+          borderWidth="1px"
+          borderColor="orange.200"
+          color="orange.900"
+        >
+          <Text fontSize="sm" mb={2}>
+            You haven't read this technique yet. The challenge is harder
+            without the trick — consider reading first.
+          </Text>
+          <Button size="xs" variant="outline" onClick={onReadTechnique}>
+            Read the technique
+          </Button>
+        </Box>
+      )}
 
       {!hasDrillHistory && (
         <Box
