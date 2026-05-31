@@ -11,6 +11,7 @@ import type {
   Difficulty,
 } from '@/shared/types'
 import { ALL_DIFFICULTIES } from '@/shared/types'
+import { computeXp } from '@/features/session/xp'
 
 // ── Schema / retention constants ─────────────────────────────
 
@@ -49,17 +50,6 @@ const initialState: UserProgress = {
   dailyChallenges: {},
   settings: { pactModeEnabled: false },
   schemaVersion: SCHEMA_VERSION,
-}
-
-// ── XP Formula ───────────────────────────────────────────────
-
-export function calculateXp(summary: SessionSummary): number {
-  let xp = summary.correct * 10
-  if (summary.accuracyPct >= 95) xp += 50
-  else if (summary.accuracyPct >= 80) xp += 25
-  if (summary.speedPerMin >= 8) xp += 20
-  else if (summary.speedPerMin >= 5) xp += 10
-  return xp
 }
 
 // ── Mastery Star Calculation ─────────────────────────────────
@@ -133,8 +123,15 @@ const progressSlice = createSlice({
       }
       const progress = state.techniqueProgress[id]
 
-      // ── XP: compute once, write back to the persisted summary ──
-      const xpEarned = calculateXp(summary)
+      // ── XP: first-session bonus requires state — compute here, overwrite summary ──
+      const prevSessionsForTier = progress.sessions.filter((s) => s.type === summary.type)
+      const isFirstSession = prevSessionsForTier.length === 0
+      const xpEarned = computeXp({
+        correct: summary.correct,
+        accuracyPct: summary.accuracyPct,
+        speedPerMin: summary.speedPerMin,
+        isFirstSession,
+      })
       const persistedSummary: SessionSummary = { ...summary, xpEarned }
 
       // Sessions (FIFO trim)

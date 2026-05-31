@@ -65,7 +65,8 @@ describe('progressSlice — basics', () => {
 })
 
 describe('progressSlice — XP', () => {
-  it('awards 10 XP per correct answer (no bonuses)', () => {
+  it('awards 10 XP per correct answer plus first-session bonus', () => {
+    // First drill for this technique → +100 first-session bonus
     state = progressReducer(
       state,
       completeSession({
@@ -73,7 +74,8 @@ describe('progressSlice — XP', () => {
         thresholds: THRESHOLDS,
       })
     )
-    expect(state.xp).toBe(100)
+    // 100 base + 0 accuracy (70%) + 0 speed (3/min) + 100 first = 200
+    expect(state.xp).toBe(200)
   })
 
   it('adds the ≥95% accuracy bonus (+50)', () => {
@@ -84,7 +86,8 @@ describe('progressSlice — XP', () => {
         thresholds: THRESHOLDS,
       })
     )
-    expect(state.xp).toBe(150)
+    // 100 base + 50 accuracy + 0 speed + 100 first = 250
+    expect(state.xp).toBe(250)
   })
 
   it('adds the ≥80% accuracy bonus (+25) without the higher tier', () => {
@@ -95,7 +98,8 @@ describe('progressSlice — XP', () => {
         thresholds: THRESHOLDS,
       })
     )
-    expect(state.xp).toBe(125)
+    // 100 base + 25 accuracy + 0 speed + 100 first = 225
+    expect(state.xp).toBe(225)
   })
 
   it('adds the ≥8/min speed bonus (+20)', () => {
@@ -106,7 +110,63 @@ describe('progressSlice — XP', () => {
         thresholds: THRESHOLDS,
       })
     )
-    expect(state.xp).toBe(120)
+    // 100 base + 0 accuracy + 20 speed + 100 first = 220
+    expect(state.xp).toBe(220)
+  })
+
+  it('adds the ≥5/min speed bonus (+10)', () => {
+    state = progressReducer(
+      state,
+      completeSession({
+        summary: makeSummary({ correct: 10, accuracyPct: 70, speedPerMin: 5 }),
+        thresholds: THRESHOLDS,
+      })
+    )
+    // 100 base + 0 accuracy + 10 speed + 100 first = 210
+    expect(state.xp).toBe(210)
+  })
+
+  it('first-session bonus is not applied on subsequent sessions', () => {
+    // Session 1 (first drill)
+    state = progressReducer(
+      state,
+      completeSession({
+        summary: makeSummary({ id: 's1', correct: 10, accuracyPct: 70, speedPerMin: 3 }),
+        thresholds: THRESHOLDS,
+      })
+    )
+    // Session 2 (not first)
+    state = progressReducer(
+      state,
+      completeSession({
+        summary: makeSummary({ id: 's2', correct: 10, accuracyPct: 70, speedPerMin: 3 }),
+        thresholds: THRESHOLDS,
+      })
+    )
+    // Session 1: 200 (100 base + 100 first). Session 2: 100 (base only). Total = 300.
+    expect(state.xp).toBe(300)
+  })
+
+  it('first-session bonus is tracked per tier — drill and challenge each get it once', () => {
+    // First drill
+    state = progressReducer(
+      state,
+      completeSession({
+        summary: makeSummary({ id: 'd1', type: 'drill', correct: 5, accuracyPct: 70, speedPerMin: 3 }),
+        thresholds: THRESHOLDS,
+      })
+    )
+    // First challenge (different tier → another +100)
+    state = progressReducer(
+      state,
+      completeSession({
+        summary: makeSummary({ id: 'c1', type: 'challenge', correct: 5, accuracyPct: 70, speedPerMin: 3 }),
+        thresholds: THRESHOLDS,
+        passed: false,
+      })
+    )
+    // Drill: 50 base + 100 first = 150. Challenge: 50 base + 100 first = 150. Total = 300.
+    expect(state.xp).toBe(300)
   })
 
   it('writes computed xpEarned back onto the persisted session summary', () => {
@@ -118,9 +178,9 @@ describe('progressSlice — XP', () => {
       })
     )
     const session = state.techniqueProgress['mul-by-11'].sessions[0]
-    // 100 base + 50 accuracy + 20 speed = 170
-    expect(session.xpEarned).toBe(170)
-    expect(state.xp).toBe(170)
+    // 100 base + 50 accuracy + 20 speed + 100 first = 270
+    expect(session.xpEarned).toBe(270)
+    expect(state.xp).toBe(270)
   })
 
   it('updates level as XP crosses 1000', () => {
@@ -133,8 +193,10 @@ describe('progressSlice — XP', () => {
         })
       )
     }
-    // 10 sessions × (120 base + 50 + 20) = 1900 → level 1
-    expect(state.level).toBe(1)
+    // Session 1: 120 base + 50 acc + 20 speed + 100 first = 290
+    // Sessions 2-10 (9 sessions): 120 + 50 + 20 = 190 each → 9 × 190 = 1710
+    // Total: 290 + 1710 = 2000 → level 2
+    expect(state.level).toBe(2)
   })
 })
 

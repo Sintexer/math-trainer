@@ -80,7 +80,9 @@ export function buildSummary(state: SessionState): SessionSummary {
     }
   }
 
-  const xpEarned = computeXp({ correct, accuracyPct, type: config.type, passed })
+  // isFirstSession is unknown here (no access to persisted store state).
+  // The progress slice will re-evaluate with the correct value and overwrite xpEarned on persist.
+  const xpEarned = computeXp({ correct, accuracyPct, speedPerMin, isFirstSession: false })
 
   // Per-technique breakdown
   const techniqueBreakdown: Record<string, { correct: number; attempted: number }> = {}

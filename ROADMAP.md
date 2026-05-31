@@ -1004,52 +1004,52 @@ Phase 15 (Pre-Launch Hardening)
 
 Use this checklist to track completion and PR readiness per phase.
 
-### Phase 0 ✅ / ⏳ / ❌
-- [ ] Project initialized (Vite, React, TS, Tailwind)
-- [ ] Redux + redux-persist skeleton
-- [ ] Folder structure
-- [ ] Router configured (placeholder routes)
-- [ ] Base types defined
-- [ ] CI set up
-- [ ] Deploy working
-- **Status:** `Phase 0`
+### Phase 0 ✅
+- [x] Project initialized (Vite, React, TS, Tailwind)
+- [x] Redux + redux-persist skeleton
+- [x] Folder structure
+- [x] Router configured (placeholder routes)
+- [x] Base types defined
+- [x] CI set up
+- [x] Deploy working
+- **Status:** `Done`
 
-### Phase 1 ✅ / ⏳ / ❌
-- [ ] 25 technique metadata authored
-- [ ] Topic definitions
-- [ ] Constellation graph edges
-- [ ] Content registry module
-- [ ] Validation tests
-- **Status:** `Phase 1`
+### Phase 1 ✅
+- [x] 25 technique metadata authored
+- [x] Topic definitions
+- [x] Constellation graph edges
+- [x] Content registry module
+- [x] Validation tests
+- **Status:** `Done`
 
-### Phase 2 ✅ / ⏳ / ❌
-- [ ] Generator contract and registry
-- [ ] All 25 technique generators implemented
-- [ ] Multi-technique generator
-- [ ] Property-based tests per generator
-- [ ] Difficulty distribution validated
-- **Status:** `Phase 2`
+### Phase 2 ✅
+- [x] Generator contract and registry
+- [x] All 25 technique generators implemented
+- [x] Multi-technique generator
+- [x] Property-based tests per generator
+- [x] Difficulty distribution validated
+- **Status:** `Done`
 
-### Phase 3 ✅ / ⏳ / ❌
-- [ ] Session state machine
-- [ ] Drill mode implementation
-- [ ] Challenge mode implementation
-- [ ] Answer evaluation
-- [ ] SessionSummary generation
-- [ ] Weak technique detection
-- [ ] Full session flow tests
-- **Status:** `Phase 3`
+### Phase 3 ✅
+- [x] Session state machine
+- [x] Drill mode implementation
+- [x] Challenge mode implementation
+- [x] Answer evaluation
+- [x] SessionSummary generation
+- [x] Weak technique detection
+- [x] Full session flow tests
+- **Status:** `Done`
 
-### Phase 4 ✅ / ⏳ / ❌
-- [ ] UserProgress Redux slice
-- [ ] Mastery calculation selectors
-- [ ] XP & level selectors
-- [ ] redux-persist configured
-- [ ] Export/import functions
-- [ ] Persistence round-trip tests
-- **Status:** `Phase 4`
+### Phase 4 ✅
+- [x] UserProgress Redux slice
+- [x] Mastery calculation selectors
+- [x] XP & level selectors
+- [x] redux-persist configured
+- [x] Export/import functions
+- [x] Persistence round-trip tests
+- **Status:** `Done`
 
-### Phase 5 ✅ / ⏳ / ❌
+### Phase 5 ⏳
 - [ ] Numeric keypad component
 - [ ] Keyboard input handler
 - [ ] Feedback component
@@ -1057,9 +1057,9 @@ Use this checklist to track completion and PR readiness per phase.
 - [ ] Progress indicators
 - [ ] Component tests
 - [ ] Demo route
-- **Status:** `Phase 5`
+- **Status:** `Next`
 
-### Phase 6 ✅ / ⏳ / ❌
+### Phase 6 ⏳
 - [ ] Drill entry screen
 - [ ] In-session screen
 - [ ] Post-session report
@@ -1067,9 +1067,9 @@ Use this checklist to track completion and PR readiness per phase.
 - [ ] Persistence integration
 - [ ] Pilot technique verified end-to-end
 - [ ] Navigation tests
-- **Status:** `Phase 6`
+- **Status:** `Pending`
 
-### Phase 7 ✅ / ⏳ / ❌
+### Phase 7 ⏳
 - [ ] Challenge entry screen
 - [ ] In-session screen (high intensity)
 - [ ] Pass screen with star animation
@@ -1077,9 +1077,9 @@ Use this checklist to track completion and PR readiness per phase.
 - [ ] Session engine (challenge mode) integration
 - [ ] Mastery star gating
 - [ ] Pass/fail tests
-- **Status:** `Phase 7`
+- **Status:** `Pending`
 
-### Phase 8 ✅ / ⏳ / ❌
+### Phase 8 ⏳
 - [ ] Technique card slide viewer
 - [ ] Content schema defined
 - [ ] All 25 technique cards authored
@@ -1087,18 +1087,18 @@ Use this checklist to track completion and PR readiness per phase.
 - [ ] Reference access from session
 - [ ] Content validation
 - [ ] Slide navigation tests
-- **Status:** `Phase 8`
+- **Status:** `Pending`
 
-### Phase 9 ✅ / ⏳ / ❌
+### Phase 9 ⏳
 - [ ] Topic detail layout
 - [ ] Tier card styling & states
 - [ ] Mastery radar display
 - [ ] Navigation & deep linking
 - [ ] Responsive design
 - [ ] Integration tests
-- **Status:** `Phase 9`
+- **Status:** `Pending`
 
-### Phase 10 ✅ / ⏳ / ❌
+### Phase 10 ⏳
 - [ ] Node layout (hand-tuned coordinates)
 - [ ] Node component with all states
 - [ ] Edge rendering
@@ -1107,17 +1107,17 @@ Use this checklist to track completion and PR readiness per phase.
 - [ ] First-visit indicators
 - [ ] Responsive design
 - [ ] Navigation tests
-- **Status:** `Phase 10`
+- **Status:** `Pending`
 
-### Phase 11 ✅ / ⏳ / ❌
+### Phase 11 ⏳
 - [ ] Settings toggle for pact mode
 - [ ] Suggested sequence defined
 - [ ] Map visual changes (pact mode)
 - [ ] Soft lock (clickable, not hard-blocked)
 - [ ] Tests
-- **Status:** `Phase 11`
+- **Status:** `Pending`
 
-### Phase 12 ✅ / ⏳ / ❌
+### Phase 12 ⏳
 - [ ] Date-seeded RNG
 - [ ] Multi-technique daily generator
 - [ ] Daily challenge session
@@ -1126,9 +1126,9 @@ Use this checklist to track completion and PR readiness per phase.
 - [ ] Already-completed state
 - [ ] Persistence
 - [ ] Tests
-- **Status:** `Phase 12`
+- **Status:** `Pending`
 
-### Phase 13 ✅ / ⏳ / ❌
+### Phase 13 ⏳
 - [ ] Profile header
 - [ ] Mastery overview grid
 - [ ] Session history
@@ -1137,9 +1137,9 @@ Use this checklist to track completion and PR readiness per phase.
 - [ ] Export/import
 - [ ] Responsive design
 - [ ] Tests
-- **Status:** `Phase 13`
+- **Status:** `Pending`
 
-### Phase 14 ✅ / ⏳ / ❌
+### Phase 14 ⏳
 - [ ] Constellation animations
 - [ ] Session screen animations
 - [ ] Technique card animations
@@ -1150,9 +1150,9 @@ Use this checklist to track completion and PR readiness per phase.
 - [ ] Performance audit (60fps, Lighthouse)
 - [ ] Brand & tone
 - [ ] Tests
-- **Status:** `Phase 14`
+- **Status:** `Pending`
 
-### Phase 15 ✅ / ⏳ / ❌
+### Phase 15 ⏳
 - [ ] Cross-browser testing
 - [ ] Performance audit (90+ Lighthouse)
 - [ ] localStorage edge cases
@@ -1163,7 +1163,7 @@ Use this checklist to track completion and PR readiness per phase.
 - [ ] SSL & domain
 - [ ] Launch checklist
 - [ ] Documentation
-- **Status:** `Phase 15`
+- **Status:** `Pending`
 
 ---
 
@@ -1193,4 +1193,4 @@ Use this checklist to track completion and PR readiness per phase.
 
 ---
 
-**Status:** Ready for Phase 0 kickoff.
+**Status:** Phases 0–4 complete. Starting Phase 5 (Input UI Primitives).

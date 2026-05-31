@@ -80,3 +80,29 @@ export const selectGlobalStats = createSelector(
 
 export const selectDailyChallengeResult = (date: string) => (state: RootState) =>
   state.progress.dailyChallenges[date] ?? null
+
+// ── Cross-topic weak techniques ──────────────────────────────
+
+/**
+ * Returns up to 3 techniqueIds with the lowest windowed average accuracy
+ * across all techniques that have at least one session.
+ *
+ * Useful for the profile page and post-run reports that need a global view
+ * of where the user struggles most.
+ */
+export const selectWeakTechniques = createSelector(
+  [selectAllTechniqueProgress],
+  (allProgress) => {
+    return Object.entries(allProgress)
+      .filter(([, p]) => p.sessions.length > 0)
+      .map(([id, p]) => {
+        const recent = p.sessions.slice(-MASTERY_WINDOW)
+        const avgAccuracy =
+          recent.reduce((sum, s) => sum + s.accuracyPct, 0) / recent.length
+        return { id, avgAccuracy }
+      })
+      .sort((a, b) => a.avgAccuracy - b.avgAccuracy)
+      .slice(0, 3)
+      .map(({ id }) => id)
+  }
+)

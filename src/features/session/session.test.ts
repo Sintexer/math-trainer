@@ -76,32 +76,42 @@ function runDrill(
 
 describe('computeXp', () => {
   it('base: correct × 10', () => {
-    expect(computeXp({ correct: 5, accuracyPct: 50, type: 'drill', passed: false })).toBe(50)
+    expect(computeXp({ correct: 5, accuracyPct: 50, speedPerMin: 0, isFirstSession: false })).toBe(50)
   })
 
-  it('accuracy bonus: +20 when accuracyPct >= 80', () => {
-    expect(computeXp({ correct: 5, accuracyPct: 80, type: 'drill', passed: false })).toBe(70)
-    expect(computeXp({ correct: 5, accuracyPct: 100, type: 'drill', passed: false })).toBe(70)
+  it('accuracy bonus: +25 at ≥80%, +50 at ≥95%', () => {
+    expect(computeXp({ correct: 5, accuracyPct: 80,  speedPerMin: 0, isFirstSession: false })).toBe(75)
+    expect(computeXp({ correct: 5, accuracyPct: 94,  speedPerMin: 0, isFirstSession: false })).toBe(75)
+    expect(computeXp({ correct: 5, accuracyPct: 95,  speedPerMin: 0, isFirstSession: false })).toBe(100)
+    expect(computeXp({ correct: 5, accuracyPct: 100, speedPerMin: 0, isFirstSession: false })).toBe(100)
   })
 
   it('no accuracy bonus below 80%', () => {
-    expect(computeXp({ correct: 5, accuracyPct: 79, type: 'drill', passed: false })).toBe(50)
+    expect(computeXp({ correct: 5, accuracyPct: 79, speedPerMin: 0, isFirstSession: false })).toBe(50)
   })
 
-  it('challenge pass bonus: +50', () => {
-    expect(computeXp({ correct: 5, accuracyPct: 80, type: 'challenge', passed: true })).toBe(120)
+  it('speed bonus: +10 at ≥5/min, +20 at ≥8/min', () => {
+    expect(computeXp({ correct: 5, accuracyPct: 50, speedPerMin: 5, isFirstSession: false })).toBe(60)
+    expect(computeXp({ correct: 5, accuracyPct: 50, speedPerMin: 7, isFirstSession: false })).toBe(60)
+    expect(computeXp({ correct: 5, accuracyPct: 50, speedPerMin: 8, isFirstSession: false })).toBe(70)
+    expect(computeXp({ correct: 5, accuracyPct: 50, speedPerMin: 20, isFirstSession: false })).toBe(70)
   })
 
-  it('no challenge bonus for drill even if passed=true', () => {
-    expect(computeXp({ correct: 5, accuracyPct: 80, type: 'drill', passed: true })).toBe(70)
+  it('no speed bonus below 5/min', () => {
+    expect(computeXp({ correct: 5, accuracyPct: 50, speedPerMin: 4, isFirstSession: false })).toBe(50)
   })
 
-  it('no challenge bonus on failed challenge', () => {
-    expect(computeXp({ correct: 5, accuracyPct: 80, type: 'challenge', passed: false })).toBe(70)
+  it('first-session bonus: +100', () => {
+    expect(computeXp({ correct: 5, accuracyPct: 50, speedPerMin: 0, isFirstSession: true })).toBe(150)
   })
 
-  it('zero correct → zero base', () => {
-    expect(computeXp({ correct: 0, accuracyPct: 0, type: 'drill', passed: false })).toBe(0)
+  it('all bonuses stack', () => {
+    // 50 base + 50 accuracy + 20 speed + 100 first = 220
+    expect(computeXp({ correct: 5, accuracyPct: 95, speedPerMin: 8, isFirstSession: true })).toBe(220)
+  })
+
+  it('zero correct → zero base (bonuses still apply)', () => {
+    expect(computeXp({ correct: 0, accuracyPct: 0, speedPerMin: 0, isFirstSession: false })).toBe(0)
   })
 })
 
@@ -321,8 +331,11 @@ describe('drill mode — full session', () => {
 
   it('summary.xpEarned is computed correctly (all correct, accuracy 100%)', () => {
     const final = runDrill(makeProblems(5))
-    // 5 × 10 + 20 (accuracy bonus) = 70
-    expect(final.summary!.xpEarned).toBe(70)
+    // 5 correct × 10 = 50 base
+    // accuracy 100% ≥ 95% → +50
+    // speed ≥ 8/min (≈37/min given 8s total drill time) → +20
+    // isFirstSession: false (buildSummary cannot know) → +0
+    expect(final.summary!.xpEarned).toBe(120)
   })
 
   it('no problems remain unanswered after complete', () => {
