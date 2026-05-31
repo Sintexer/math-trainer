@@ -9,7 +9,9 @@ import progressReducer, {
   MASTERY_WINDOW,
   MIN_SESSIONS_FOR_ACCURACY_STAR,
 } from '@/features/progress/progressSlice'
-import type { SessionSummary, UserProgress, MasteryThresholds } from '@/shared/types'
+import type { MasteryThresholds } from '@/shared/types'
+import type { SessionSummary } from '@/features/session'
+import type { UserProgress } from '@/features/progress/types'
 
 const THRESHOLDS: MasteryThresholds = { speedPerMin: 6, accuracyPct: 90 }
 

@@ -1,19 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import type {
-  UserProgress,
-  TechniqueProgress,
-  SessionSummary,
-  UserSettings,
-  DailyChallengeResult,
-  MasteryStars,
-  MasteryThresholds,
-  Difficulty,
+import {
+  ALL_DIFFICULTIES,
+  type Difficulty,
+  type MasteryStars,
+  type MasteryThresholds,
 } from '@/shared/types'
-import { ALL_DIFFICULTIES } from '@/shared/types'
+import type { SessionSummary } from '@/features/session'
+import type {
+  DailyChallengeResult,
+  TechniqueProgress,
+  UserProgress,
+  UserSettings,
+} from './types'
 import { computeXp } from '@/features/session/xp'
-
-// ── Schema / retention constants ─────────────────────────────
 
 export const SCHEMA_VERSION = 1
 
@@ -29,8 +29,6 @@ export const MIN_SESSIONS_FOR_ACCURACY_STAR = 5
 
 /** Cap on persisted daily challenge results (most recent N). */
 export const MAX_DAILY_CHALLENGES_RETAINED = 90
-
-// ── Defaults ─────────────────────────────────────────────────
 
 const defaultTechniqueProgress = (): TechniqueProgress => ({
   techniqueRead: false,
@@ -52,10 +50,7 @@ const initialState: UserProgress = {
   schemaVersion: SCHEMA_VERSION,
 }
 
-// ── Mastery Star Calculation ─────────────────────────────────
-
-/** Stars are monotonic — once earned, never lost. Merges a freshly computed
- *  star set with the existing one by OR-ing each flag. */
+// Stars are monotonic — once earned, never lost.
 function mergeStars(prev: MasteryStars, next: MasteryStars): MasteryStars {
   return {
     speed: prev.speed || next.speed,
@@ -66,11 +61,10 @@ function mergeStars(prev: MasteryStars, next: MasteryStars): MasteryStars {
 
 function computeStars(
   progress: TechniqueProgress,
-  thresholds: MasteryThresholds
+  thresholds: MasteryThresholds,
 ): MasteryStars {
-  // Speed star: avg speedPerMin over the last MASTERY_WINDOW drill sessions
-  // meets or exceeds the technique's speed threshold. (Challenge sessions are
-  // a separate gate — see `challengePassed`.)
+  // Speed/Accuracy stars use the avg over recent drill sessions only —
+  // challenge sessions are a separate gate (see challengePassed).
   const recentDrills = progress.sessions
     .filter((s) => s.type === 'drill')
     .slice(-MASTERY_WINDOW)
@@ -93,8 +87,6 @@ function computeStars(
   }
 }
 
-// ── Slice ─────────────────────────────────────────────────────
-
 const progressSlice = createSlice({
   name: 'progress',
   initialState,
@@ -113,7 +105,7 @@ const progressSlice = createSlice({
         summary: SessionSummary
         thresholds: MasteryThresholds
         passed?: boolean
-      }>
+      }>,
     ) {
       const { summary, thresholds, passed } = action.payload
       const id = summary.techniqueId
@@ -123,9 +115,10 @@ const progressSlice = createSlice({
       }
       const progress = state.techniqueProgress[id]
 
-      // ── XP: first-session bonus requires state — compute here, overwrite summary ──
-      const prevSessionsForTier = progress.sessions.filter((s) => s.type === summary.type)
-      const isFirstSession = prevSessionsForTier.length === 0
+      // XP requires knowledge of session history (first-session bonus) — the
+      // session engine cannot compute it; we do it here as the single source.
+      const isFirstSession =
+        progress.sessions.filter((s) => s.type === summary.type).length === 0
       const xpEarned = computeXp({
         correct: summary.correct,
         accuracyPct: summary.accuracyPct,
@@ -134,34 +127,28 @@ const progressSlice = createSlice({
       })
       const persistedSummary: SessionSummary = { ...summary, xpEarned }
 
-      // Sessions (FIFO trim)
       progress.sessions = [...progress.sessions, persistedSummary].slice(
-        -MAX_SESSIONS_RETAINED
+        -MAX_SESSIONS_RETAINED,
       )
 
-      // Aggregates
       progress.totalCorrect += persistedSummary.correct
       progress.totalAttempted += persistedSummary.attempted
       if (persistedSummary.speedPerMin > progress.bestSpeedPerMin) {
         progress.bestSpeedPerMin = persistedSummary.speedPerMin
       }
 
-      // Difficulties: union with this session's correctly-solved difficulties
       for (const d of persistedSummary.difficultiesAttempted) {
         if (!progress.difficultiesCovered.includes(d)) {
           progress.difficultiesCovered.push(d)
         }
       }
 
-      // Challenge pass — separate one-way gate from the Speed star
       if (persistedSummary.type === 'challenge' && passed) {
         progress.challengePassed = true
       }
 
-      // Stars: compute fresh, then OR with prior (monotonic)
       progress.stars = mergeStars(progress.stars, computeStars(progress, thresholds))
 
-      // Global XP / level
       state.xp += xpEarned
       state.level = Math.floor(state.xp / 1000)
     },
@@ -170,7 +157,6 @@ const progressSlice = createSlice({
       const result = action.payload
       state.dailyChallenges[result.date] = result
 
-      // Cap retention to the most recent MAX_DAILY_CHALLENGES_RETAINED dates.
       const dates = Object.keys(state.dailyChallenges).sort()
       const excess = dates.length - MAX_DAILY_CHALLENGES_RETAINED
       if (excess > 0) {
@@ -188,9 +174,7 @@ const progressSlice = createSlice({
       state.settings = { ...state.settings, ...action.payload }
     },
 
-    /** Replace all progress. Caller is responsible for validation (see
-     *  isValidUserProgress) — invalid payloads will simply overwrite state
-     *  and may corrupt subsequent operations. */
+    /** Replace all progress. Caller must validate first (see isValidUserProgress). */
     importProgress(_state, action: PayloadAction<UserProgress>) {
       return action.payload
     },
@@ -201,11 +185,7 @@ const progressSlice = createSlice({
   },
 })
 
-// ── Import validation ────────────────────────────────────────
-
-/** Minimal structural validator for imported progress JSON. Does not
- *  attempt deep semantic validation; just rejects payloads that would
- *  immediately throw in selectors / reducers. */
+/** Minimal structural validator for imported progress JSON. */
 export function isValidUserProgress(value: unknown): value is UserProgress {
   if (!value || typeof value !== 'object') return false
   const v = value as Record<string, unknown>
@@ -232,7 +212,5 @@ export const {
 
 export default progressSlice.reducer
 
-// Re-export so tests / migrations can construct fresh state without poking
-// at module internals.
 export { defaultTechniqueProgress, initialState as initialProgressState }
 export type { Difficulty }

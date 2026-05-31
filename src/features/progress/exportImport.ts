@@ -14,7 +14,7 @@
  *   dispatch(importProgress(progress))
  */
 
-import type { UserProgress } from '@/shared/types'
+import type { UserProgress } from './types'
 import { isValidUserProgress, SCHEMA_VERSION } from './progressSlice'
 
 // ── Export ────────────────────────────────────────────────────────────────────

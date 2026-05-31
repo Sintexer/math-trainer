@@ -10,12 +10,11 @@ import {
   sessionReducer,
   createIdleState,
   applyActions,
-  buildSummary,
   detectWeakTechniques,
   computeXp,
 } from './index'
-import type { SessionState, SessionAction, AnsweredProblem } from './index'
-import type { Problem, SessionConfig } from '@/shared/types'
+import type { SessionState, SessionAction, AnsweredProblem, SessionConfig } from './index'
+import type { Problem } from '@/shared/types'
 
 // ── Test fixtures ─────────────────────────────────────────────────────────────
 
@@ -329,13 +328,9 @@ describe('drill mode — full session', () => {
     expect(final.summary!.type).toBe('drill')
   })
 
-  it('summary.xpEarned is computed correctly (all correct, accuracy 100%)', () => {
+  it('summary.xpEarned is left at 0 — XP is computed by the progress slice on persistence', () => {
     const final = runDrill(makeProblems(5))
-    // 5 correct × 10 = 50 base
-    // accuracy 100% ≥ 95% → +50
-    // speed ≥ 8/min (≈37/min given 8s total drill time) → +20
-    // isFirstSession: false (buildSummary cannot know) → +0
-    expect(final.summary!.xpEarned).toBe(120)
+    expect(final.summary!.xpEarned).toBe(0)
   })
 
   it('no problems remain unanswered after complete', () => {

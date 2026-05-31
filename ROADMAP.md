@@ -1049,25 +1049,25 @@ Use this checklist to track completion and PR readiness per phase.
 - [x] Persistence round-trip tests
 - **Status:** `Done`
 
-### Phase 5 ⏳
-- [ ] Numeric keypad component
-- [ ] Keyboard input handler
-- [ ] Feedback component
-- [ ] Timer component
-- [ ] Progress indicators
-- [ ] Component tests
-- [ ] Demo route
-- **Status:** `Next`
+### Phase 5 ✅
+- [x] Numeric keypad component
+- [x] Keyboard input handler
+- [x] Feedback component
+- [x] Timer component
+- [x] Progress indicators
+- [x] Component tests
+- [x] Demo route
+- **Status:** `Done`
 
-### Phase 6 ⏳
-- [ ] Drill entry screen
-- [ ] In-session screen
-- [ ] Post-session report
-- [ ] Session engine integration
-- [ ] Persistence integration
-- [ ] Pilot technique verified end-to-end
-- [ ] Navigation tests
-- **Status:** `Pending`
+### Phase 6 ✅
+- [x] Drill entry screen
+- [x] In-session screen
+- [x] Post-session report
+- [x] Session engine integration
+- [x] Persistence integration
+- [x] Pilot technique verified end-to-end
+- [x] Navigation tests
+- **Status:** `Done`
 
 ### Phase 7 ⏳
 - [ ] Challenge entry screen
@@ -1193,4 +1193,4 @@ Use this checklist to track completion and PR readiness per phase.
 
 ---
 
-**Status:** Phases 0–4 complete. Starting Phase 5 (Input UI Primitives).
+**Status:** Phases 0–6 complete. Starting Phase 7 (Challenge Session UI).

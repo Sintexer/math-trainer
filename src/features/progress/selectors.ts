@@ -16,24 +16,25 @@ export const selectDailyChallenges = (state: RootState) =>
 export const selectAllTechniqueProgress = (state: RootState) =>
   state.progress.techniqueProgress
 
-// ── Per-technique selector factories ─────────────────────────
+// ── Per-technique selectors ──────────────────────────────────
 //
-// NOTE: these create a fresh function on every call. That's fine for
-// primitive returns (React-Redux uses strict equality on the result),
-// but reference-returning factories use module-level constants as the
-// "missing" sentinel so React-Redux doesn't see a new object reference
-// each render.
+// Signature is `(state, id)` rather than the curried `(id) => (state) => …`.
+// React-Redux compares the returned value with strict equality, so primitive
+// returns (booleans, numbers) are safe to recompute on each render.
+// Reference-returning selectors fall back to a frozen module-level constant
+// (DEFAULT_MASTERY_STARS) so React-Redux doesn't see a fresh object reference
+// every time a technique has no progress yet.
 
-export const selectTechniqueProgress = (techniqueId: string) => (state: RootState) =>
+export const selectTechniqueProgress = (state: RootState, techniqueId: string) =>
   state.progress.techniqueProgress[techniqueId] ?? null
 
-export const selectTechniqueRead = (techniqueId: string) => (state: RootState) =>
+export const selectTechniqueRead = (state: RootState, techniqueId: string) =>
   state.progress.techniqueProgress[techniqueId]?.techniqueRead ?? false
 
-export const selectMasteryStars = (techniqueId: string) => (state: RootState) =>
+export const selectMasteryStars = (state: RootState, techniqueId: string) =>
   state.progress.techniqueProgress[techniqueId]?.stars ?? DEFAULT_MASTERY_STARS
 
-export const selectChallengePassed = (techniqueId: string) => (state: RootState) =>
+export const selectChallengePassed = (state: RootState, techniqueId: string) =>
   state.progress.techniqueProgress[techniqueId]?.challengePassed ?? false
 
 // ── Derived global stats ─────────────────────────────────────
@@ -78,7 +79,7 @@ export const selectGlobalStats = createSelector(
   }
 )
 
-export const selectDailyChallengeResult = (date: string) => (state: RootState) =>
+export const selectDailyChallengeResult = (state: RootState, date: string) =>
   state.progress.dailyChallenges[date] ?? null
 
 // ── Cross-topic weak techniques ──────────────────────────────

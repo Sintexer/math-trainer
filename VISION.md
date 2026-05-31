@@ -489,7 +489,7 @@ A 2-hour feature that builds significant user trust:
 | Framework | React + TypeScript | Ecosystem, hire-ability, type safety |
 | State management | Redux Toolkit (RTK) | Scales cleanly for complex session state and mastery tracking |
 | Persistence | `redux-persist` → localStorage | Automatic, zero user friction |
-| Styling | Tailwind CSS | Utility-first, fast iteration |
+| Styling | Chakra UI v3 | Token-based design system; accessible primitives out of the box |
 | Animation | Framer Motion | Constellation glow effects, session transitions, card flips |
 | Routing | React Router v6 | SPA — Map / Topic / Session / Daily / Profile |
 | Build tool | Vite | Best-in-class DX for React + TS |

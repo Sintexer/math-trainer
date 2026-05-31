@@ -9,7 +9,7 @@
 import { describe, it, expect } from 'vitest'
 import { selectGlobalStats, selectWeakTechniques } from '@/features/progress/selectors'
 import type { RootState } from '@/app/store'
-import type { TechniqueProgress, UserProgress } from '@/shared/types'
+import type { TechniqueProgress, UserProgress } from '@/features/progress/types'
 import { initialProgressState } from '@/features/progress/progressSlice'
 
 // ── Helpers ──────────────────────────────────────────────────────────────────

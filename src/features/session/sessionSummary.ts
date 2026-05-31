@@ -1,28 +1,17 @@
-/**
- * Session Summary Builder
- *
- * `buildSummary` is called by the reducer once a session reaches 'complete'.
- * It is a pure function — no side effects, no randomness.
- */
+// Pure summary builder. Called by the reducer on session completion.
+// Reads timestamps from state — no Date.now() / new Date() calls here.
 
-import type { Difficulty, SessionSummary } from '@/shared/types'
-import type { AnsweredProblem, SessionState } from './types'
-import { computeXp } from './xp'
+import type { Difficulty } from '@/shared/types'
+import type { AnsweredProblem, SessionState, SessionSummary } from './types'
 import { getTechnique } from '@/content'
 
-// ── Weak technique detection ──────────────────────────────────────────────────
-
-/** Minimum problems attempted in a session before weak-technique detection fires. */
+/** Minimum problems required before weak-technique detection fires. */
 const MIN_PROBLEMS_FOR_WEAK_DETECTION = 5
 
-/**
- * Return up to 2 techniqueIds with the lowest accuracy in this session.
- * Only fires when the session has >= MIN_PROBLEMS_FOR_WEAK_DETECTION answers.
- */
+/** Return up to 2 techniqueIds with the lowest accuracy in this session. */
 export function detectWeakTechniques(answers: AnsweredProblem[]): string[] {
   if (answers.length < MIN_PROBLEMS_FOR_WEAK_DETECTION) return []
 
-  // Aggregate per technique
   const byTechnique = new Map<string, { correct: number; attempted: number }>()
   for (const a of answers) {
     const id = a.problem.techniqueId
@@ -32,7 +21,7 @@ export function detectWeakTechniques(answers: AnsweredProblem[]): string[] {
     byTechnique.set(id, entry)
   }
 
-  // Sort by accuracy ascending (worst first), break ties by more attempts (more data = more reliable)
+  // Sort ascending by accuracy; break ties by more attempts (more data = more reliable).
   const sorted = Array.from(byTechnique.entries()).sort(([, a], [, b]) => {
     const accA = a.correct / a.attempted
     const accB = b.correct / b.attempted
@@ -43,48 +32,40 @@ export function detectWeakTechniques(answers: AnsweredProblem[]): string[] {
   return sorted.slice(0, 2).map(([id]) => id)
 }
 
-// ── Summary builder ───────────────────────────────────────────────────────────
-
-let _summaryCounter = 0
-
 /**
  * Build the final SessionSummary from a completed session's state.
- * Call this only when state.status is transitioning to 'complete'.
+ *
+ * `xpEarned` is intentionally left at 0 — XP requires knowledge of prior
+ * sessions (first-session bonus) and is computed exclusively by the
+ * progress slice when the session is persisted.
  */
 export function buildSummary(state: SessionState): SessionSummary {
-  const { config, answers } = state
+  const { config, answers, currentTimeMs } = state
 
   const attempted = answers.length
   const correct = answers.filter((a) => a.correct).length
   const accuracyPct = attempted > 0 ? Math.round((correct / attempted) * 100) : 0
 
-  // speedPerMin: correct answers per minute, based on actual elapsed session time
-  // For challenge: use full duration. For drill: sum of all answer times.
-  let totalTimeMs: number
-  if (config.type === 'challenge') {
-    totalTimeMs = (config.durationSeconds ?? 60) * 1000
-  } else {
-    totalTimeMs = answers.reduce((sum, a) => sum + a.timeMs, 0)
-  }
+  // Drill: sum of per-answer times. Challenge: full configured duration.
+  const totalTimeMs =
+    config.type === 'challenge'
+      ? (config.durationSeconds ?? 60) * 1000
+      : answers.reduce((sum, a) => sum + a.timeMs, 0)
   const totalTimeMin = totalTimeMs / 60_000
-  const speedPerMin = totalTimeMin > 0 ? Math.round((correct / totalTimeMin) * 10) / 10 : 0
+  const speedPerMin =
+    totalTimeMin > 0 ? Math.round((correct / totalTimeMin) * 10) / 10 : 0
 
-  // Pass/fail for challenge mode
   let passed = false
   if (config.type === 'challenge') {
     try {
       const thresholds = getTechnique(config.techniqueId).masteryThresholds
-      passed = speedPerMin >= thresholds.speedPerMin && accuracyPct >= thresholds.accuracyPct
+      passed =
+        speedPerMin >= thresholds.speedPerMin && accuracyPct >= thresholds.accuracyPct
     } catch {
-      // Unknown technique — treat as not passed
+      // Unknown technique — treat as not passed.
     }
   }
 
-  // isFirstSession is unknown here (no access to persisted store state).
-  // The progress slice will re-evaluate with the correct value and overwrite xpEarned on persist.
-  const xpEarned = computeXp({ correct, accuracyPct, speedPerMin, isFirstSession: false })
-
-  // Per-technique breakdown
   const techniqueBreakdown: Record<string, { correct: number; attempted: number }> = {}
   for (const a of answers) {
     const id = a.problem.techniqueId
@@ -93,9 +74,8 @@ export function buildSummary(state: SessionState): SessionSummary {
     if (a.correct) techniqueBreakdown[id].correct++
   }
 
-  // Difficulties the user got at least one correct answer at
   const difficultiesAttempted: Difficulty[] = []
-  const seen = new Set<string>()
+  const seen = new Set<Difficulty>()
   for (const a of answers) {
     if (a.correct && !seen.has(a.problem.difficulty)) {
       seen.add(a.problem.difficulty)
@@ -103,19 +83,17 @@ export function buildSummary(state: SessionState): SessionSummary {
     }
   }
 
-  const weakTechniqueIds = detectWeakTechniques(answers)
-
   return {
-    id: `session-${Date.now()}-${++_summaryCounter}`,
+    id: `session-${currentTimeMs}-${config.techniqueId}`,
     type: config.type,
     techniqueId: config.techniqueId,
-    date: new Date().toISOString(),
+    date: new Date(currentTimeMs).toISOString(),
     correct,
     attempted,
     accuracyPct,
     speedPerMin,
-    xpEarned,
-    weakTechniqueIds,
+    xpEarned: 0,
+    weakTechniqueIds: detectWeakTechniques(answers),
     techniqueBreakdown,
     difficultiesAttempted,
     passed,

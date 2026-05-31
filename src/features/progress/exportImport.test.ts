@@ -14,7 +14,7 @@ import {
   ProgressImportError,
 } from '@/features/progress/exportImport'
 import { initialProgressState, SCHEMA_VERSION } from '@/features/progress/progressSlice'
-import type { UserProgress } from '@/shared/types'
+import type { UserProgress } from '@/features/progress/types'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 

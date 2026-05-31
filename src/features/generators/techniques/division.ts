@@ -10,25 +10,26 @@
  */
 
 import type { Difficulty, Problem } from '@/shared/types'
-import { makeId, randInt, pick } from '../utils'
+import { makeId } from '../utils'
+import type { Rng } from '../rng'
 
 // ── div-by-5 ──────────────────────────────────────────────────────────────────
 
-export function generateDivBy5(difficulty: Difficulty): Problem {
+export function generateDivBy5(difficulty: Difficulty, rng: Rng): Problem {
   let n: number
 
   switch (difficulty) {
     case 'easy':
       // 2-digit ÷ 5 (multiple of 5, 15–95)
-      n = randInt(3, 19) * 5 // 15, 20, 25, ..., 95
+      n = rng.int(3, 19) * 5 // 15, 20, 25, ..., 95
       break
     case 'medium':
       // 3-digit ÷ 5 (multiple of 5, 105–995)
-      n = randInt(21, 199) * 5
+      n = rng.int(21, 199) * 5
       break
     case 'hard':
       // 4-digit ÷ 5 (multiple of 5, 1005–4995)
-      n = randInt(201, 999) * 5
+      n = rng.int(201, 999) * 5
       break
   }
 
@@ -44,21 +45,21 @@ export function generateDivBy5(difficulty: Difficulty): Problem {
 
 // ── div-by-25 ─────────────────────────────────────────────────────────────────
 
-export function generateDivBy25(difficulty: Difficulty): Problem {
+export function generateDivBy25(difficulty: Difficulty, rng: Rng): Problem {
   let n: number
 
   switch (difficulty) {
     case 'easy':
       // 2–3-digit ÷ 25 (multiples of 25: 25, 50, 75, ... 475)
-      n = randInt(1, 19) * 25
+      n = rng.int(1, 19) * 25
       break
     case 'medium':
       // 3-digit ÷ 25 (larger multiples: 500–2375)
-      n = randInt(20, 95) * 25
+      n = rng.int(20, 95) * 25
       break
     case 'hard':
       // 4-digit ÷ 25
-      n = randInt(100, 399) * 25
+      n = rng.int(100, 399) * 25
       break
   }
 
@@ -78,23 +79,23 @@ export function generateDivBy25(difficulty: Difficulty): Problem {
  * Divides a number that is a multiple of 9.
  * The technique: running digit-sum shortcut for the quotient.
  */
-export function generateDivBy9DigitSum(difficulty: Difficulty): Problem {
+export function generateDivBy9DigitSum(difficulty: Difficulty, rng: Rng): Problem {
   let quotient: number, n: number
 
   switch (difficulty) {
     case 'easy':
       // Quotient 2–9 (single digit), n = quotient × 9
-      quotient = randInt(2, 9)
+      quotient = rng.int(2, 9)
       n = quotient * 9
       break
     case 'medium':
       // Quotient 11–99 (2-digit), n = quotient × 9
-      quotient = randInt(11, 99)
+      quotient = rng.int(11, 99)
       n = quotient * 9
       break
     case 'hard':
       // Quotient 100–499, n = quotient × 9
-      quotient = randInt(100, 499)
+      quotient = rng.int(100, 499)
       n = quotient * 9
       break
   }
@@ -116,14 +117,14 @@ type PercentType = { pct: number; label: string }
 /**
  * Find X% of a number, using the shortcut routes for 5/10/15/20/25%.
  */
-export function generateDivPercent(difficulty: Difficulty): Problem {
+export function generateDivPercent(difficulty: Difficulty, rng: Rng): Problem {
   let base: number
   let chosen: PercentType
 
   switch (difficulty) {
     case 'easy': {
       // 10% of a 2-digit multiple of 10 (trivial move decimal)
-      base = randInt(2, 12) * 10
+      base = rng.int(2, 12) * 10
       chosen = { pct: 10, label: '10%' }
       break
     }
@@ -133,8 +134,8 @@ export function generateDivPercent(difficulty: Difficulty): Problem {
         { pct: 5, label: '5%' },
         { pct: 20, label: '20%' },
       ]
-      chosen = pick(opts)
-      base = randInt(2, 19) * 10 // multiples of 10 keep answers whole
+      chosen = rng.pick(opts)
+      base = rng.int(2, 19) * 10 // multiples of 10 keep answers whole
       break
     }
     case 'hard': {
@@ -143,12 +144,12 @@ export function generateDivPercent(difficulty: Difficulty): Problem {
         { pct: 15, label: '15%' },
         { pct: 25, label: '25%' },
       ]
-      chosen = pick(opts)
+      chosen = rng.pick(opts)
       // For 25%: divisible by 4; for 15%: divisible by 20 for whole answer
       if (chosen.pct === 25) {
-        base = randInt(1, 24) * 4 // multiples of 4
+        base = rng.int(1, 24) * 4 // multiples of 4
       } else {
-        base = randInt(2, 12) * 20 // multiples of 20 → clean 15%
+        base = rng.int(2, 12) * 20 // multiples of 20 → clean 15%
       }
       break
     }
@@ -172,24 +173,24 @@ export function generateDivPercent(difficulty: Difficulty): Problem {
  * Exact-quotient problems where the divisor is not trivial but the answer
  * is a whole number the student can verify / adjust from a rounded estimate.
  */
-export function generateDivEstimateAdjust(difficulty: Difficulty): Problem {
+export function generateDivEstimateAdjust(difficulty: Difficulty, rng: Rng): Problem {
   let divisor: number, quotient: number
 
   switch (difficulty) {
     case 'easy':
       // Divisors: 11, 14, 15 with small quotients 4–15
-      divisor = pick([11, 14, 15])
-      quotient = randInt(4, 15)
+      divisor = rng.pick([11, 14, 15])
+      quotient = rng.int(4, 15)
       break
     case 'medium':
       // Divisors: 13, 17, 19 with quotients 5–20
-      divisor = pick([13, 17, 19])
-      quotient = randInt(5, 20)
+      divisor = rng.pick([13, 17, 19])
+      quotient = rng.int(5, 20)
       break
     case 'hard':
       // Larger divisors: 21, 22, 23 with quotients 8–30
-      divisor = pick([21, 22, 23])
-      quotient = randInt(8, 30)
+      divisor = rng.pick([21, 22, 23])
+      quotient = rng.int(8, 30)
       break
   }
 
@@ -223,25 +224,25 @@ const DECOMPOSABLE_DIVISORS: ReadonlyArray<{ divisor: number; factors: [number, 
   { divisor: 36, factors: [4, 9] },
 ]
 
-export function generateDivFactorDecompose(difficulty: Difficulty): Problem {
+export function generateDivFactorDecompose(difficulty: Difficulty, rng: Rng): Problem {
   let quotient: number
   let entry: (typeof DECOMPOSABLE_DIVISORS)[number]
 
   switch (difficulty) {
     case 'easy':
       // Small divisors, small quotients
-      entry = pick(DECOMPOSABLE_DIVISORS.slice(0, 3)) // 12, 15, 16
-      quotient = randInt(3, 12)
+      entry = rng.pick(DECOMPOSABLE_DIVISORS.slice(0, 3)) // 12, 15, 16
+      quotient = rng.int(3, 12)
       break
     case 'medium':
       // Mid divisors
-      entry = pick(DECOMPOSABLE_DIVISORS.slice(2, 6)) // 16, 18, 21, 24
-      quotient = randInt(5, 20)
+      entry = rng.pick(DECOMPOSABLE_DIVISORS.slice(2, 6)) // 16, 18, 21, 24
+      quotient = rng.int(5, 20)
       break
     case 'hard':
       // Larger divisors
-      entry = pick(DECOMPOSABLE_DIVISORS.slice(5)) // 24, 28, 36
-      quotient = randInt(8, 25)
+      entry = rng.pick(DECOMPOSABLE_DIVISORS.slice(5)) // 24, 28, 36
+      quotient = rng.int(8, 25)
       break
   }
 
