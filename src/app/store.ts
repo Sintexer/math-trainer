@@ -1,7 +1,8 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import {
   persistStore,
   persistReducer,
+  createMigrate,
   FLUSH,
   REHYDRATE,
   PAUSE,
@@ -9,19 +10,32 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist'
+import type { PersistedState } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-import { combineReducers } from '@reduxjs/toolkit'
-import progressReducer from '@/features/progress/progressSlice'
+import progressReducer, { SCHEMA_VERSION } from '@/features/progress/progressSlice'
 
 const rootReducer = combineReducers({
   progress: progressReducer,
 })
 
+/**
+ * Migration registry. Keys are the target schema version; each function
+ * receives the previously-persisted state and returns the new shape.
+ *
+ * IMPORTANT: bump SCHEMA_VERSION in the progress slice and add a migration
+ * here whenever a breaking change is made to persisted state.
+ */
+const migrations = {
+  // 1: initial schema — no migration needed.
+  1: (state: PersistedState) => state,
+}
+
 const persistConfig = {
   key: 'mathsprint-root',
-  version: 1,
+  version: SCHEMA_VERSION,
   storage,
   whitelist: ['progress'],
+  migrate: createMigrate(migrations, { debug: false }),
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

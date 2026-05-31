@@ -7,6 +7,10 @@
 
 export type Difficulty = 'easy' | 'medium' | 'hard'
 
+/** The full set of difficulties, in canonical order. Use this constant
+ *  instead of hardcoding the literal array in reducers / selectors. */
+export const ALL_DIFFICULTIES: readonly Difficulty[] = ['easy', 'medium', 'hard'] as const
+
 // ── Problem ──────────────────────────────────────────────────
 
 export interface Problem {
@@ -101,11 +105,16 @@ export interface SessionSummary {
   accuracyPct: number
   /** Correct answers per minute */
   speedPerMin: number
+  /** Computed inside the reducer from the canonical XP formula —
+   *  callers may leave this at 0 when constructing a summary. */
   xpEarned: number
   /** IDs of up to 2 worst-performing techniques in this session */
   weakTechniqueIds: string[]
   /** Granular per-technique stats for reporting */
   techniqueBreakdown: Record<string, { correct: number; attempted: number }>
+  /** Difficulties the user CORRECTLY solved at least one problem at during
+   *  this session. Powers the Range star and per-technique breadth metrics. */
+  difficultiesAttempted: Difficulty[]
   passed?: boolean // only meaningful for challenge sessions
 }
 
@@ -117,18 +126,31 @@ export interface MasteryStars {
   range: boolean
 }
 
+/** Module-level frozen default. Selectors return this exact reference for
+ *  techniques with no progress yet, so React-Redux's default equality check
+ *  does not trigger spurious re-renders. */
+export const DEFAULT_MASTERY_STARS: MasteryStars = Object.freeze({
+  speed: false,
+  accuracy: false,
+  range: false,
+})
+
 // ── User Progress ────────────────────────────────────────────
 
-export interface TopicProgress {
+/** Per-technique progress. Note: there is no per-topic aggregate by design —
+ *  the curriculum unit of progress is the technique, and topic-level rollups
+ *  are computed on the fly by selectors. */
+export interface TechniqueProgress {
   techniqueRead: boolean
   challengePassed: boolean
-  /** Kept trimmed to last 20 sessions */
+  /** Kept trimmed to last MAX_SESSIONS_RETAINED sessions */
   sessions: SessionSummary[]
   stars: MasteryStars
   // Aggregated stats (updated on each session completion):
   totalCorrect: number
   totalAttempted: number
   bestSpeedPerMin: number
+  /** Difficulties the user has correctly solved ≥1 problem at, across all sessions. */
   difficultiesCovered: Difficulty[]
 }
 
@@ -147,7 +169,8 @@ export interface UserSettings {
 export interface UserProgress {
   xp: number
   level: number
-  topicProgress: Record<string, TopicProgress>
+  /** Keyed by techniqueId. */
+  techniqueProgress: Record<string, TechniqueProgress>
   dailyChallenges: Record<string, DailyChallengeResult>
   settings: UserSettings
   /** Incremented on schema changes for migration support */

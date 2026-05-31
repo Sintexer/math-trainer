@@ -8,6 +8,9 @@ import DailyChallengePage from '@/pages/DailyChallengePage'
 import ProfilePage from '@/pages/ProfilePage'
 import SettingsPage from '@/pages/SettingsPage'
 
+// HashRouter is intentional: the app deploys to GitHub Pages, which serves
+// static files and cannot rewrite arbitrary paths to /index.html. Switching
+// to BrowserRouter would break direct links and refreshes on any non-root URL.
 export default function AppRouter() {
   return (
     <HashRouter>
