@@ -1069,15 +1069,15 @@ Use this checklist to track completion and PR readiness per phase.
 - [x] Navigation tests
 - **Status:** `Done`
 
-### Phase 7 ⏳
-- [ ] Challenge entry screen
-- [ ] In-session screen (high intensity)
-- [ ] Pass screen with star animation
-- [ ] Fail screen with positive framing
-- [ ] Session engine (challenge mode) integration
-- [ ] Mastery star gating
-- [ ] Pass/fail tests
-- **Status:** `Pending`
+### Phase 7 ✅
+- [x] Challenge entry screen
+- [x] In-session screen (high intensity)
+- [x] Pass screen with star animation
+- [x] Fail screen with positive framing
+- [x] Session engine (challenge mode) integration
+- [x] Mastery star gating
+- [x] Pass/fail tests
+- **Status:** `Done`
 
 ### Phase 8 ⏳
 - [ ] Technique card slide viewer
@@ -1193,4 +1193,4 @@ Use this checklist to track completion and PR readiness per phase.
 
 ---
 
-**Status:** Phases 0–6 complete. Starting Phase 7 (Challenge Session UI).
+**Status:** Phases 0–7 complete. Starting Phase 8 (Technique Card UI).

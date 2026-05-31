@@ -2,6 +2,7 @@ import { HashRouter, Routes, Route } from 'react-router-dom'
 import { Box, Heading, Text } from '@chakra-ui/react'
 import PrimitivesDemoScreen from '@/features/input/demo/PrimitivesDemoScreen'
 import { DrillScreen } from '@/features/drill'
+import { ChallengeScreen } from '@/features/challenge'
 
 // HashRouter is intentional: the app deploys to GitHub Pages, which serves
 // static files and cannot rewrite arbitrary paths to /index.html. Switching
@@ -33,7 +34,7 @@ export default function AppRouter() {
         <Route path="/topic/:techniqueId/drill" element={<DrillScreen />} />
         <Route
           path="/topic/:techniqueId/challenge"
-          element={<Placeholder name="Challenge" />}
+          element={<ChallengeScreen />}
         />
         <Route path="/daily" element={<Placeholder name="Daily Challenge" />} />
         <Route path="/profile" element={<Placeholder name="Profile" />} />
