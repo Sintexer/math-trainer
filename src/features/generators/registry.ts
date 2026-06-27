@@ -15,6 +15,9 @@ import {
   generateAddRoundAdjust,
   generateAddNearDoubles,
   generateAddColumnGrouping,
+  generateAddSpeed1d2d,
+  generateAddSpeed2d2d,
+  generateAddSpeed3d,
 } from './techniques/addition'
 
 // Subtraction
@@ -23,6 +26,9 @@ import {
   generateSubBorrowFree,
   generateSubRoundAdjust,
   generateSubCountingUp,
+  generateSubSpeed2d1d,
+  generateSubSpeed2d2d,
+  generateSubSpeed3d,
 } from './techniques/subtraction'
 
 // Multiplication
@@ -37,6 +43,8 @@ import {
   generateMulDoubleHalve,
   generateMulBy99101,
   generateMulFoilMental,
+  generateMulTimesTable,
+  generateMulPerfectSquares,
 } from './techniques/multiplication'
 
 // Division
@@ -50,20 +58,26 @@ import {
 } from './techniques/division'
 
 export const generatorRegistry: Readonly<Record<string, ProblemGenerator>> = {
-  // Addition (5)
+  // Addition (8)
   'add-left-to-right': generateAddLeftToRight,
   'add-complement-100': generateAddComplement100,
   'add-round-adjust': generateAddRoundAdjust,
   'add-near-doubles': generateAddNearDoubles,
   'add-column-grouping': generateAddColumnGrouping,
+  'add-speed-1d2d': generateAddSpeed1d2d,
+  'add-speed-2d2d': generateAddSpeed2d2d,
+  'add-speed-3d': generateAddSpeed3d,
 
-  // Subtraction (4)
+  // Subtraction (7)
   'sub-complement-10': generateSubComplement10,
   'sub-borrow-free': generateSubBorrowFree,
   'sub-round-adjust': generateSubRoundAdjust,
   'sub-counting-up': generateSubCountingUp,
+  'sub-speed-2d1d': generateSubSpeed2d1d,
+  'sub-speed-2d2d': generateSubSpeed2d2d,
+  'sub-speed-3d': generateSubSpeed3d,
 
-  // Multiplication (10)
+  // Multiplication (12)
   'mul-by-11': generateMulBy11,
   'mul-by-9': generateMulBy9,
   'mul-by-5': generateMulBy5,
@@ -74,6 +88,8 @@ export const generatorRegistry: Readonly<Record<string, ProblemGenerator>> = {
   'mul-double-halve': generateMulDoubleHalve,
   'mul-by-99-101': generateMulBy99101,
   'mul-foil-mental': generateMulFoilMental,
+  'mul-times-table': generateMulTimesTable,
+  'mul-perfect-squares': generateMulPerfectSquares,
 
   // Division (6)
   'div-by-5': generateDivBy5,

@@ -1193,4 +1193,25 @@ Use this checklist to track completion and PR readiness per phase.
 
 ---
 
-**Status:** Phases 0–8 complete. Starting Phase 9 (Topic Node Detail Screen).
+**Status:** Phases 0–11 complete (33 techniques, home list screen, constellation map overlay). Starting Phase 12.
+
+---
+
+## Deferred / Future Work
+
+### Floating-Point / Decimal Trick Techniques (post-Phase 15)
+
+A future content pack of techniques for mental arithmetic with decimals and percentages.
+Deferred until the core integer curriculum is complete and mastery data is stable.
+
+Planned techniques (examples, not exhaustive):
+- `dec-multiply-by-0.5` — halving instead of multiplying by 0.5
+- `dec-multiply-by-0.25` — quarter via two halvings
+- `dec-percent-of-number` — e.g. 17.5% of 80 via 10%+5%+2.5%
+- `dec-move-decimal` — multiply/divide by powers of 10
+- `dec-estimate-round` — round to nearest integer, adjust
+
+Generator considerations:
+- Answers must be exact (no floating-point rounding error); use integer arithmetic internally and divide at the last step.
+- `parsePromptNumbers` regex in tests must be extended to capture decimal literals (`/-?\d+(\.\d+)?/g` already does this).
+- Mastery thresholds will be lower speed-per-minute than integer drills (e.g. 6/5/4 instead of 10/8/5).

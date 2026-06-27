@@ -41,7 +41,7 @@ interface PanState {
  * Node click dispatches React Router navigation only when the gesture
  * didn't exceed CLICK_THRESHOLD pixels of movement.
  */
-export default function ConstellationMapScreen() {
+export default function ConstellationMapScreen({ onNavigate }: { onNavigate?: () => void } = {}) {
   const navigate = useNavigate()
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -270,10 +270,11 @@ export default function ConstellationMapScreen() {
   const handleNodeClick = useCallback(
     (techniqueId: string) => {
       if (!pan.current.hasMoved) {
+        onNavigate?.()
         navigate(`/topic/${techniqueId}`)
       }
     },
-    [navigate],
+    [navigate, onNavigate],
   )
 
   const dismissTooltip = useCallback(() => {

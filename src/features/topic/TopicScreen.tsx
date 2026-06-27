@@ -69,7 +69,7 @@ export default function TopicScreen() {
       <Box p={8}>
         <Text color="text.muted">Technique not found: {techniqueId}</Text>
         <Button mt={4} onClick={() => navigate('/')}>
-          ← Back to Map
+          ← Back
         </Button>
       </Box>
     )
@@ -82,9 +82,9 @@ export default function TopicScreen() {
         variant="ghost"
         onClick={() => navigate('/')}
         mb={4}
-        aria-label="Back to map"
+        aria-label="Back"
       >
-        ← Back to Map
+        ← Back
       </Button>
 
       {/* Header */}

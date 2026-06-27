@@ -41,4 +41,34 @@ export const subtractionTechniques: Technique[] = [
     relatedTechniqueIds: ['sub-complement-10', 'add-left-to-right'],
     masteryThresholds: { speedPerMin: 5, accuracyPct: 85 },
   },
+  {
+    id: 'sub-speed-2d1d',
+    name: '2-Digit − 1-Digit (Speed)',
+    topicId: 'subtraction',
+    description:
+      'Build automatic recall for subtracting a single digit from a two-digit number. Essential groundwork before tackling subtraction shortcuts.',
+    difficulty: 'easy',
+    relatedTechniqueIds: ['sub-speed-2d2d'],
+    masteryThresholds: { speedPerMin: 10, accuracyPct: 90 },
+  },
+  {
+    id: 'sub-speed-2d2d',
+    name: '2-Digit − 2-Digit (Speed)',
+    topicId: 'subtraction',
+    description:
+      'Repetition drill for two-digit subtraction with and without borrowing. Trains your working memory to handle all carry-back patterns smoothly.',
+    difficulty: 'easy',
+    relatedTechniqueIds: ['sub-speed-2d1d', 'sub-speed-3d', 'sub-complement-10'],
+    masteryThresholds: { speedPerMin: 8, accuracyPct: 90 },
+  },
+  {
+    id: 'sub-speed-3d',
+    name: '3-Digit Subtraction (Speed)',
+    topicId: 'subtraction',
+    description:
+      'Speed drill for three-digit subtraction covering all borrowing patterns. Builds the fluency needed for advanced subtraction techniques.',
+    difficulty: 'medium',
+    relatedTechniqueIds: ['sub-speed-2d2d', 'add-speed-3d'],
+    masteryThresholds: { speedPerMin: 5, accuracyPct: 88 },
+  },
 ]

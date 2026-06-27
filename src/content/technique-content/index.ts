@@ -5,11 +5,17 @@ import { addComplement100 } from './add-complement-100'
 import { addRoundAdjust } from './add-round-adjust'
 import { addNearDoubles } from './add-near-doubles'
 import { addColumnGrouping } from './add-column-grouping'
+import { addSpeed1d2d } from './add-speed-1d2d'
+import { addSpeed2d2d } from './add-speed-2d2d'
+import { addSpeed3d } from './add-speed-3d'
 
 import { subComplement10 } from './sub-complement-10'
 import { subBorrowFree } from './sub-borrow-free'
 import { subRoundAdjust } from './sub-round-adjust'
 import { subCountingUp } from './sub-counting-up'
+import { subSpeed2d1d } from './sub-speed-2d1d'
+import { subSpeed2d2d } from './sub-speed-2d2d'
+import { subSpeed3d } from './sub-speed-3d'
 
 import { mulBy11 } from './mul-by-11'
 import { mulBy9 } from './mul-by-9'
@@ -21,6 +27,8 @@ import { mulNear100 } from './mul-near-100'
 import { mulDoubleHalve } from './mul-double-halve'
 import { mulBy99101 } from './mul-by-99-101'
 import { mulFoilMental } from './mul-foil-mental'
+import { mulTimesTable } from './mul-times-table'
+import { mulPerfectSquares } from './mul-perfect-squares'
 
 import { divBy5 } from './div-by-5'
 import { divBy25 } from './div-by-25'
@@ -30,15 +38,24 @@ import { divEstimateAdjust } from './div-estimate-adjust'
 import { divFactorDecompose } from './div-factor-decompose'
 
 const allContent: readonly TechniqueContent[] = [
+  // Addition (8)
   addLeftToRight,
   addComplement100,
   addRoundAdjust,
   addNearDoubles,
   addColumnGrouping,
+  addSpeed1d2d,
+  addSpeed2d2d,
+  addSpeed3d,
+  // Subtraction (7)
   subComplement10,
   subBorrowFree,
   subRoundAdjust,
   subCountingUp,
+  subSpeed2d1d,
+  subSpeed2d2d,
+  subSpeed3d,
+  // Multiplication (12)
   mulBy11,
   mulBy9,
   mulBy5,
@@ -49,6 +66,9 @@ const allContent: readonly TechniqueContent[] = [
   mulDoubleHalve,
   mulBy99101,
   mulFoilMental,
+  mulTimesTable,
+  mulPerfectSquares,
+  // Division (6)
   divBy5,
   divBy25,
   divBy9DigitSum,

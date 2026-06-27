@@ -31,8 +31,8 @@ function parsePromptNumbers(prompt: string): number[] {
 // ── Registry coverage ─────────────────────────────────────────────────────────
 
 describe('generatorRegistry', () => {
-  it('has exactly 25 registered techniques', () => {
-    expect(registeredTechniqueIds).toHaveLength(25)
+  it('has exactly 33 registered techniques', () => {
+    expect(registeredTechniqueIds).toHaveLength(33)
   })
 
   it('covers all 4 topics', () => {
@@ -101,6 +101,9 @@ describe('arithmetic correctness', () => {
     'add-round-adjust',
     'add-near-doubles',
     'add-column-grouping',
+    'add-speed-1d2d',
+    'add-speed-2d2d',
+    'add-speed-3d',
   ]
   for (const id of additionIds) {
     it(`${id}: answer equals sum of operands`, () => {
@@ -116,7 +119,15 @@ describe('arithmetic correctness', () => {
   }
 
   // Subtraction: "a − b = ?" → a - b
-  const subIds = ['sub-complement-10', 'sub-borrow-free', 'sub-round-adjust', 'sub-counting-up']
+  const subIds = [
+    'sub-complement-10',
+    'sub-borrow-free',
+    'sub-round-adjust',
+    'sub-counting-up',
+    'sub-speed-2d1d',
+    'sub-speed-2d2d',
+    'sub-speed-3d',
+  ]
   for (const id of subIds) {
     it(`${id}: answer equals a − b`, () => {
       for (const difficulty of DIFFICULTIES) {
@@ -233,6 +244,29 @@ describe('arithmetic correctness', () => {
     }
   })
 
+  it('mul-times-table: answer equals a × b', () => {
+    for (const difficulty of DIFFICULTIES) {
+      for (let i = 0; i < SAMPLES; i++) {
+        const p = generateProblem('mul-times-table', difficulty)
+        const nums = parsePromptNumbers(p.prompt)
+        expect(p.answer).toBe(nums[0] * nums[1])
+        expect(nums[0]).toBeGreaterThanOrEqual(2)
+        expect(nums[1]).toBeGreaterThanOrEqual(2)
+      }
+    }
+  })
+
+  it('mul-perfect-squares: answer equals n²', () => {
+    for (const difficulty of DIFFICULTIES) {
+      for (let i = 0; i < SAMPLES; i++) {
+        const p = generateProblem('mul-perfect-squares', difficulty)
+        const nums = parsePromptNumbers(p.prompt)
+        expect(p.answer).toBe(nums[0] * nums[0])
+        expect(nums[0]).toBeGreaterThanOrEqual(2)
+      }
+    }
+  })
+
   // Division
   it('div-by-5: answer equals n ÷ 5 (whole number)', () => {
     for (const difficulty of DIFFICULTIES) {
@@ -322,7 +356,15 @@ describe('no degenerate problems', () => {
   })
 
   it('subtraction problems always have positive answers', () => {
-    const subIds = ['sub-complement-10', 'sub-borrow-free', 'sub-round-adjust', 'sub-counting-up']
+    const subIds = [
+      'sub-complement-10',
+      'sub-borrow-free',
+      'sub-round-adjust',
+      'sub-counting-up',
+      'sub-speed-2d1d',
+      'sub-speed-2d2d',
+      'sub-speed-3d',
+    ]
     for (const id of subIds) {
       for (const difficulty of DIFFICULTIES) {
         for (let i = 0; i < SAMPLES; i++) {

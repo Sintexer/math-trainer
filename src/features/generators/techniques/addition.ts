@@ -1,11 +1,14 @@
 /**
- * Addition technique generators (5 techniques)
+ * Addition technique generators (8 techniques)
  *
  * add-left-to-right   — add two multi-digit numbers, left to right
  * add-complement-100  — numbers near 100 using complement trick
  * add-round-adjust    — round one addend, add, then adjust
  * add-near-doubles    — two close numbers; double + offset
  * add-column-grouping — group 3+ numbers so pairs sum to 10/20
+ * add-speed-1d2d      — raw speed drill: 1-digit + 2-digit
+ * add-speed-2d2d      — raw speed drill: 2-digit + 2-digit
+ * add-speed-3d        — raw speed drill: 3-digit addition
  */
 
 import type { Difficulty, Problem } from '@/shared/types'
@@ -220,5 +223,105 @@ export function generateAddColumnGrouping(difficulty: Difficulty, rng: Rng): Pro
     difficulty,
     prompt,
     answer,
+  }
+}
+
+// ── add-speed-1d2d ────────────────────────────────────────────────────────────
+
+/**
+ * Pure speed drill: one single-digit operand + one multi-digit operand.
+ * Order is randomised so learners don't fixate on a fixed pattern.
+ */
+export function generateAddSpeed1d2d(difficulty: Difficulty, rng: Rng): Problem {
+  let small: number, large: number
+
+  switch (difficulty) {
+    case 'easy':
+      small = rng.int(1, 9)
+      large = rng.int(10, 49)
+      break
+    case 'medium':
+      small = rng.int(1, 9)
+      large = rng.int(50, 89)
+      break
+    case 'hard':
+      small = rng.int(1, 9)
+      large = rng.int(90, 199)
+      break
+  }
+
+  // Randomise operand order
+  const [a, b] = rng.int(0, 1) === 0 ? [small, large] : [large, small]
+
+  return {
+    id: makeId('add-speed-1d2d'),
+    techniqueId: 'add-speed-1d2d',
+    topicId: 'addition',
+    difficulty,
+    prompt: `${a} + ${b} = ?`,
+    answer: a + b,
+  }
+}
+
+// ── add-speed-2d2d ────────────────────────────────────────────────────────────
+
+/** Pure speed drill: two-digit + two-digit, no specific trick. */
+export function generateAddSpeed2d2d(difficulty: Difficulty, rng: Rng): Problem {
+  let a: number, b: number
+
+  switch (difficulty) {
+    case 'easy':
+      a = rng.int(10, 49)
+      b = rng.int(10, 49)
+      break
+    case 'medium':
+      a = rng.int(10, 79)
+      b = rng.int(10, 79)
+      break
+    case 'hard':
+      a = rng.int(10, 99)
+      b = rng.int(10, 99)
+      break
+  }
+
+  return {
+    id: makeId('add-speed-2d2d'),
+    techniqueId: 'add-speed-2d2d',
+    topicId: 'addition',
+    difficulty,
+    prompt: `${a} + ${b} = ?`,
+    answer: a + b,
+  }
+}
+
+// ── add-speed-3d ──────────────────────────────────────────────────────────────
+
+/** Pure speed drill: three-digit addition across all carry patterns. */
+export function generateAddSpeed3d(difficulty: Difficulty, rng: Rng): Problem {
+  let a: number, b: number
+
+  switch (difficulty) {
+    case 'easy':
+      // Sum will generally stay below 800
+      a = rng.int(100, 399)
+      b = rng.int(100, 399)
+      break
+    case 'medium':
+      a = rng.int(100, 599)
+      b = rng.int(100, 499)
+      break
+    case 'hard':
+      a = rng.int(100, 799)
+      b = rng.int(100, 699)
+      break
+  }
+
+  return {
+    id: makeId('add-speed-3d'),
+    techniqueId: 'add-speed-3d',
+    topicId: 'addition',
+    difficulty,
+    prompt: `${a} + ${b} = ?`,
+    answer: a + b,
   }
 }

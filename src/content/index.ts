@@ -103,7 +103,16 @@ export function getMasteryThresholds(techniqueId: string): MasteryThresholds {
  */
 export function getPactSequence(): string[] {
   return [
-    // Start with addition — foundational
+    // Foundation speed drills — build raw arithmetic fluency first
+    'add-speed-1d2d',
+    'add-speed-2d2d',
+    'sub-speed-2d1d',
+    'sub-speed-2d2d',
+    'add-speed-3d',
+    'sub-speed-3d',
+    'mul-times-table',
+    'mul-perfect-squares',
+    // Addition tricks (build on speed foundation)
     'add-left-to-right',
     'add-round-adjust',
     'add-complement-100',

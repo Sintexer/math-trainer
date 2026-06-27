@@ -101,4 +101,24 @@ export const multiplicationTechniques: Technique[] = [
     relatedTechniqueIds: ['mul-near-100', 'mul-sq-ending-5'],
     masteryThresholds: { speedPerMin: 3, accuracyPct: 80 },
   },
+  {
+    id: 'mul-times-table',
+    name: 'Times Table (×2–99)',
+    topicId: 'multiplication',
+    description:
+      'Build reflexive recall for multiplication facts. Easy covers the classic 9×9 table. Medium extends to 19×19 (the "teen" table). Hard drills any pair up to 99×99 through repetition.',
+    difficulty: 'easy',
+    relatedTechniqueIds: ['mul-perfect-squares', 'mul-by-9'],
+    masteryThresholds: { speedPerMin: 8, accuracyPct: 90 },
+  },
+  {
+    id: 'mul-perfect-squares',
+    name: 'Perfect Squares',
+    topicId: 'multiplication',
+    description:
+      'Build instant recall of perfect squares from 2² to 50². Fluency with squares is essential for factoring, estimation, and unlocking tricks like Squares Ending in 5.',
+    difficulty: 'medium',
+    relatedTechniqueIds: ['mul-times-table', 'mul-sq-ending-5'],
+    masteryThresholds: { speedPerMin: 6, accuracyPct: 90 },
+  },
 ]

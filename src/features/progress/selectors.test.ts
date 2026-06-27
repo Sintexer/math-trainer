@@ -111,8 +111,8 @@ describe('selectGlobalStats', () => {
       },
     })
     const stats = selectGlobalStats(state)
-    // Curriculum has 25 techniques; 1 has a star → 1/25 = 4%
-    expect(stats.breadthPct).toBeCloseTo(4, 0)
+    // Curriculum has 33 techniques; 1 has a star → 1/33 ≈ 3%
+    expect(stats.breadthPct).toBeCloseTo(3, 0)
   })
 })
 

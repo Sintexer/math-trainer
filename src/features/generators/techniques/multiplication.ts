@@ -1,16 +1,18 @@
 /**
- * Multiplication technique generators (10 techniques)
+ * Multiplication technique generators (12 techniques)
  *
- * mul-by-11        — digit-sum trick (2- and 3-digit × 11)
- * mul-by-9         — ×9 = ×10 − n
- * mul-by-5         — ÷2 × 10
- * mul-by-25        — ÷4 × 100
- * mul-by-12        — ×10 + ×2
- * mul-sq-ending-5  — squares ending in 5
- * mul-near-100     — numbers near 100 using difference from 100
- * mul-double-halve — double one factor, halve the other
- * mul-by-99-101    — ×99 = ×100 − n, ×101 = ×100 + n
- * mul-foil-mental  — FOIL on two 2-digit numbers
+ * mul-by-11           — digit-sum trick (2- and 3-digit × 11)
+ * mul-by-9            — ×9 = ×10 − n
+ * mul-by-5            — ÷2 × 10
+ * mul-by-25           — ÷4 × 100
+ * mul-by-12           — ×10 + ×2
+ * mul-sq-ending-5     — squares ending in 5
+ * mul-near-100        — numbers near 100 using difference from 100
+ * mul-double-halve    — double one factor, halve the other
+ * mul-by-99-101       — ×99 = ×100 − n, ×101 = ×100 + n
+ * mul-foil-mental     — FOIL on two 2-digit numbers
+ * mul-times-table     — reflexive recall drill for multiplication facts
+ * mul-perfect-squares — instant recall of perfect squares
  */
 
 import type { Difficulty, Problem } from '@/shared/types'
@@ -349,5 +351,70 @@ export function generateMulFoilMental(difficulty: Difficulty, rng: Rng): Problem
     difficulty,
     prompt: `${a} × ${b} = ?`,
     answer: a * b,
+  }
+}
+
+// ── mul-times-table ───────────────────────────────────────────────────────────
+
+/**
+ * Reflexive recall drill for multiplication facts.
+ * Easy: classic 2–9 × 2–9 table. Medium: up to 19×19. Hard: up to 99×99.
+ */
+export function generateMulTimesTable(difficulty: Difficulty, rng: Rng): Problem {
+  let a: number, b: number
+
+  switch (difficulty) {
+    case 'easy':
+      a = rng.int(2, 9)
+      b = rng.int(2, 9)
+      break
+    case 'medium':
+      a = rng.int(2, 19)
+      b = rng.int(2, 19)
+      break
+    case 'hard':
+      a = rng.int(2, 99)
+      b = rng.int(2, 99)
+      break
+  }
+
+  return {
+    id: makeId('mul-times-table'),
+    techniqueId: 'mul-times-table',
+    topicId: 'multiplication',
+    difficulty,
+    prompt: `${a} × ${b} = ?`,
+    answer: a * b,
+  }
+}
+
+// ── mul-perfect-squares ───────────────────────────────────────────────────────
+
+/**
+ * Instant-recall drill for perfect squares.
+ * Easy: 2²–12². Medium: 13²–25². Hard: 26²–50².
+ */
+export function generateMulPerfectSquares(difficulty: Difficulty, rng: Rng): Problem {
+  let n: number
+
+  switch (difficulty) {
+    case 'easy':
+      n = rng.int(2, 12)
+      break
+    case 'medium':
+      n = rng.int(13, 25)
+      break
+    case 'hard':
+      n = rng.int(26, 50)
+      break
+  }
+
+  return {
+    id: makeId('mul-perfect-squares'),
+    techniqueId: 'mul-perfect-squares',
+    topicId: 'multiplication',
+    difficulty,
+    prompt: `${n}² = ?`,
+    answer: n * n,
   }
 }

@@ -6,6 +6,7 @@ import type { ConstellationGraph } from '@/shared/types'
  * Layout concept:
  *   - Addition cluster:       top-left
  *   - Subtraction cluster:    bottom-left
+ *   - Speed / memory drills:  middle strip (x ≈ 400–490) — foundation nodes
  *   - Multiplication cluster: top-right (largest)
  *   - Division cluster:       bottom-right
  *
@@ -26,6 +27,19 @@ export const constellationGraph: ConstellationGraph = {
     { techniqueId: 'sub-borrow-free',     x: 250, y: 380 },
     { techniqueId: 'sub-round-adjust',    x: 200, y: 500 },
     { techniqueId: 'sub-counting-up',     x:  90, y: 540 },
+
+    // ── Speed & memory foundation drills (middle strip) ──
+    // Addition speed — top of middle strip
+    { techniqueId: 'add-speed-1d2d',      x: 400, y: 100 },
+    { techniqueId: 'add-speed-2d2d',      x: 420, y: 200 },
+    { techniqueId: 'add-speed-3d',        x: 440, y: 305 },
+    // Subtraction speed — bottom of middle strip
+    { techniqueId: 'sub-speed-2d1d',      x: 400, y: 440 },
+    { techniqueId: 'sub-speed-2d2d',      x: 420, y: 540 },
+    { techniqueId: 'sub-speed-3d',        x: 440, y: 650 },
+    // Multiplication memory — left edge of multiplication cluster
+    { techniqueId: 'mul-times-table',     x: 490, y:  90 },
+    { techniqueId: 'mul-perfect-squares', x: 490, y: 230 },
 
     // ── Multiplication (top-right, largest cluster) ──────
     { techniqueId: 'mul-by-11',           x: 640, y:  90 },
@@ -77,6 +91,19 @@ export const constellationGraph: ConstellationGraph = {
     { from: 'div-estimate-adjust', to: 'div-factor-decompose' },
     { from: 'div-percent-10-5-20', to: 'div-by-25' },
 
+    // ── Speed drill progression chains ───────────────────
+    { from: 'add-speed-1d2d',      to: 'add-speed-2d2d' },
+    { from: 'add-speed-2d2d',      to: 'add-speed-3d' },
+    { from: 'sub-speed-2d1d',      to: 'sub-speed-2d2d' },
+    { from: 'sub-speed-2d2d',      to: 'sub-speed-3d' },
+    { from: 'mul-times-table',     to: 'mul-perfect-squares' },
+
+    // ── Foundation → trick technique bridges ─────────────
+    { from: 'add-speed-2d2d',      to: 'add-left-to-right' },
+    { from: 'sub-speed-2d2d',      to: 'sub-complement-10' },
+    { from: 'mul-times-table',     to: 'mul-by-9' },
+    { from: 'mul-perfect-squares', to: 'mul-sq-ending-5' },
+
     // ── Cross-topic bridges ──────────────────────────────
     { from: 'add-complement-100',  to: 'sub-complement-10' },
     { from: 'add-round-adjust',    to: 'sub-round-adjust' },
@@ -85,5 +112,7 @@ export const constellationGraph: ConstellationGraph = {
     { from: 'mul-by-25',           to: 'div-by-25' },
     { from: 'mul-by-9',            to: 'div-by-9-digit-sum' },
     { from: 'div-percent-10-5-20', to: 'mul-by-5' },
+    // Inverse-operation bridge: addition ↔ subtraction speed drills
+    { from: 'add-speed-3d',        to: 'sub-speed-3d' },
   ],
 }

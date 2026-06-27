@@ -51,4 +51,34 @@ export const additionTechniques: Technique[] = [
     relatedTechniqueIds: ['add-left-to-right', 'add-round-adjust'],
     masteryThresholds: { speedPerMin: 5, accuracyPct: 85 },
   },
+  {
+    id: 'add-speed-1d2d',
+    name: '1-Digit + 2-Digit (Speed)',
+    topicId: 'addition',
+    description:
+      'Build reflexive speed adding a single digit to any two-digit number. Drill until the answer appears instantly — no counting up, no hesitation.',
+    difficulty: 'easy',
+    relatedTechniqueIds: ['add-speed-2d2d'],
+    masteryThresholds: { speedPerMin: 10, accuracyPct: 90 },
+  },
+  {
+    id: 'add-speed-2d2d',
+    name: '2-Digit + 2-Digit (Speed)',
+    topicId: 'addition',
+    description:
+      'Pure repetition drill for adding two two-digit numbers. No tricks — train your brain to handle all carry patterns by reflex.',
+    difficulty: 'easy',
+    relatedTechniqueIds: ['add-speed-1d2d', 'add-speed-3d', 'add-left-to-right'],
+    masteryThresholds: { speedPerMin: 8, accuracyPct: 90 },
+  },
+  {
+    id: 'add-speed-3d',
+    name: '3-Digit Addition (Speed)',
+    topicId: 'addition',
+    description:
+      'Speed drill for three-digit addition covering all carry combinations. The goal is fluency through repetition, not specific shortcuts.',
+    difficulty: 'medium',
+    relatedTechniqueIds: ['add-speed-2d2d', 'sub-speed-3d'],
+    masteryThresholds: { speedPerMin: 5, accuracyPct: 88 },
+  },
 ]

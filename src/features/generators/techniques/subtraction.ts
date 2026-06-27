@@ -1,10 +1,13 @@
 /**
- * Subtraction technique generators (4 techniques)
+ * Subtraction technique generators (7 techniques)
  *
  * sub-complement-10  — complement-of-10 mental subtraction
  * sub-borrow-free    — adjust both numbers to avoid borrowing
  * sub-round-adjust   — round the subtractor, subtract, then adjust
  * sub-counting-up    — count up from subtractor to minuend
+ * sub-speed-2d1d     — raw speed drill: 2-digit minus 1-digit
+ * sub-speed-2d2d     — raw speed drill: 2-digit minus 2-digit
+ * sub-speed-3d       — raw speed drill: 3-digit subtraction
  */
 
 import type { Difficulty, Problem } from '@/shared/types'
@@ -178,6 +181,110 @@ export function generateSubCountingUp(difficulty: Difficulty, rng: Rng): Problem
   return {
     id: makeId('sub-counting-up'),
     techniqueId: 'sub-counting-up',
+    topicId: 'subtraction',
+    difficulty,
+    prompt: `${a} − ${b} = ?`,
+    answer: a - b,
+  }
+}
+
+// ── sub-speed-2d1d ────────────────────────────────────────────────────────────
+
+/** Pure speed drill: two-digit minus single digit. Always positive answer. */
+export function generateSubSpeed2d1d(difficulty: Difficulty, rng: Rng): Problem {
+  let a: number, b: number
+
+  switch (difficulty) {
+    case 'easy':
+      a = rng.int(11, 39)
+      b = rng.int(1, 9)
+      break
+    case 'medium':
+      a = rng.int(40, 69)
+      b = rng.int(1, 9)
+      break
+    case 'hard':
+      a = rng.int(70, 99)
+      b = rng.int(1, 9)
+      break
+  }
+
+  return {
+    id: makeId('sub-speed-2d1d'),
+    techniqueId: 'sub-speed-2d1d',
+    topicId: 'subtraction',
+    difficulty,
+    prompt: `${a} − ${b} = ?`,
+    answer: a - b,
+  }
+}
+
+// ── sub-speed-2d2d ────────────────────────────────────────────────────────────
+
+/**
+ * Pure speed drill: two-digit minus two-digit.
+ * Constructed as b + gap to guarantee a positive answer without guessing.
+ */
+export function generateSubSpeed2d2d(difficulty: Difficulty, rng: Rng): Problem {
+  let a: number, b: number
+
+  switch (difficulty) {
+    case 'easy': {
+      b = rng.int(10, 29)
+      const gap = rng.int(5, Math.min(40, 99 - b))
+      a = b + gap
+      break
+    }
+    case 'medium': {
+      b = rng.int(10, 49)
+      const gap = rng.int(5, Math.min(45, 99 - b))
+      a = b + gap
+      break
+    }
+    case 'hard': {
+      b = rng.int(10, 79)
+      const gap = rng.int(5, Math.min(20, 99 - b))
+      a = b + gap
+      break
+    }
+  }
+
+  return {
+    id: makeId('sub-speed-2d2d'),
+    techniqueId: 'sub-speed-2d2d',
+    topicId: 'subtraction',
+    difficulty,
+    prompt: `${a} − ${b} = ?`,
+    answer: a - b,
+  }
+}
+
+// ── sub-speed-3d ──────────────────────────────────────────────────────────────
+
+/** Pure speed drill: three-digit subtraction across all borrowing patterns. */
+export function generateSubSpeed3d(difficulty: Difficulty, rng: Rng): Problem {
+  let a: number, b: number
+
+  switch (difficulty) {
+    case 'easy':
+      // 3-digit minus 2-digit (always positive since a ≥ 100 > b ≤ 99)
+      b = rng.int(10, 99)
+      a = rng.int(b + 1, b + 200)
+      if (a > 499) a = 499
+      break
+    case 'medium':
+      b = rng.int(100, 399)
+      a = b + rng.int(50, 250)
+      break
+    case 'hard':
+      b = rng.int(100, 699)
+      a = b + rng.int(50, 300)
+      break
+  }
+
+  return {
+    id: makeId('sub-speed-3d'),
+    techniqueId: 'sub-speed-3d',
     topicId: 'subtraction',
     difficulty,
     prompt: `${a} − ${b} = ?`,

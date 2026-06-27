@@ -5,6 +5,11 @@ export const topics: Topic[] = [
     id: 'addition',
     name: 'Addition',
     techniqueIds: [
+      // Speed foundation drills (learn these first)
+      'add-speed-1d2d',
+      'add-speed-2d2d',
+      'add-speed-3d',
+      // Trick-based techniques
       'add-left-to-right',
       'add-complement-100',
       'add-round-adjust',
@@ -16,6 +21,11 @@ export const topics: Topic[] = [
     id: 'subtraction',
     name: 'Subtraction',
     techniqueIds: [
+      // Speed foundation drills
+      'sub-speed-2d1d',
+      'sub-speed-2d2d',
+      'sub-speed-3d',
+      // Trick-based techniques
       'sub-complement-10',
       'sub-borrow-free',
       'sub-round-adjust',
@@ -26,6 +36,10 @@ export const topics: Topic[] = [
     id: 'multiplication',
     name: 'Multiplication',
     techniqueIds: [
+      // Memory foundation drills
+      'mul-times-table',
+      'mul-perfect-squares',
+      // Trick-based techniques
       'mul-by-11',
       'mul-by-9',
       'mul-by-5',
