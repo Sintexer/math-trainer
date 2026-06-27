@@ -10,7 +10,7 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
+import storage from 'redux-persist/es/storage'
 import progressReducer, { SCHEMA_VERSION } from '@/features/progress/progressSlice'
 
 const rootReducer = combineReducers({

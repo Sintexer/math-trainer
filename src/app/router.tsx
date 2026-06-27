@@ -4,13 +4,12 @@ import PrimitivesDemoScreen from '@/features/input/demo/PrimitivesDemoScreen'
 import { DrillScreen } from '@/features/drill'
 import { ChallengeScreen } from '@/features/challenge'
 import { TechniqueCardScreen } from '@/features/technique-card'
+import { ConstellationMapScreen } from '@/features/constellation'
+import { TopicScreen } from '@/features/topic'
 
 // HashRouter is intentional: the app deploys to GitHub Pages, which serves
 // static files and cannot rewrite arbitrary paths to /index.html. Switching
 // to BrowserRouter would break direct links and refreshes on any non-root URL.
-//
-// Routes currently render an inline placeholder — real feature screens land
-// under src/features/<x>/screens/ as the UI phases are implemented.
 function Placeholder({ name }: { name: string }) {
   return (
     <Box p={8}>
@@ -26,8 +25,8 @@ export default function AppRouter() {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" element={<Placeholder name="Constellation Map" />} />
-        <Route path="/topic/:techniqueId" element={<Placeholder name="Topic" />} />
+        <Route path="/" element={<ConstellationMapScreen />} />
+        <Route path="/topic/:techniqueId" element={<TopicScreen />} />
         <Route
           path="/topic/:techniqueId/technique"
           element={<TechniqueCardScreen />}
