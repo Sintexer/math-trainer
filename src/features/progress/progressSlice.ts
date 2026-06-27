@@ -23,10 +23,6 @@ export const MAX_SESSIONS_RETAINED = 20
 /** Window used by mastery-star calculations (last N sessions). */
 export const MASTERY_WINDOW = 5
 
-/** Minimum sessions in the window before the Accuracy star may be earned —
- *  guards against single-session noise. */
-export const MIN_SESSIONS_FOR_ACCURACY_STAR = 5
-
 /** Cap on persisted daily challenge results (most recent N). */
 export const MAX_DAILY_CHALLENGES_RETAINED = 90
 
@@ -34,7 +30,7 @@ const defaultTechniqueProgress = (): TechniqueProgress => ({
   techniqueRead: false,
   challengePassed: false,
   sessions: [],
-  stars: { speed: false, accuracy: false, range: false },
+  stars: { speed: false, range: false },
   totalCorrect: 0,
   totalAttempted: 0,
   bestSpeedPerMin: 0,
@@ -54,7 +50,6 @@ const initialState: UserProgress = {
 function mergeStars(prev: MasteryStars, next: MasteryStars): MasteryStars {
   return {
     speed: prev.speed || next.speed,
-    accuracy: prev.accuracy || next.accuracy,
     range: prev.range || next.range,
   }
 }
@@ -63,7 +58,7 @@ function computeStars(
   progress: TechniqueProgress,
   thresholds: MasteryThresholds,
 ): MasteryStars {
-  // Speed/Accuracy stars use the avg over recent drill sessions only —
+  // Speed star uses the avg over recent drill sessions only —
   // challenge sessions are a separate gate (see challengePassed).
   const recentDrills = progress.sessions
     .filter((s) => s.type === 'drill')
@@ -72,17 +67,10 @@ function computeStars(
     recentDrills.length > 0
       ? recentDrills.reduce((sum, s) => sum + s.speedPerMin, 0) / recentDrills.length
       : 0
-  const avgAccuracy =
-    recentDrills.length > 0
-      ? recentDrills.reduce((sum, s) => sum + s.accuracyPct, 0) / recentDrills.length
-      : 0
 
   return {
     speed:
       recentDrills.length >= MASTERY_WINDOW && avgSpeed >= thresholds.speedPerMin,
-    accuracy:
-      recentDrills.length >= MIN_SESSIONS_FOR_ACCURACY_STAR &&
-      avgAccuracy >= thresholds.accuracyPct,
     range: ALL_DIFFICULTIES.every((d) => progress.difficultiesCovered.includes(d)),
   }
 }

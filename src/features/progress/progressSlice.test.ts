@@ -7,13 +7,12 @@ import progressReducer, {
   initialProgressState,
   isValidUserProgress,
   MASTERY_WINDOW,
-  MIN_SESSIONS_FOR_ACCURACY_STAR,
 } from '@/features/progress/progressSlice'
 import type { MasteryThresholds } from '@/shared/types'
 import type { SessionSummary } from '@/features/session'
 import type { UserProgress } from '@/features/progress/types'
 
-const THRESHOLDS: MasteryThresholds = { speedPerMin: 6, accuracyPct: 90 }
+const THRESHOLDS: MasteryThresholds = { speedPerMin: 6 }
 
 // ── Helpers ──────────────────────────────────────────────────
 //
@@ -286,40 +285,6 @@ describe('progressSlice — mastery stars', () => {
     expect(state.techniqueProgress['mul-by-11'].stars.speed).toBe(false)
   })
 
-  it(`Accuracy star requires at least ${MIN_SESSIONS_FOR_ACCURACY_STAR} drills at threshold`, () => {
-    for (let i = 0; i < MIN_SESSIONS_FOR_ACCURACY_STAR - 1; i++) {
-      state = progressReducer(
-        state,
-        completeSession({
-          summary: makeSummary({ id: `s${i}`, accuracyPct: 95, speedPerMin: 3 }),
-          thresholds: THRESHOLDS,
-        })
-      )
-    }
-    expect(state.techniqueProgress['mul-by-11'].stars.accuracy).toBe(false)
-    state = progressReducer(
-      state,
-      completeSession({
-        summary: makeSummary({ id: 'last', accuracyPct: 95, speedPerMin: 3 }),
-        thresholds: THRESHOLDS,
-      })
-    )
-    expect(state.techniqueProgress['mul-by-11'].stars.accuracy).toBe(true)
-  })
-
-  it('Accuracy star not earned below the threshold', () => {
-    for (let i = 0; i < MIN_SESSIONS_FOR_ACCURACY_STAR; i++) {
-      state = progressReducer(
-        state,
-        completeSession({
-          summary: makeSummary({ id: `s${i}`, accuracyPct: 75, speedPerMin: 3 }),
-          thresholds: THRESHOLDS,
-        })
-      )
-    }
-    expect(state.techniqueProgress['mul-by-11'].stars.accuracy).toBe(false)
-  })
-
   it('Range star requires the user to cover all three difficulties', () => {
     state = progressReducer(
       state,
@@ -347,29 +312,29 @@ describe('progressSlice — mastery stars', () => {
   })
 
   it('Stars are monotonic — once earned, never lost', () => {
-    // Earn accuracy star.
-    for (let i = 0; i < MIN_SESSIONS_FOR_ACCURACY_STAR; i++) {
+    // Earn speed star.
+    for (let i = 0; i < MASTERY_WINDOW; i++) {
       state = progressReducer(
         state,
         completeSession({
-          summary: makeSummary({ id: `s${i}`, accuracyPct: 95, speedPerMin: 3 }),
+          summary: makeSummary({ id: `s${i}`, accuracyPct: 70, speedPerMin: 10 }),
           thresholds: THRESHOLDS,
         })
       )
     }
-    expect(state.techniqueProgress['mul-by-11'].stars.accuracy).toBe(true)
+    expect(state.techniqueProgress['mul-by-11'].stars.speed).toBe(true)
 
-    // Tank accuracy enough that the window average would drop below threshold.
-    for (let i = 0; i < MIN_SESSIONS_FOR_ACCURACY_STAR; i++) {
+    // Tank speed enough that the window average would drop below threshold.
+    for (let i = 0; i < MASTERY_WINDOW; i++) {
       state = progressReducer(
         state,
         completeSession({
-          summary: makeSummary({ id: `b${i}`, accuracyPct: 10, speedPerMin: 3 }),
+          summary: makeSummary({ id: `b${i}`, accuracyPct: 70, speedPerMin: 1 }),
           thresholds: THRESHOLDS,
         })
       )
     }
-    expect(state.techniqueProgress['mul-by-11'].stars.accuracy).toBe(true)
+    expect(state.techniqueProgress['mul-by-11'].stars.speed).toBe(true)
   })
 })
 

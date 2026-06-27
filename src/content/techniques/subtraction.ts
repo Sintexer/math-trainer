@@ -9,7 +9,7 @@ export const subtractionTechniques: Technique[] = [
       "Find the complement: the number you add to reach the next 10. E.g. 83 − 7 → 7's complement to 10 is 3, so borrow 10 and adjust. Eliminates mental borrowing.",
     difficulty: 'easy',
     relatedTechniqueIds: ['add-complement-100', 'sub-borrow-free'],
-    masteryThresholds: { speedPerMin: 6, accuracyPct: 85 },
+    masteryThresholds: { speedPerMin: 6 },
   },
   {
     id: 'sub-borrow-free',
@@ -19,7 +19,7 @@ export const subtractionTechniques: Technique[] = [
       'Adjust both numbers by the same amount to avoid borrowing. E.g. 82 − 47 → 85 − 50 = 35. Add to both to make the subtractor end in 0.',
     difficulty: 'easy',
     relatedTechniqueIds: ['sub-complement-10', 'sub-round-adjust'],
-    masteryThresholds: { speedPerMin: 6, accuracyPct: 85 },
+    masteryThresholds: { speedPerMin: 6 },
   },
   {
     id: 'sub-round-adjust',
@@ -29,7 +29,7 @@ export const subtractionTechniques: Technique[] = [
       'Round the subtractor to the nearest 10, subtract, then add back the difference. E.g. 94 − 38 → 94 − 40 + 2 = 56.',
     difficulty: 'easy',
     relatedTechniqueIds: ['add-round-adjust', 'sub-borrow-free'],
-    masteryThresholds: { speedPerMin: 6, accuracyPct: 85 },
+    masteryThresholds: { speedPerMin: 6 },
   },
   {
     id: 'sub-counting-up',
@@ -39,7 +39,7 @@ export const subtractionTechniques: Technique[] = [
       "Count up from the subtractor to the minuend. E.g. 72 − 45: count up from 45 → 50 (+5) → 72 (+22) = 27. Turns subtraction into addition.",
     difficulty: 'medium',
     relatedTechniqueIds: ['sub-complement-10', 'add-left-to-right'],
-    masteryThresholds: { speedPerMin: 5, accuracyPct: 85 },
+    masteryThresholds: { speedPerMin: 5 },
   },
   {
     id: 'sub-speed-2d1d',
@@ -49,7 +49,7 @@ export const subtractionTechniques: Technique[] = [
       'Build automatic recall for subtracting a single digit from a two-digit number. Essential groundwork before tackling subtraction shortcuts.',
     difficulty: 'easy',
     relatedTechniqueIds: ['sub-speed-2d2d'],
-    masteryThresholds: { speedPerMin: 10, accuracyPct: 90 },
+    masteryThresholds: { speedPerMin: 10 },
   },
   {
     id: 'sub-speed-2d2d',
@@ -59,7 +59,7 @@ export const subtractionTechniques: Technique[] = [
       'Repetition drill for two-digit subtraction with and without borrowing. Trains your working memory to handle all carry-back patterns smoothly.',
     difficulty: 'easy',
     relatedTechniqueIds: ['sub-speed-2d1d', 'sub-speed-3d', 'sub-complement-10'],
-    masteryThresholds: { speedPerMin: 8, accuracyPct: 90 },
+    masteryThresholds: { speedPerMin: 8 },
   },
   {
     id: 'sub-speed-3d',
@@ -69,6 +69,6 @@ export const subtractionTechniques: Technique[] = [
       'Speed drill for three-digit subtraction covering all borrowing patterns. Builds the fluency needed for advanced subtraction techniques.',
     difficulty: 'medium',
     relatedTechniqueIds: ['sub-speed-2d2d', 'add-speed-3d'],
-    masteryThresholds: { speedPerMin: 5, accuracyPct: 88 },
+    masteryThresholds: { speedPerMin: 5 },
   },
 ]

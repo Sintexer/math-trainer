@@ -33,7 +33,7 @@ export function ChallengeEntry({
   onReadTechnique,
   onBack,
 }: ChallengeEntryProps) {
-  const { speedPerMin, accuracyPct } = technique.masteryThresholds
+  const { speedPerMin } = technique.masteryThresholds
 
   return (
     <Box p={{ base: 4, md: 8 }} maxW="640px" mx="auto">
@@ -78,7 +78,6 @@ export function ChallengeEntry({
         </Heading>
         <HStack gap={6} flexWrap="wrap">
           <Threshold label="Speed" value={`≥ ${speedPerMin}/min`} />
-          <Threshold label="Accuracy" value={`≥ ${accuracyPct}%`} />
           <Threshold label="Time" value="60 s" />
         </HStack>
         <Text fontSize="sm" color="text.muted">
@@ -107,7 +106,6 @@ export function ChallengeEntry({
         </Heading>
         <HStack gap={4}>
           <Star label="Speed" filled={stars.speed} />
-          <Star label="Accuracy" filled={stars.accuracy} />
           <Star label="Range" filled={stars.range} />
         </HStack>
       </Stack>

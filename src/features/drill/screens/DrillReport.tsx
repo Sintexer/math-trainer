@@ -57,7 +57,6 @@ export function DrillReport({
         </Heading>
         <HStack gap={4}>
           <StarRow label="Speed" before={starsBefore.speed} after={starsAfter.speed} />
-          <StarRow label="Accuracy" before={starsBefore.accuracy} after={starsAfter.accuracy} />
           <StarRow label="Range" before={starsBefore.range} after={starsAfter.range} />
         </HStack>
       </Stack>

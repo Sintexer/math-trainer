@@ -69,7 +69,7 @@ export const selectGlobalStats = createSelector(
         : 0
 
     const withAnyStar = entries.filter(
-      (p) => p.stars.speed || p.stars.accuracy || p.stars.range
+      (p) => p.stars.speed || p.stars.range
     ).length
 
     const breadthPct =

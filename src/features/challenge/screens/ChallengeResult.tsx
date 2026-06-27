@@ -42,7 +42,6 @@ export function ChallengeResult({
   onReview,
 }: ChallengeResultProps) {
   const speedMet = summary.speedPerMin >= thresholds.speedPerMin
-  const accuracyMet = summary.accuracyPct >= thresholds.accuracyPct
 
   return (
     <Box p={{ base: 4, md: 8 }} maxW="640px" mx="auto">
@@ -81,12 +80,7 @@ export function ChallengeResult({
           target={`≥ ${thresholds.speedPerMin}`}
           met={speedMet}
         />
-        <Stat
-          label="Accuracy"
-          value={`${summary.accuracyPct}%`}
-          target={`≥ ${thresholds.accuracyPct}`}
-          met={accuracyMet}
-        />
+        <Stat label="Accuracy" value={`${summary.accuracyPct}%`} />
         <Stat label="XP" value={`+${xpEarned}`} highlight />
       </SimpleGrid>
 
@@ -101,9 +95,7 @@ export function ChallengeResult({
         >
           <Text color="text.primary">A few more Drills will get you there.</Text>
           <Text fontSize="sm" color="text.muted" mt={1}>
-            {!speedMet && !accuracyMet && 'Build both speed and accuracy.'}
-            {!speedMet && accuracyMet && 'Accuracy is solid — focus on speed.'}
-            {speedMet && !accuracyMet && 'Speed is solid — focus on accuracy.'}
+            Focus on building speed.
           </Text>
         </Box>
       )}

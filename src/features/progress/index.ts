@@ -13,7 +13,6 @@ export {
   SCHEMA_VERSION,
   MASTERY_WINDOW,
   MAX_SESSIONS_RETAINED,
-  MIN_SESSIONS_FOR_ACCURACY_STAR,
   MAX_DAILY_CHALLENGES_RETAINED,
 } from './progressSlice'
 export * from './selectors'

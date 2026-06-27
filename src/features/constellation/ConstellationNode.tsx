@@ -12,7 +12,7 @@ function resolveState(
   hasAnySessions: boolean,
   stars: MasteryStars,
 ): NodeState {
-  if (stars.speed && stars.accuracy && stars.range) return 'mastered'
+  if (stars.speed && stars.range) return 'mastered'
   if (techniqueRead || hasAnySessions) return 'active'
   return 'unvisited'
 }
@@ -104,10 +104,9 @@ export function ConstellationNode({
         {name}
       </Text>
 
-      {/* Three mastery dot indicators */}
+      {/* Two mastery dot indicators — Speed and Range */}
       <HStack gap="3px">
         <MasteryDot filled={stars.speed} tokenColor="star.speed" label="Speed" />
-        <MasteryDot filled={stars.accuracy} tokenColor="star.accuracy" label="Accuracy" />
         <MasteryDot filled={stars.range} tokenColor="star.range" label="Range" />
       </HStack>
     </Box>

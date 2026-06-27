@@ -77,8 +77,6 @@ describe('Content Registry — integrity', () => {
   it('every technique has sensible mastery thresholds', () => {
     for (const t of getAllTechniques()) {
       expect(t.masteryThresholds.speedPerMin, `${t.id} speedPerMin must be > 0`).toBeGreaterThan(0)
-      expect(t.masteryThresholds.accuracyPct, `${t.id} accuracyPct must be 0–100`).toBeGreaterThan(0)
-      expect(t.masteryThresholds.accuracyPct, `${t.id} accuracyPct must be ≤ 100`).toBeLessThanOrEqual(100)
     }
   })
 
@@ -223,7 +221,6 @@ describe('Content Registry — integrity', () => {
   it('getMasteryThresholds returns thresholds for known technique', () => {
     const thresholds = getMasteryThresholds('mul-by-11')
     expect(thresholds.speedPerMin).toBeGreaterThan(0)
-    expect(thresholds.accuracyPct).toBeGreaterThan(0)
   })
 
   // ── Pact sequence ────────────────────────────────────────────

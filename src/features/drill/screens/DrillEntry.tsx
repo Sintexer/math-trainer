@@ -60,7 +60,6 @@ export function DrillEntry({
         </Heading>
         <HStack gap={4}>
           <Star label="Speed" filled={stars.speed} />
-          <Star label="Accuracy" filled={stars.accuracy} />
           <Star label="Range" filled={stars.range} />
         </HStack>
         {lastSession && (

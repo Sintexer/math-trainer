@@ -47,7 +47,7 @@ describe('serializeProgress', () => {
           techniqueRead: true,
           challengePassed: false,
           sessions: [],
-          stars: { speed: false, accuracy: true, range: false },
+          stars: { speed: false, range: false },
           totalCorrect: 30,
           totalAttempted: 35,
           bestSpeedPerMin: 7.5,
@@ -56,7 +56,7 @@ describe('serializeProgress', () => {
       },
     })
     const roundTripped = JSON.parse(serializeProgress(progress))
-    expect(roundTripped.techniqueProgress['mul-by-11'].stars.accuracy).toBe(true)
+    expect(roundTripped.techniqueProgress['mul-by-11'].stars.speed).toBe(false)
     expect(roundTripped.techniqueProgress['mul-by-11'].bestSpeedPerMin).toBe(7.5)
   })
 

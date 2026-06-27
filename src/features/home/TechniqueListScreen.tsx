@@ -110,10 +110,9 @@ function TechniqueRow({ technique, stars, isLast, onClick }: TechniqueRowProps) 
         </Badge>
       </Box>
 
-      {/* Right: 3 mastery star dots */}
+      {/* Right: 2 mastery star dots */}
       <HStack gap={1} flexShrink={0} aria-label="Mastery stars">
         <StarDot filled={stars.speed} color="star.speed" label="Speed" />
-        <StarDot filled={stars.accuracy} color="star.accuracy" label="Accuracy" />
         <StarDot filled={stars.range} color="star.range" label="Range" />
       </HStack>
     </HStack>

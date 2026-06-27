@@ -59,8 +59,7 @@ export function buildSummary(state: SessionState): SessionSummary {
   if (config.type === 'challenge') {
     try {
       const thresholds = getTechnique(config.techniqueId).masteryThresholds
-      passed =
-        speedPerMin >= thresholds.speedPerMin && accuracyPct >= thresholds.accuracyPct
+      passed = speedPerMin >= thresholds.speedPerMin
     } catch {
       // Unknown technique — treat as not passed.
     }

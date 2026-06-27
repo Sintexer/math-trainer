@@ -49,9 +49,8 @@ describe('ChallengeScreen', () => {
     renderAt(`/topic/${TECH}/challenge`)
     expect(screen.getByRole('heading', { name: /Multiply by 11/i })).toBeInTheDocument()
     expect(screen.getByText(/To pass/i)).toBeInTheDocument()
-    // mul-by-11 thresholds: 7/min, 85%.
+    // mul-by-11 threshold: 7/min (no accuracy threshold any more)
     expect(screen.getByText(/≥ 7\/min/)).toBeInTheDocument()
-    expect(screen.getByText(/≥ 85%/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Start Challenge/i })).toBeInTheDocument()
   })
 
@@ -79,7 +78,7 @@ describe('ChallengeScreen', () => {
             difficultiesAttempted: ['easy'],
             passed: false,
           },
-          thresholds: { speedPerMin: 7, accuracyPct: 85 },
+          thresholds: { speedPerMin: 7 },
         },
       })
     })

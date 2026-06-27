@@ -48,7 +48,7 @@ function makeTechniqueProgress(
     techniqueRead: false,
     challengePassed: false,
     sessions: s,
-    stars: { speed: false, accuracy: false, range: false },
+    stars: { speed: false, range: false },
     totalCorrect: s.reduce((n, sess) => n + sess.correct, 0),
     totalAttempted: s.reduce((n, sess) => n + sess.attempted, 0),
     bestSpeedPerMin: bestSpeed,
@@ -102,11 +102,11 @@ describe('selectGlobalStats', () => {
       techniqueProgress: {
         'mul-by-11': {
           ...makeTechniqueProgress([{ accuracyPct: 95 }]),
-          stars: { speed: true, accuracy: false, range: false },
+          stars: { speed: true, range: false },
         },
         'mul-by-9': {
           ...makeTechniqueProgress([{ accuracyPct: 50 }]),
-          stars: { speed: false, accuracy: false, range: false },
+          stars: { speed: false, range: false },
         },
       },
     })

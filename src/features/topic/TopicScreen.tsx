@@ -55,10 +55,6 @@ export default function TopicScreen() {
     recentDrills.length > 0
       ? recentDrills.reduce((sum, s) => sum + s.speedPerMin, 0) / recentDrills.length
       : 0
-  const avgAccuracy =
-    recentDrills.length > 0
-      ? recentDrills.reduce((sum, s) => sum + s.accuracyPct, 0) / recentDrills.length
-      : 0
   const difficultiesCovered = progress?.difficultiesCovered ?? []
   const hasDrillHistory = recentDrills.length > 0
   const lastDrillSession =
@@ -126,13 +122,6 @@ export default function TopicScreen() {
             target={`need ${thresholds.speedPerMin}/min`}
           />
           <MasteryItem
-            label="Accuracy"
-            filled={stars.accuracy}
-            tokenColor="star.accuracy"
-            current={avgAccuracy > 0 ? `${avgAccuracy.toFixed(0)}%` : '—'}
-            target={`need ${thresholds.accuracyPct}%`}
-          />
-          <MasteryItem
             label="Range"
             filled={stars.range}
             tokenColor="star.range"
@@ -186,7 +175,7 @@ export default function TopicScreen() {
                   : 'Warm up with drills first'
           }
           statusHighlight={challengePassed}
-          description={`Pass ≥${thresholds.speedPerMin}/min and ≥${thresholds.accuracyPct}% accuracy to clear this technique.`}
+          description={`Pass ≥${thresholds.speedPerMin}/min to clear this technique.`}
           ctaLabel={challengePassed ? 'Try Again' : 'Start Challenge'}
           locked={!techniqueRead}
           accent={challengePassed}
@@ -283,7 +272,6 @@ function TierCard({
       {stars && (
         <HStack gap={3}>
           <StarIndicator label="Speed" filled={stars.speed} tokenColor="star.speed" />
-          <StarIndicator label="Accuracy" filled={stars.accuracy} tokenColor="star.accuracy" />
           <StarIndicator label="Range" filled={stars.range} tokenColor="star.range" />
         </HStack>
       )}

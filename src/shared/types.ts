@@ -22,7 +22,6 @@ export interface Problem {
 
 export interface MasteryThresholds {
   speedPerMin: number
-  accuracyPct: number
 }
 
 export interface Technique {
@@ -59,7 +58,6 @@ export interface ConstellationGraph {
 
 export interface MasteryStars {
   speed: boolean
-  accuracy: boolean
   range: boolean
 }
 
@@ -67,6 +65,5 @@ export interface MasteryStars {
  *  progress yet — preserves referential equality across renders. */
 export const DEFAULT_MASTERY_STARS: MasteryStars = Object.freeze({
   speed: false,
-  accuracy: false,
   range: false,
 })
