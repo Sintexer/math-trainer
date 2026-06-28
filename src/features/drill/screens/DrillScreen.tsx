@@ -10,7 +10,6 @@ import {
 } from '@/features/progress'
 import type { SessionSummary } from '@/features/session'
 import { useDrillSession } from '../useDrillSession'
-import { DrillEntry } from './DrillEntry'
 import { DrillInSession } from './DrillInSession'
 import { DrillReport } from './DrillReport'
 
@@ -48,6 +47,13 @@ export default function DrillScreen() {
   const { state, currentProblem, start, submitAnswer, advance, reset } =
     useDrillSession({ techniqueId })
 
+  // Auto-start the drill the moment the technique is known and we're idle.
+  // This skips the DrillEntry screen so the user goes straight into practice.
+  useEffect(() => {
+    if (technique && state.status === 'idle') start()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [technique])
+
   useEffect(() => {
     if (state.status !== 'complete' || !state.summary || !technique) return
     if (persistedSummaryIdRef.current === state.summary.id) return
@@ -74,25 +80,8 @@ export default function DrillScreen() {
     )
   }
 
-  // ── Entry ──────────────────────────────────────────────────────────
-  if (state.status === 'idle') {
-    const lastSession =
-      [...(techniqueProgress?.sessions ?? [])]
-        .reverse()
-        .find((s) => s.type === 'drill') ?? null
-    return (
-      <DrillEntry
-        technique={technique}
-        stars={liveStars}
-        lastSession={lastSession}
-        onStart={() => {
-          setStarsBefore(liveStars)
-          start()
-        }}
-        onBack={() => navigate(-1)}
-      />
-    )
-  }
+  // ── Idle (auto-starting) ────────────────────────────────────────────
+  if (state.status === 'idle') return null
 
   // ── Report ─────────────────────────────────────────────────────────
   if (state.status === 'complete' && state.summary) {
@@ -113,6 +102,7 @@ export default function DrillScreen() {
           setStarsBefore(liveStars)
           persistedSummaryIdRef.current = null
           reset()
+          start()
         }}
       />
     )
@@ -133,10 +123,7 @@ export default function DrillScreen() {
       lastCorrectAnswer={lastAnswer?.problem.answer ?? null}
       onSubmit={submitAnswer}
       onAdvance={advance}
-      onExit={() => {
-        persistedSummaryIdRef.current = null
-        reset()
-      }}
+      onExit={() => navigate(-1)}
     />
   )
 }

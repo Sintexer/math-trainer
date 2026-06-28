@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
   Badge,
-  Box,
   Button,
   Flex,
   HStack,
@@ -60,35 +59,34 @@ export default function TechniqueCardScreen() {
 
   return (
     <Flex direction="column" minH="100dvh" p={{ base: 4, md: 8 }}>
-      <Box maxW="720px" mx="auto" w="full">
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => {
-            const topicId = getLearningTopicForTechnique(technique.id)?.id
-            navigate(topicId ? `/topic/${topicId}` : '/')
-          }}
-          mb={4}
-          aria-label="Back to topic"
-        >
-          ← Back
-        </Button>
+      <Button
+        size="sm"
+        variant="ghost"
+        alignSelf="flex-start"
+        onClick={() => {
+          const topicId = getLearningTopicForTechnique(technique.id)?.id
+          navigate(topicId ? `/topic/${topicId}` : '/')
+        }}
+        mb={4}
+        aria-label="Back to topic"
+      >
+        ← Back
+      </Button>
 
-        <Stack gap={2} mb={6}>
-          <Heading size="xl">{technique.name}</Heading>
-          <HStack gap={2}>
-            <Badge>{technique.topicId}</Badge>
-            <Badge colorPalette="purple">{technique.difficulty}</Badge>
-            {alreadyRead && <Badge colorPalette="green">Read</Badge>}
-          </HStack>
-        </Stack>
+      <Stack gap={2} mb={6}>
+        <Heading size="xl">{technique.name}</Heading>
+        <HStack gap={2}>
+          <Badge>{technique.topicId}</Badge>
+          <Badge colorPalette="purple">{technique.difficulty}</Badge>
+          {alreadyRead && <Badge colorPalette="green">Read</Badge>}
+        </HStack>
+      </Stack>
 
-        <TechniqueSlideViewer
-          slides={content.slides}
-          completeLabel={alreadyRead ? 'Done' : 'Got it'}
-          onComplete={onComplete}
-        />
-      </Box>
+      <TechniqueSlideViewer
+        slides={content.slides}
+        completeLabel={alreadyRead ? 'Done' : 'Got it'}
+        onComplete={onComplete}
+      />
     </Flex>
   )
 }

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Box, Flex, HStack, Heading, Stack, Text } from '@chakra-ui/react'
+import { Flex, Heading, SimpleGrid, Stack, Text } from '@chakra-ui/react'
 import { getAllLearningTopics } from '@/content'
 import { useAppSelector } from '@/app/hooks'
 import { selectAllTechniqueProgress } from '@/features/progress'
@@ -26,31 +26,29 @@ export default function HomeScreen() {
   return (
     // pb="24" leaves room above the fixed constellation FAB
     <Flex direction="column" minH="100dvh" p={{ base: 4, md: 8 }} pb={24}>
-      <Box maxW="640px" mx="auto" w="full">
-        <Heading size="xl" mb={1}>
-          Math Trainer
-        </Heading>
-        <Text color="text.muted" mb={8}>
-          {totalChallenges} challenges across {topics.length} topics
-        </Text>
+      <Heading size="xl" mb={1}>
+        Math Trainer
+      </Heading>
+      <Text color="text.muted" mb={8}>
+        {totalChallenges} challenges across {topics.length} topics
+      </Text>
 
-        <Stack gap={3}>
-          {topics.map((topic) => {
-            const passed = topic.techniqueIds.filter(
-              (id) => allProgress[id]?.challengePassed ?? false,
-            ).length
-            return (
-              <TopicCard
-                key={topic.id}
-                topic={topic}
-                passed={passed}
-                total={topic.techniqueIds.length}
-                onClick={() => navigate(`/topic/${topic.id}`)}
-              />
-            )
-          })}
-        </Stack>
-      </Box>
+      <SimpleGrid minChildWidth="180px" gap={4}>
+        {topics.map((topic) => {
+          const passed = topic.techniqueIds.filter(
+            (id) => allProgress[id]?.challengePassed ?? false,
+          ).length
+          return (
+            <TopicCard
+              key={topic.id}
+              topic={topic}
+              passed={passed}
+              total={topic.techniqueIds.length}
+              onClick={() => navigate(`/topic/${topic.id}`)}
+            />
+          )
+        })}
+      </SimpleGrid>
     </Flex>
   )
 }
@@ -68,11 +66,11 @@ function TopicCard({ topic, passed, total, onClick }: TopicCardProps) {
   const allDone = passed === total && total > 0
 
   return (
-    <HStack
-      gap={4}
-      px={5}
-      py={4}
-      borderRadius="lg"
+    <Stack
+      gap={2}
+      p={5}
+      minH="130px"
+      borderRadius="xl"
       borderWidth="2px"
       borderColor={allDone ? 'green.300' : 'border.subtle'}
       bg={allDone ? 'green.50' : 'bg.card'}
@@ -82,29 +80,19 @@ function TopicCard({ topic, passed, total, onClick }: TopicCardProps) {
       role="button"
       aria-label={`Open ${topic.name}`}
     >
-      {/* Left: name + description */}
-      <Stack gap={0.5} flex={1} minW={0}>
-        <Text fontWeight="semibold" lineClamp={1}>
-          {topic.name}
-        </Text>
-        <Text fontSize="sm" color="text.muted" lineClamp={1}>
-          {topic.description}
-        </Text>
-      </Stack>
-
-      {/* Right: progress badge */}
-      <Box flexShrink={0} textAlign="right">
-        <Text
-          fontSize="sm"
-          fontWeight="semibold"
-          color={allDone ? 'green.600' : passed > 0 ? 'brand.500' : 'text.muted'}
-        >
-          {passed}/{total}
-        </Text>
-        <Text fontSize="xs" color="text.muted">
-          passed
-        </Text>
-      </Box>
-    </HStack>
+      <Text fontWeight="bold" fontSize="lg">
+        {topic.name}
+      </Text>
+      <Text fontSize="sm" color="text.muted" flex={1}>
+        {topic.description}
+      </Text>
+      <Text
+        fontSize="sm"
+        fontWeight="semibold"
+        color={allDone ? 'green.600' : passed > 0 ? 'brand.500' : 'text.muted'}
+      >
+        {passed}/{total} passed
+      </Text>
+    </Stack>
   )
 }

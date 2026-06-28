@@ -45,7 +45,6 @@ export function ChallengeResult({
 
   return (
     <Flex direction="column" minH="100dvh" p={{ base: 4, md: 8 }}>
-      <Box maxW="640px" mx="auto" w="full">
         <Stack
           gap={2}
           mb={6}
@@ -152,7 +151,6 @@ export function ChallengeResult({
             Try Again
           </Button>
         </Stack>
-      </Box>
     </Flex>
   )
 }

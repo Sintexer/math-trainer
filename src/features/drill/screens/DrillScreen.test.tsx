@@ -40,11 +40,11 @@ async function answerWrongAndContinue(user: ReturnType<typeof userEvent.setup>) 
 }
 
 describe('DrillScreen', () => {
-  it('renders the entry screen first with technique name + Start CTA', () => {
+  it('auto-starts and shows the first problem immediately', async () => {
     renderAt(`/challenge/${TECH}/drill`)
-    expect(screen.getByRole('heading', { name: /Multiply by 11/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Start Drill/i })).toBeInTheDocument()
-    expect(screen.getByText(/No drill attempts yet/i)).toBeInTheDocument()
+    await waitFor(() =>
+      expect(screen.getByTestId('drill-prompt')).toBeInTheDocument(),
+    )
   })
 
   it('shows an error screen for an unknown technique', () => {
@@ -52,18 +52,12 @@ describe('DrillScreen', () => {
     expect(screen.getByText(/Unknown technique/i)).toBeInTheDocument()
   })
 
-  it('Start CTA transitions to the in-session screen showing the first problem', async () => {
-    const user = userEvent.setup()
-    renderAt(`/challenge/${TECH}/drill`)
-    await user.click(screen.getByRole('button', { name: /Start Drill/i }))
-    expect(screen.getByTestId('drill-prompt')).toBeInTheDocument()
-  })
-
   it('end-to-end: completes a drill, persists summary, shows report with stats', async () => {
     const user = userEvent.setup()
     const { store } = renderAt(`/challenge/${TECH}/drill`)
 
-    await user.click(screen.getByRole('button', { name: /Start Drill/i }))
+    // Wait for auto-start
+    await waitFor(() => expect(screen.getByTestId('drill-prompt')).toBeInTheDocument())
 
     // Walk through all 15 problems answering wrong each time.
     for (let i = 0; i < 15; i++) {
@@ -88,7 +82,7 @@ describe('DrillScreen', () => {
   it('persists XP earned (first-session bonus = 100, +0 from 0% correctness)', async () => {
     const user = userEvent.setup()
     const { store } = renderAt(`/challenge/${TECH}/drill`)
-    await user.click(screen.getByRole('button', { name: /Start Drill/i }))
+    await waitFor(() => expect(screen.getByTestId('drill-prompt')).toBeInTheDocument())
     for (let i = 0; i < 15; i++) await answerWrongAndContinue(user)
     await screen.findByRole('heading', { name: /Drill complete/i })
     // computeXp: base 0 + first-session bonus 100 = 100.
@@ -98,18 +92,20 @@ describe('DrillScreen', () => {
   it('Back-to-Map navigates to "/"', async () => {
     const user = userEvent.setup()
     renderAt(`/challenge/${TECH}/drill`)
-    await user.click(screen.getByRole('button', { name: /Start Drill/i }))
+    await waitFor(() => expect(screen.getByTestId('drill-prompt')).toBeInTheDocument())
     for (let i = 0; i < 15; i++) await answerWrongAndContinue(user)
     await user.click(await screen.findByRole('button', { name: /Back to Map/i }))
     expect(screen.getByTestId('map')).toBeInTheDocument()
   })
 
-  it('Try Again resets back to the entry screen', async () => {
+  it('Try Again restarts a new session immediately', async () => {
     const user = userEvent.setup()
     renderAt(`/challenge/${TECH}/drill`)
-    await user.click(screen.getByRole('button', { name: /Start Drill/i }))
+    await waitFor(() => expect(screen.getByTestId('drill-prompt')).toBeInTheDocument())
     for (let i = 0; i < 15; i++) await answerWrongAndContinue(user)
     await user.click(await screen.findByRole('button', { name: /Try Again/i }))
-    expect(screen.getByRole('button', { name: /Start Drill/i })).toBeInTheDocument()
+    await waitFor(() =>
+      expect(screen.getByTestId('drill-prompt')).toBeInTheDocument(),
+    )
   })
 })

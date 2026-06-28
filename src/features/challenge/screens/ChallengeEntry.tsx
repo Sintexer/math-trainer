@@ -26,92 +26,91 @@ export function ChallengeEntry({
 
   return (
     <Flex direction="column" minH="100dvh" p={{ base: 4, md: 8 }}>
-      <Box maxW="640px" mx="auto" w="full">
-        <Button
+      <Button
+        size="sm"
+        variant="ghost"
+        alignSelf="flex-start"
+        onClick={onBack}
+        mb={4}
+        aria-label="Back to topic"
+      >
+        ← Back
+      </Button>
+
+      <Heading size="xl" mb={1}>
+        {technique.name}
+      </Heading>
+      <HStack mb={4} gap={2}>
+        <Badge>{technique.topicId}</Badge>
+        <Badge colorPalette="purple">{technique.difficulty}</Badge>
+        <Badge colorPalette="orange">Challenge</Badge>
+      </HStack>
+      <Text color="text.muted" mb={6}>
+        {technique.description}
+      </Text>
+
+      <Stack
+        gap={3}
+        p={5}
+        borderRadius="lg"
+        borderWidth="2px"
+        borderColor="border.subtle"
+        bg="bg.card"
+        mb={4}
+      >
+        <Heading
           size="sm"
-          variant="ghost"
-          onClick={onBack}
-          mb={4}
-          aria-label="Back to topic"
+          color="text.muted"
+          textTransform="uppercase"
+          letterSpacing="wider"
         >
-          ← Back
-        </Button>
-
-        <Heading size="xl" mb={1}>
-          {technique.name}
+          To pass
         </Heading>
-        <HStack mb={4} gap={2}>
-          <Badge>{technique.topicId}</Badge>
-          <Badge colorPalette="purple">{technique.difficulty}</Badge>
-          <Badge colorPalette="orange">Challenge</Badge>
+        <HStack gap={6} flexWrap="wrap">
+          <Threshold label="Speed" value={`≥ ${speedPerMin}/min`} />
+          <Threshold label="Time" value="60 s" />
         </HStack>
-        <Text color="text.muted" mb={6}>
-          {technique.description}
+        <Text fontSize="sm" color="text.muted">
+          {challengePassed
+            ? 'You have already passed this challenge. Try again to beat your time.'
+            : 'Pass to mark this technique as challenge-cleared.'}
         </Text>
+      </Stack>
 
-        <Stack
-          gap={3}
-          p={5}
-          borderRadius="lg"
-          borderWidth="2px"
-          borderColor="border.subtle"
-          bg="bg.card"
-          mb={4}
+      <Stack
+        gap={2}
+        p={5}
+        borderRadius="lg"
+        borderWidth="2px"
+        borderColor="border.subtle"
+        bg="bg.card"
+        mb={6}
+      >
+        <Heading
+          size="sm"
+          color="text.muted"
+          textTransform="uppercase"
+          letterSpacing="wider"
         >
-          <Heading
-            size="sm"
-            color="text.muted"
-            textTransform="uppercase"
-            letterSpacing="wider"
-          >
-            To pass
-          </Heading>
-          <HStack gap={6} flexWrap="wrap">
-            <Threshold label="Speed" value={`≥ ${speedPerMin}/min`} />
-            <Threshold label="Time" value="60 s" />
-          </HStack>
-          <Text fontSize="sm" color="text.muted">
-            {challengePassed
-              ? 'You have already passed this challenge. Try again to beat your time.'
-              : 'Pass to mark this technique as challenge-cleared.'}
-          </Text>
-        </Stack>
+          Mastery
+        </Heading>
+        <HStack gap={4}>
+          <Star label="Speed" filled={stars.speed} />
+          <Star label="Range" filled={stars.range} />
+        </HStack>
+      </Stack>
 
-        <Stack
-          gap={2}
-          p={5}
-          borderRadius="lg"
-          borderWidth="2px"
-          borderColor="border.subtle"
-          bg="bg.card"
-          mb={6}
-        >
-          <Heading
-            size="sm"
-            color="text.muted"
-            textTransform="uppercase"
-            letterSpacing="wider"
-          >
-            Mastery
-          </Heading>
-          <HStack gap={4}>
-            <Star label="Speed" filled={stars.speed} />
-            <Star label="Range" filled={stars.range} />
-          </HStack>
-        </Stack>
-
-        <Button
-          size="lg"
-          w="full"
-          onClick={onStart}
-          bg="brand.500"
-          color="white"
-          _hover={{ bg: 'brand.600' }}
-          aria-label="Start Challenge"
-        >
-          Start Challenge
-        </Button>
-      </Box>
+      <Button
+        size="lg"
+        w="full"
+        onClick={onStart}
+        bg="brand.500"
+        color="white"
+        _hover={{ bg: 'brand.600' }}
+        aria-label="Start Challenge"
+      >
+        Start Challenge
+      </Button>
     </Flex>
   )
 }

@@ -7,6 +7,7 @@ import {
   Flex,
   HStack,
   Heading,
+  SimpleGrid,
   Stack,
   Text,
 } from '@chakra-ui/react'
@@ -62,17 +63,17 @@ export default function TopicHubScreen() {
 
   return (
     <Flex direction="column" minH="100dvh" p={{ base: 4, md: 8 }}>
+      <Button
+        size="sm"
+        variant="ghost"
+        alignSelf="flex-start"
+        mb={4}
+        onClick={() => navigate('/')}
+        aria-label="Back to home"
+      >
+        ← Back
+      </Button>
       <Box maxW="800px" mx="auto" w="full">
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => navigate('/')}
-          mb={4}
-          aria-label="Back to home"
-        >
-          ← Back
-        </Button>
-
         <Heading size="xl" mb={1}>
           {topic.name}
         </Heading>
@@ -80,7 +81,7 @@ export default function TopicHubScreen() {
           {topic.description}
         </Text>
 
-        <Stack gap={3}>
+        <SimpleGrid minChildWidth="220px" gap={4}>
           {techniques.map((technique) => {
             const progress = allProgress[technique.id]
             const challengePassed = progress?.challengePassed ?? false
@@ -100,7 +101,7 @@ export default function TopicHubScreen() {
               />
             )
           })}
-        </Stack>
+        </SimpleGrid>
       </Box>
     </Flex>
   )
@@ -131,73 +132,56 @@ function ChallengeCard({
   return (
     <Stack
       gap={3}
-      p={5}
+      p={4}
       borderRadius="lg"
       borderWidth="2px"
       borderColor={challengePassed ? 'green.300' : 'border.subtle'}
       bg={challengePassed ? 'green.50' : 'bg.card'}
     >
-      {/* Header row */}
-      <HStack justify="space-between" align="flex-start" flexWrap="wrap" gap={2}>
-        <Stack gap={1} flex={1} minW={0}>
-          <Text fontWeight="semibold" lineClamp={1}>
-            {technique.name}
-          </Text>
-          <HStack gap={2} flexWrap="wrap">
-            <Badge colorPalette={DIFFICULTY_PALETTE[technique.difficulty]} size="sm">
-              {technique.difficulty}
+      {/* Name + badges */}
+      <Stack gap={1}>
+        <Text fontWeight="semibold" lineClamp={2} fontSize="sm">
+          {technique.name}
+        </Text>
+        <HStack gap={2} flexWrap="wrap">
+          <Badge colorPalette={DIFFICULTY_PALETTE[technique.difficulty]} size="sm">
+            {technique.difficulty}
+          </Badge>
+          {challengePassed && (
+            <Badge colorPalette="green" size="sm">
+              Passed ✓
             </Badge>
-            {challengePassed && (
-              <Badge colorPalette="green" size="sm">
-                Passed ✓
-              </Badge>
-            )}
-          </HStack>
-        </Stack>
-        {lastDrill && (
-          <Text fontSize="xs" color="text.muted" flexShrink={0} pt={0.5}>
-            Last: {lastDrill.speedPerMin}/min · {lastDrill.accuracyPct}%
-          </Text>
-        )}
-      </HStack>
+          )}
+        </HStack>
+      </Stack>
 
-      {/* Action buttons
-          Layout: [Read Theory] [Practice] occupy the left, [Challenge →] on the right.
-          On narrow screens all three wrap naturally in the HStack. */}
-      <HStack gap={2} flexWrap="wrap">
+      {lastDrill && (
+        <Text fontSize="xs" color="text.muted">
+          Last: {lastDrill.speedPerMin}/min · {lastDrill.accuracyPct}%
+        </Text>
+      )}
+
+      {/* Action buttons stacked vertically to fit narrow cells */}
+      <Stack gap={2} mt="auto">
         {showTheory && (
-          <Button
-            size="sm"
-            variant="outline"
-            minH="40px"
-            onClick={onReadTheory}
-            flexShrink={0}
-          >
+          <Button size="sm" variant="outline" w="full" onClick={onReadTheory}>
             Read Theory
           </Button>
         )}
-        <Button
-          size="sm"
-          variant="outline"
-          minH="40px"
-          onClick={onPractice}
-          flexShrink={0}
-        >
+        <Button size="sm" variant="outline" w="full" onClick={onPractice}>
           Practice
         </Button>
         <Button
           size="sm"
-          minH="40px"
-          ml="auto"
+          w="full"
           onClick={onChallenge}
           bg="brand.500"
           color="white"
           _hover={{ bg: 'brand.600' }}
-          flexShrink={0}
         >
-          {challengePassed ? 'Retry Challenge' : 'Start Challenge →'}
+          {challengePassed ? 'Retry' : 'Challenge →'}
         </Button>
-      </HStack>
+      </Stack>
     </Stack>
   )
 }

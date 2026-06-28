@@ -29,7 +29,6 @@ export function DrillReport({
 }: DrillReportProps) {
   return (
     <Flex direction="column" minH="100dvh" p={{ base: 4, md: 8 }}>
-      <Box maxW="640px" mx="auto" w="full">
         <Heading size="xl" mb={1}>
           Drill complete
         </Heading>
@@ -108,7 +107,6 @@ export function DrillReport({
             Try Again
           </Button>
         </Stack>
-      </Box>
     </Flex>
   )
 }
