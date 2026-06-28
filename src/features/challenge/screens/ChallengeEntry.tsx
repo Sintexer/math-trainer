@@ -1,4 +1,5 @@
 import { Badge, Box, Button, Flex, HStack, Heading, Stack, Text } from '@chakra-ui/react'
+import { DifficultyBadge } from '@/features/input'
 import type { MasteryStars, Technique } from '@/shared/types'
 
 export interface ChallengeEntryProps {
@@ -41,8 +42,8 @@ export function ChallengeEntry({
         {technique.name}
       </Heading>
       <HStack mb={4} gap={2}>
+        <DifficultyBadge difficulty={technique.difficulty} />
         <Badge>{technique.topicId}</Badge>
-        <Badge colorPalette="purple">{technique.difficulty}</Badge>
         <Badge colorPalette="orange">Challenge</Badge>
       </HStack>
       <Text color="text.muted" mb={6}>

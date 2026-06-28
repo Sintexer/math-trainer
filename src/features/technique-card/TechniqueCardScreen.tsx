@@ -12,6 +12,7 @@ import {
 import { findTechnique, getTechniqueContent, getLearningTopicForTechnique } from '@/content'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import { markTechniqueRead, selectTechniqueRead } from '@/features/progress'
+import { DifficultyBadge } from '@/features/input'
 import { TechniqueSlideViewer } from './TechniqueSlideViewer'
 
 /**
@@ -76,8 +77,8 @@ export default function TechniqueCardScreen() {
       <Stack gap={2} mb={6}>
         <Heading size="xl">{technique.name}</Heading>
         <HStack gap={2}>
+          <DifficultyBadge difficulty={technique.difficulty} />
           <Badge>{technique.topicId}</Badge>
-          <Badge colorPalette="purple">{technique.difficulty}</Badge>
           {alreadyRead && <Badge colorPalette="green">Read</Badge>}
         </HStack>
       </Stack>

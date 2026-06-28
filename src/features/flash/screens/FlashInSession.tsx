@@ -3,8 +3,6 @@ import type { Problem } from '@/shared/types'
 import type { FlashStatus } from '../flashSessionReducer'
 import { FlashProblemPicker } from './FlashProblemPicker'
 
-const HISTORY_DEPTH = 2
-
 export interface FlashInSessionProps {
   problems: Problem[]
   currentIndex: number

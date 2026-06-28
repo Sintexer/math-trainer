@@ -1,4 +1,5 @@
 import { Badge, Box, Button, Flex, HStack, Heading, Stack, Text } from '@chakra-ui/react'
+import { DifficultyBadge } from '@/features/input'
 import type { MasteryStars, Technique } from '@/shared/types'
 import type { SessionSummary } from '@/features/session'
 
@@ -35,8 +36,8 @@ export function DrillEntry({
           {technique.name}
         </Heading>
         <HStack mb={4} gap={2}>
+          <DifficultyBadge difficulty={technique.difficulty} />
           <Badge>{technique.topicId}</Badge>
-          <Badge colorPalette="purple">{technique.difficulty}</Badge>
         </HStack>
         <Text color="text.muted" mb={6}>
           {technique.description}

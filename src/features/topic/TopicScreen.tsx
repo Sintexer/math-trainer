@@ -14,16 +14,10 @@ import {
 import { findLearningTopic, findTechnique } from '@/content'
 import { useAppSelector } from '@/app/hooks'
 import { selectAllTechniqueProgress } from '@/features/progress'
+import { DifficultyBadge } from '@/features/input'
 import type { SessionSummary } from '@/features/session'
 import type { Technique } from '@/shared/types'
 
-const DIFFICULTY_PALETTE: Record<string, string> = {
-  easy: 'green',
-  medium: 'orange',
-  hard: 'red',
-}
-
-/** Technique IDs that support Flash (mental speed) training. */
 const FLASH_TECHNIQUE_IDS = new Set([
   'add-speed-1d2d',
   'add-speed-2d2d',
@@ -159,15 +153,13 @@ function ChallengeCard({
       borderColor={challengePassed ? 'green.300' : 'border.subtle'}
       bg={challengePassed ? 'green.50' : 'bg.card'}
     >
-      {/* Name + badges */}
+      {/* Name + badges — difficulty first */}
       <Stack gap={1}>
         <Text fontWeight="semibold" lineClamp={2} fontSize="sm">
           {technique.name}
         </Text>
         <HStack gap={2} flexWrap="wrap">
-          <Badge colorPalette={DIFFICULTY_PALETTE[technique.difficulty]} size="sm">
-            {technique.difficulty}
-          </Badge>
+          <DifficultyBadge difficulty={technique.difficulty} />
           {challengePassed && (
             <Badge colorPalette="green" size="sm">
               Passed ✓

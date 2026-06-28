@@ -29,3 +29,6 @@ export type { SessionProgressProps } from './SessionProgress'
 
 export { InSessionScreen } from './InSessionScreen'
 export type { InSessionScreenProps } from './InSessionScreen'
+
+export { DifficultyBadge } from './DifficultyBadge'
+export type { DifficultyBadgeProps } from './DifficultyBadge'
