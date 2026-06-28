@@ -36,13 +36,20 @@ export const topics: Topic[] = [
     id: 'multiplication',
     name: 'Multiplication',
     techniqueIds: [
-      // Memory foundation drills
-      'mul-times-table',
-      'mul-perfect-squares',
+      // Memory foundation drills (times tables)
+      'mul-table-2to9',
+      'mul-table-10to19',
+      'mul-table-20to29',
+      'mul-by-5',
+      'mul-whole-numbers',
+      // Squares & roots foundation
+      'mul-squares-foundation',
+      'mul-squares-advanced',
+      'mul-roots-foundation',
+      'mul-roots-practice',
       // Trick-based techniques
       'mul-by-11',
       'mul-by-9',
-      'mul-by-5',
       'mul-by-25',
       'mul-by-12',
       'mul-sq-ending-5',

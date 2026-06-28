@@ -25,8 +25,11 @@ const FLASH_TECHNIQUE_IDS = new Set([
   'sub-speed-2d1d',
   'sub-speed-2d2d',
   'sub-speed-3d',
-  'mul-times-table',
-  'mul-perfect-squares',
+  'mul-table-2to9',
+  'mul-table-10to19',
+  'mul-squares-foundation',
+  'mul-roots-foundation',
+  'mul-roots-practice',
 ])
 
 export default function TopicHubScreen() {
@@ -69,24 +72,14 @@ export default function TopicHubScreen() {
         ← Back
       </Button>
       <Box maxW="800px" mx="auto" w="full">
-        <Flex justify="space-between" align="flex-start" mb={1} gap={3} flexWrap="wrap">
-          <Box>
-            <Heading size="xl" mb={1}>
-              {topic.name}
-            </Heading>
-            <Text color="text.muted" mb={6}>
-              {topic.description}
-            </Text>
-          </Box>
-          <Button
-            size="sm"
-            variant="outline"
-            flexShrink={0}
-            onClick={() => navigate(`/topic/${topicId}/challenge`)}
-          >
-            Topic Test →
-          </Button>
-        </Flex>
+        <Box mb={6}>
+          <Heading size="xl" mb={1}>
+            {topic.name}
+          </Heading>
+          <Text color="text.muted">
+            {topic.description}
+          </Text>
+        </Box>
 
         <SimpleGrid minChildWidth="220px" gap={4}>
           {techniques.map((technique) => {
@@ -104,13 +97,14 @@ export default function TopicHubScreen() {
                 showTheory={topic.hasTheory ?? true}
                 showFlash={FLASH_TECHNIQUE_IDS.has(technique.id)}
                 onReadTheory={() => navigate(`/challenge/${technique.id}/theory`)}
-                onPractice={() => navigate(`/challenge/${technique.id}/drill`)}
                 onFlash={() => navigate(`/challenge/${technique.id}/flash`)}
                 onCustom={() => navigate(`/challenge/${technique.id}/config`)}
                 onChallenge={() => navigate(`/challenge/${technique.id}`)}
               />
             )
           })}
+          {/* Topic Test card — always at the end */}
+          <TopicTestCard onTopicTest={() => navigate(`/topic/${topicId}/challenge`)} />
         </SimpleGrid>
       </Box>
     </Flex>
@@ -126,7 +120,6 @@ interface ChallengeCardProps {
   showTheory: boolean
   showFlash: boolean
   onReadTheory: () => void
-  onPractice: () => void
   onFlash: () => void
   onCustom: () => void
   onChallenge: () => void
@@ -139,7 +132,6 @@ function ChallengeCard({
   showTheory,
   showFlash,
   onReadTheory,
-  onPractice,
   onFlash,
   onCustom,
   onChallenge,
@@ -150,9 +142,30 @@ function ChallengeCard({
       p={4}
       borderRadius="lg"
       borderWidth="2px"
-      borderColor={challengePassed ? 'green.300' : 'border.subtle'}
+      borderColor={challengePassed ? 'green.200' : 'gray.100'}
       bg={challengePassed ? 'green.50' : 'bg.card'}
+      position="relative"
     >
+      {/* Theory icon in top-right corner */}
+      {showTheory && (
+        <Button
+          size="sm"
+          variant="ghost"
+          position="absolute"
+          top={2}
+          right={2}
+          onClick={onReadTheory}
+          aria-label="Read theory"
+          p={2}
+          minW="auto"
+          borderRadius="full"
+          borderWidth="1px"
+          borderColor="gray.100"
+        >
+          ?
+        </Button>
+      )}
+
       {/* Name + badges — difficulty first */}
       <Stack gap={1}>
         <Text fontWeight="semibold" lineClamp={2} fontSize="sm">
@@ -174,24 +187,21 @@ function ChallengeCard({
         </Text>
       )}
 
-      {/* Action buttons stacked vertically to fit narrow cells */}
+      {/* Action buttons layout */}
       <Stack gap={2} mt="auto">
-        {showTheory && (
-          <Button size="sm" variant="outline" w="full" onClick={onReadTheory}>
-            Read Theory
+        {/* First row: Flash and Custom side-by-side */}
+        <HStack gap={2} w="full">
+          {showFlash && (
+            <Button size="sm" variant="outline" flex={1} onClick={onFlash}>
+              ⚡ Flash
+            </Button>
+          )}
+          <Button size="sm" variant="outline" flex={1} onClick={onCustom}>
+            ⚙ Custom
           </Button>
-        )}
-        <Button size="sm" variant="outline" w="full" onClick={onPractice}>
-          Practice
-        </Button>
-        {showFlash && (
-          <Button size="sm" variant="outline" w="full" onClick={onFlash}>
-            ⚡ Flash
-          </Button>
-        )}
-        <Button size="sm" variant="ghost" w="full" onClick={onCustom} fontSize="xs">
-          Custom…
-        </Button>
+        </HStack>
+
+        {/* Second row: Challenge button full width */}
         <Button
           size="sm"
           w="full"
@@ -200,9 +210,46 @@ function ChallengeCard({
           color="white"
           _hover={{ bg: 'brand.600' }}
         >
-          {challengePassed ? 'Retry' : 'Challenge →'}
+          {challengePassed ? 'Retry' : 'Challenge'}
         </Button>
       </Stack>
+    </Stack>
+  )
+}
+
+function TopicTestCard({ onTopicTest }: { onTopicTest: () => void }) {
+  return (
+    <Stack
+      gap={4}
+      p={4}
+      borderRadius="lg"
+      borderWidth="2px"
+      borderColor="gray.100"
+      bg="bg.card"
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+      textAlign="center"
+      minH="220px"
+    >
+      <Text fontSize="lg" fontWeight="bold">
+        Topic Test
+      </Text>
+      <Text fontSize="sm" color="text.muted">
+        Test all techniques in this topic at once. Pass to master the entire subject.
+      </Text>
+      <Button
+        size="md"
+        mt="auto"
+        w="full"
+        onClick={onTopicTest}
+        bg="brand.500"
+        color="white"
+        _hover={{ bg: 'brand.600' }}
+      >
+        Start Test
+      </Button>
     </Stack>
   )
 }

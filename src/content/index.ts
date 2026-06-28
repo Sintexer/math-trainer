@@ -160,8 +160,17 @@ export function getPactSequence(): string[] {
     'sub-speed-2d2d',
     'add-speed-3d',
     'sub-speed-3d',
-    'mul-times-table',
-    'mul-perfect-squares',
+    // Multiplication foundations — progressive table difficulty
+    'mul-table-2to9',
+    'mul-table-10to19',
+    'mul-table-20to29',
+    'mul-by-5',
+    'mul-whole-numbers',
+    // Squares & roots foundation
+    'mul-squares-foundation',
+    'mul-squares-advanced',
+    'mul-roots-foundation',
+    'mul-roots-practice',
     // Addition tricks (build on speed foundation)
     'add-left-to-right',
     'add-round-adjust',
@@ -173,8 +182,7 @@ export function getPactSequence(): string[] {
     'sub-borrow-free',
     'sub-round-adjust',
     'sub-counting-up',
-    // Multiplication — easy tricks first
-    'mul-by-5',
+    // Multiplication tricks — easy ones first
     'mul-by-9',
     'mul-by-11',
     'mul-by-12',

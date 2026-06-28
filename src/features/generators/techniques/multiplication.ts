@@ -1,18 +1,28 @@
 /**
- * Multiplication technique generators (12 techniques)
+ * Multiplication technique generators
  *
- * mul-by-11           — digit-sum trick (2- and 3-digit × 11)
- * mul-by-9            — ×9 = ×10 − n
- * mul-by-5            — ÷2 × 10
- * mul-by-25           — ÷4 × 100
- * mul-by-12           — ×10 + ×2
- * mul-sq-ending-5     — squares ending in 5
- * mul-near-100        — numbers near 100 using difference from 100
- * mul-double-halve    — double one factor, halve the other
- * mul-by-99-101       — ×99 = ×100 − n, ×101 = ×100 + n
- * mul-foil-mental     — FOIL on two 2-digit numbers
- * mul-times-table     — reflexive recall drill for multiplication facts
- * mul-perfect-squares — instant recall of perfect squares
+ * mul-by-11              — digit-sum trick (2- and 3-digit × 11)
+ * mul-by-9               — ×9 = ×10 − n
+ * mul-by-5               — ÷2 × 10 (repositioned as foundation drill)
+ * mul-by-25              — ÷4 × 100
+ * mul-by-12              — ×10 + ×2
+ * mul-sq-ending-5        — squares ending in 5
+ * mul-near-100           — numbers near 100 using difference from 100
+ * mul-double-halve       — double one factor, halve the other
+ * mul-by-99-101          — ×99 = ×100 − n, ×101 = ×100 + n
+ * mul-foil-mental        — FOIL on two 2-digit numbers
+ *
+ * ── Times Table Foundation (split from original mul-times-table) ──
+ * mul-table-2to9         — classic 2–9 × 2–9 table
+ * mul-table-10to19       — 10–19 multiplication (teen table)
+ * mul-table-20to29       — 20–29 multiplication
+ * mul-whole-numbers      — mixed 2–99 drill (capstone)
+ *
+ * ── Squares & Roots (split from original mul-perfect-squares) ──
+ * mul-squares-foundation — squares 2²–20²
+ * mul-squares-advanced   — squares 21²–50²
+ * mul-roots-foundation   — square roots (perfect squares up to 100)
+ * mul-roots-practice     — roots with estimation
  */
 
 import type { Difficulty, Problem } from '@/shared/types'
@@ -354,13 +364,9 @@ export function generateMulFoilMental(difficulty: Difficulty, rng: Rng): Problem
   }
 }
 
-// ── mul-times-table ───────────────────────────────────────────────────────────
+// ── mul-table-2to9 ────────────────────────────────────────────────────────────
 
-/**
- * Reflexive recall drill for multiplication facts.
- * Easy: classic 2–9 × 2–9 table. Medium: up to 19×19. Hard: up to 99×99.
- */
-export function generateMulTimesTable(difficulty: Difficulty, rng: Rng): Problem {
+export function generateMulTable2to9(difficulty: Difficulty, rng: Rng): Problem {
   let a: number, b: number
 
   switch (difficulty) {
@@ -369,8 +375,98 @@ export function generateMulTimesTable(difficulty: Difficulty, rng: Rng): Problem
       b = rng.int(2, 9)
       break
     case 'medium':
+      a = rng.int(2, 9)
+      b = rng.int(2, 9)
+      break
+    case 'hard':
+      a = rng.int(2, 9)
+      b = rng.int(2, 9)
+      break
+  }
+
+  return {
+    id: makeId('mul-table-2to9'),
+    techniqueId: 'mul-table-2to9',
+    topicId: 'multiplication',
+    difficulty,
+    prompt: `${a} × ${b} = ?`,
+    answer: a * b,
+  }
+}
+
+// ── mul-table-10to19 ──────────────────────────────────────────────────────────
+
+export function generateMulTable10to19(difficulty: Difficulty, rng: Rng): Problem {
+  let a: number, b: number
+
+  switch (difficulty) {
+    case 'easy':
+      a = rng.int(10, 14)
+      b = rng.int(10, 14)
+      break
+    case 'medium':
+      a = rng.int(10, 19)
+      b = rng.int(10, 19)
+      break
+    case 'hard':
+      a = rng.int(10, 19)
+      b = rng.int(10, 19)
+      break
+  }
+
+  return {
+    id: makeId('mul-table-10to19'),
+    techniqueId: 'mul-table-10to19',
+    topicId: 'multiplication',
+    difficulty,
+    prompt: `${a} × ${b} = ?`,
+    answer: a * b,
+  }
+}
+
+// ── mul-table-20to29 ──────────────────────────────────────────────────────────
+
+export function generateMulTable20to29(difficulty: Difficulty, rng: Rng): Problem {
+  let a: number, b: number
+
+  switch (difficulty) {
+    case 'easy':
+      a = rng.int(20, 24)
+      b = rng.int(2, 19)
+      break
+    case 'medium':
+      a = rng.int(20, 29)
+      b = rng.int(2, 29)
+      break
+    case 'hard':
+      a = rng.int(20, 29)
+      b = rng.int(10, 99)
+      break
+  }
+
+  return {
+    id: makeId('mul-table-20to29'),
+    techniqueId: 'mul-table-20to29',
+    topicId: 'multiplication',
+    difficulty,
+    prompt: `${a} × ${b} = ?`,
+    answer: a * b,
+  }
+}
+
+// ── mul-whole-numbers ─────────────────────────────────────────────────────────
+
+export function generateMulWholeNumbers(difficulty: Difficulty, rng: Rng): Problem {
+  let a: number, b: number
+
+  switch (difficulty) {
+    case 'easy':
       a = rng.int(2, 19)
       b = rng.int(2, 19)
+      break
+    case 'medium':
+      a = rng.int(10, 49)
+      b = rng.int(10, 49)
       break
     case 'hard':
       a = rng.int(2, 99)
@@ -379,8 +475,8 @@ export function generateMulTimesTable(difficulty: Difficulty, rng: Rng): Problem
   }
 
   return {
-    id: makeId('mul-times-table'),
-    techniqueId: 'mul-times-table',
+    id: makeId('mul-whole-numbers'),
+    techniqueId: 'mul-whole-numbers',
     topicId: 'multiplication',
     difficulty,
     prompt: `${a} × ${b} = ?`,
@@ -388,13 +484,9 @@ export function generateMulTimesTable(difficulty: Difficulty, rng: Rng): Problem
   }
 }
 
-// ── mul-perfect-squares ───────────────────────────────────────────────────────
+// ── mul-squares-foundation ────────────────────────────────────────────────────
 
-/**
- * Instant-recall drill for perfect squares.
- * Easy: 2²–12². Medium: 13²–25². Hard: 26²–50².
- */
-export function generateMulPerfectSquares(difficulty: Difficulty, rng: Rng): Problem {
+export function generateMulSquaresFoundation(difficulty: Difficulty, rng: Rng): Problem {
   let n: number
 
   switch (difficulty) {
@@ -402,19 +494,116 @@ export function generateMulPerfectSquares(difficulty: Difficulty, rng: Rng): Pro
       n = rng.int(2, 12)
       break
     case 'medium':
-      n = rng.int(13, 25)
+      n = rng.int(2, 16)
       break
     case 'hard':
-      n = rng.int(26, 50)
+      n = rng.int(2, 20)
       break
   }
 
   return {
-    id: makeId('mul-perfect-squares'),
-    techniqueId: 'mul-perfect-squares',
+    id: makeId('mul-squares-foundation'),
+    techniqueId: 'mul-squares-foundation',
     topicId: 'multiplication',
     difficulty,
     prompt: `${n}² = ?`,
     answer: n * n,
+  }
+}
+
+// ── mul-squares-advanced ──────────────────────────────────────────────────────
+
+export function generateMulSquaresAdvanced(difficulty: Difficulty, rng: Rng): Problem {
+  let n: number
+
+  switch (difficulty) {
+    case 'easy':
+      n = rng.int(21, 30)
+      break
+    case 'medium':
+      n = rng.int(21, 40)
+      break
+    case 'hard':
+      n = rng.int(21, 50)
+      break
+  }
+
+  return {
+    id: makeId('mul-squares-advanced'),
+    techniqueId: 'mul-squares-advanced',
+    topicId: 'multiplication',
+    difficulty,
+    prompt: `${n}² = ?`,
+    answer: n * n,
+  }
+}
+
+// ── mul-roots-foundation ──────────────────────────────────────────────────────
+
+export function generateMulRootsFoundation(difficulty: Difficulty, rng: Rng): Problem {
+  let n: number
+
+  switch (difficulty) {
+    case 'easy':
+      // Perfect squares: 4, 9, 16, 25, 36, 49, 64, 81, 100
+      n = rng.pick([4, 9, 16, 25, 36, 49, 64, 81, 100])
+      break
+    case 'medium':
+      // Perfect squares up to 100
+      n = rng.pick([4, 9, 16, 25, 36, 49, 64, 81, 100])
+      break
+    case 'hard':
+      // Mix perfect and non-perfect (requires estimation)
+      if (rng.int(1, 2) === 1) {
+        // Perfect square
+        n = rng.pick([4, 9, 16, 25, 36, 49, 64, 81, 100])
+      } else {
+        // Non-perfect: challenge user to estimate
+        n = rng.pick([8, 10, 15, 18, 20, 24, 30, 40, 50, 75, 99, 120, 150])
+      }
+      break
+  }
+
+  const answer = Math.round(Math.sqrt(n))
+
+  return {
+    id: makeId('mul-roots-foundation'),
+    techniqueId: 'mul-roots-foundation',
+    topicId: 'multiplication',
+    difficulty,
+    prompt: `√${n} = ?`,
+    answer,
+  }
+}
+
+// ── mul-roots-practice ────────────────────────────────────────────────────────
+
+export function generateMulRootsPractice(difficulty: Difficulty, rng: Rng): Problem {
+  let n: number
+
+  switch (difficulty) {
+    case 'easy':
+      // Perfect squares 2–10 squared (4–100)
+      n = rng.pick([4, 9, 16, 25, 36, 49, 64, 81, 100])
+      break
+    case 'medium':
+      // Mix perfect and near-perfect
+      n = rng.pick([4, 5, 8, 9, 10, 15, 16, 24, 25, 35, 36, 48, 49, 63, 64, 80, 81, 99, 100])
+      break
+    case 'hard':
+      // Large range with estimation
+      n = rng.int(4, 200)
+      break
+  }
+
+  const answer = Math.round(Math.sqrt(n))
+
+  return {
+    id: makeId('mul-roots-practice'),
+    techniqueId: 'mul-roots-practice',
+    topicId: 'multiplication',
+    difficulty,
+    prompt: `√${n} = ?`,
+    answer,
   }
 }

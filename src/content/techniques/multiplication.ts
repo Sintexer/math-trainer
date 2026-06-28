@@ -1,5 +1,7 @@
 import type { Technique } from '@/shared/types'
 
+// ── Multiplication Tricks ─────────────────────────────────────────────────────
+
 export const multiplicationTechniques: Technique[] = [
   {
     id: 'mul-by-11',
@@ -20,16 +22,6 @@ export const multiplicationTechniques: Technique[] = [
     difficulty: 'easy',
     relatedTechniqueIds: ['mul-by-5', 'mul-by-99-101'],
     masteryThresholds: { speedPerMin: 7 },
-  },
-  {
-    id: 'mul-by-5',
-    name: 'Multiply by 5',
-    topicId: 'multiplication',
-    description:
-      'Divide by 2, then multiply by 10. E.g. 48 × 5 = 48 ÷ 2 × 10 = 24 × 10 = 240. For odd numbers: (n−1)/2 × 10 + 5.',
-    difficulty: 'easy',
-    relatedTechniqueIds: ['mul-by-25', 'div-by-5'],
-    masteryThresholds: { speedPerMin: 8 },
   },
   {
     id: 'mul-by-25',
@@ -101,24 +93,100 @@ export const multiplicationTechniques: Technique[] = [
     relatedTechniqueIds: ['mul-near-100', 'mul-sq-ending-5'],
     masteryThresholds: { speedPerMin: 3 },
   },
+
+  // ── Multiplication Foundations (Times Tables) ──────────────────────────────
+
   {
-    id: 'mul-times-table',
-    name: 'Times Table (×2–99)',
+    id: 'mul-table-2to9',
+    name: 'Times Table 2–9',
     topicId: 'multiplication',
     description:
-      'Build reflexive recall for multiplication facts. Easy covers the classic 9×9 table. Medium extends to 19×19 (the "teen" table). Hard drills any pair up to 99×99 through repetition.',
+      'Master the classic 2–9 multiplication table. The foundation for all mental math. Build instant reflexive recall.',
     difficulty: 'easy',
-    relatedTechniqueIds: ['mul-perfect-squares', 'mul-by-9'],
+    relatedTechniqueIds: ['mul-table-10to19', 'mul-squares-foundation'],
+    masteryThresholds: { speedPerMin: 12 },
+  },
+  {
+    id: 'mul-table-10to19',
+    name: 'Times Table 10–19',
+    topicId: 'multiplication',
+    description:
+      'Extend to 10–19 multiplication (the "teen table"). Bridge between basic tables and larger multiplications.',
+    difficulty: 'medium',
+    relatedTechniqueIds: ['mul-table-2to9', 'mul-table-20to29'],
+    masteryThresholds: { speedPerMin: 10 },
+  },
+  {
+    id: 'mul-table-20to29',
+    name: 'Times Table 20–29',
+    topicId: 'multiplication',
+    description:
+      'Master 20–29 multiplication. Practice mixed multiplications to build pattern recognition for larger numbers.',
+    difficulty: 'medium',
+    relatedTechniqueIds: ['mul-table-10to19', 'mul-whole-numbers'],
+    masteryThresholds: { speedPerMin: 9 },
+  },
+  {
+    id: 'mul-by-5',
+    name: 'Multiply by 5',
+    topicId: 'multiplication',
+    description:
+      'Divide by 2, then multiply by 10. E.g. 48 × 5 = 48 ÷ 2 × 10 = 24 × 10 = 240. For odd numbers: (n−1)/2 × 10 + 5. A fast reflex, not a trick.',
+    difficulty: 'easy',
+    relatedTechniqueIds: ['mul-table-2to9', 'mul-by-25'],
+    masteryThresholds: { speedPerMin: 11 },
+  },
+  {
+    id: 'mul-whole-numbers',
+    name: 'Multiply Mixed Numbers',
+    topicId: 'multiplication',
+    description:
+      'Practice reflexive recall for any two-number multiplication (2–99). Capstone drill to build automaticity across the full range.',
+    difficulty: 'hard',
+    relatedTechniqueIds: ['mul-table-20to29', 'mul-foil-mental'],
+    masteryThresholds: { speedPerMin: 7 },
+  },
+
+  // ── Multiplication Foundations (Squares & Roots) ──────────────────────────
+
+  {
+    id: 'mul-squares-foundation',
+    name: 'Perfect Squares 2–20',
+    topicId: 'multiplication',
+    description:
+      'Build instant recall of perfect squares from 2² to 20². Squares are essential for factoring, estimation, and advanced multiplication tricks.',
+    difficulty: 'easy',
+    relatedTechniqueIds: ['mul-table-2to9', 'mul-squares-advanced'],
+    masteryThresholds: { speedPerMin: 10 },
+  },
+  {
+    id: 'mul-squares-advanced',
+    name: 'Perfect Squares 21–50',
+    topicId: 'multiplication',
+    description:
+      'Master larger perfect squares (21² through 50²). These underpin techniques like Squares Ending in 5 and estimation strategies.',
+    difficulty: 'medium',
+    relatedTechniqueIds: ['mul-squares-foundation', 'mul-sq-ending-5'],
     masteryThresholds: { speedPerMin: 8 },
   },
   {
-    id: 'mul-perfect-squares',
-    name: 'Perfect Squares',
+    id: 'mul-roots-foundation',
+    name: 'Square Roots Foundation',
     topicId: 'multiplication',
     description:
-      'Build instant recall of perfect squares from 2² to 50². Fluency with squares is essential for factoring, estimation, and unlocking tricks like Squares Ending in 5.',
+      'Learn square roots as the inverse of squares. Perfect roots up to √100. Hard mode includes estimation for non-perfect roots.',
     difficulty: 'medium',
-    relatedTechniqueIds: ['mul-times-table', 'mul-sq-ending-5'],
-    masteryThresholds: { speedPerMin: 6 },
+    relatedTechniqueIds: ['mul-squares-foundation', 'mul-roots-practice'],
+    masteryThresholds: { speedPerMin: 8 },
+  },
+  {
+    id: 'mul-roots-practice',
+    name: 'Square Roots Practice',
+    topicId: 'multiplication',
+    description:
+      'Extended practice with square roots, including both perfect roots and estimation for non-perfect squares. Build fluency with root calculation.',
+    difficulty: 'medium',
+    relatedTechniqueIds: ['mul-roots-foundation', 'mul-squares-advanced'],
+    masteryThresholds: { speedPerMin: 7 },
   },
 ]

@@ -37,9 +37,15 @@ export const constellationGraph: ConstellationGraph = {
     { techniqueId: 'sub-speed-2d1d',      x: 400, y: 440 },
     { techniqueId: 'sub-speed-2d2d',      x: 420, y: 540 },
     { techniqueId: 'sub-speed-3d',        x: 440, y: 650 },
-    // Multiplication memory — left edge of multiplication cluster
-    { techniqueId: 'mul-times-table',     x: 490, y:  90 },
-    { techniqueId: 'mul-perfect-squares', x: 490, y: 230 },
+    // Multiplication foundations — left edge of multiplication cluster
+    { techniqueId: 'mul-table-2to9',      x: 490, y:  90 },
+    { techniqueId: 'mul-table-10to19',    x: 490, y: 150 },
+    { techniqueId: 'mul-table-20to29',    x: 490, y: 210 },
+    { techniqueId: 'mul-whole-numbers',   x: 490, y: 270 },
+    { techniqueId: 'mul-squares-foundation', x: 530, y: 280 },
+    { techniqueId: 'mul-squares-advanced',   x: 570, y: 280 },
+    { techniqueId: 'mul-roots-foundation',   x: 530, y: 340 },
+    { techniqueId: 'mul-roots-practice',     x: 570, y: 340 },
 
     // ── Multiplication (top-right, largest cluster) ──────
     { techniqueId: 'mul-by-11',           x: 640, y:  90 },
@@ -75,6 +81,12 @@ export const constellationGraph: ConstellationGraph = {
     { from: 'sub-complement-10',   to: 'sub-counting-up' },
 
     // ── Multiplication internal ──────────────────────────
+    { from: 'mul-table-2to9',       to: 'mul-table-10to19' },
+    { from: 'mul-table-10to19',     to: 'mul-table-20to29' },
+    { from: 'mul-table-20to29',     to: 'mul-whole-numbers' },
+    { from: 'mul-squares-foundation', to: 'mul-squares-advanced' },
+    { from: 'mul-squares-foundation', to: 'mul-roots-foundation' },
+    { from: 'mul-roots-foundation',  to: 'mul-roots-practice' },
     { from: 'mul-by-5',            to: 'mul-by-25' },
     { from: 'mul-by-5',            to: 'mul-double-halve' },
     { from: 'mul-by-9',            to: 'mul-by-99-101' },
@@ -96,13 +108,12 @@ export const constellationGraph: ConstellationGraph = {
     { from: 'add-speed-2d2d',      to: 'add-speed-3d' },
     { from: 'sub-speed-2d1d',      to: 'sub-speed-2d2d' },
     { from: 'sub-speed-2d2d',      to: 'sub-speed-3d' },
-    { from: 'mul-times-table',     to: 'mul-perfect-squares' },
 
     // ── Foundation → trick technique bridges ─────────────
     { from: 'add-speed-2d2d',      to: 'add-left-to-right' },
     { from: 'sub-speed-2d2d',      to: 'sub-complement-10' },
-    { from: 'mul-times-table',     to: 'mul-by-9' },
-    { from: 'mul-perfect-squares', to: 'mul-sq-ending-5' },
+    { from: 'mul-table-2to9',      to: 'mul-by-9' },
+    { from: 'mul-squares-advanced', to: 'mul-sq-ending-5' },
 
     // ── Cross-topic bridges ──────────────────────────────
     { from: 'add-complement-100',  to: 'sub-complement-10' },

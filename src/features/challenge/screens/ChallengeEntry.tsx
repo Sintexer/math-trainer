@@ -1,10 +1,9 @@
 import { Badge, Box, Button, Flex, HStack, Heading, Stack, Text } from '@chakra-ui/react'
 import { DifficultyBadge } from '@/features/input'
-import type { MasteryStars, Technique } from '@/shared/types'
+import type { Technique } from '@/shared/types'
 
 export interface ChallengeEntryProps {
   technique: Technique
-  stars: MasteryStars
   challengePassed: boolean
   onStart: () => void
   onBack: () => void
@@ -18,7 +17,6 @@ export interface ChallengeEntryProps {
  */
 export function ChallengeEntry({
   technique,
-  stars,
   challengePassed,
   onStart,
   onBack,
@@ -38,80 +36,72 @@ export function ChallengeEntry({
         ← Back
       </Button>
 
-      <Heading size="xl" mb={1}>
-        {technique.name}
-      </Heading>
-      <HStack mb={4} gap={2}>
-        <DifficultyBadge difficulty={technique.difficulty} />
-        <Badge>{technique.topicId}</Badge>
-        <Badge colorPalette="orange">Challenge</Badge>
-      </HStack>
-      <Text color="text.muted" mb={6}>
-        {technique.description}
-      </Text>
-
-      <Stack
-        gap={3}
-        p={5}
-        borderRadius="lg"
-        borderWidth="2px"
-        borderColor="border.subtle"
-        bg="bg.card"
-        mb={4}
-      >
-        <Heading
-          size="sm"
-          color="text.muted"
-          textTransform="uppercase"
-          letterSpacing="wider"
+      <Flex direction={{ base: 'column', md: 'row' }} gap={6} maxW="800px" mx="auto" w="full">
+        {/* Info card (invisible border) */}
+        <Stack
+          gap={3}
+          p={5}
+          borderRadius="lg"
+          borderWidth="2px"
+          borderColor="gray.100"
+          bg="bg.card"
+          flex={1}
         >
-          To pass
-        </Heading>
-        <HStack gap={6} flexWrap="wrap">
-          <Threshold label="Speed" value={`≥ ${speedPerMin}/min`} />
-          <Threshold label="Time" value="60 s" />
-        </HStack>
-        <Text fontSize="sm" color="text.muted">
-          {challengePassed
-            ? 'You have already passed this challenge. Try again to beat your time.'
-            : 'Pass to mark this technique as challenge-cleared.'}
-        </Text>
-      </Stack>
+          <Heading size="xl" mb={1}>
+            {technique.name}
+          </Heading>
+          <HStack mb={4} gap={2}>
+            <DifficultyBadge difficulty={technique.difficulty} />
+            <Badge>{technique.topicId}</Badge>
+            <Badge colorPalette="orange">Challenge</Badge>
+          </HStack>
+          <Text color="text.muted">
+            {technique.description}
+          </Text>
+        </Stack>
 
-      <Stack
-        gap={2}
-        p={5}
-        borderRadius="lg"
-        borderWidth="2px"
-        borderColor="border.subtle"
-        bg="bg.card"
-        mb={6}
-      >
-        <Heading
-          size="sm"
-          color="text.muted"
-          textTransform="uppercase"
-          letterSpacing="wider"
+        {/* To Pass card with button inside */}
+        <Stack
+          gap={3}
+          p={5}
+          borderRadius="lg"
+          borderWidth="2px"
+          borderColor="gray.100"
+          bg="bg.card"
+          flex={1}
+          display="flex"
+          flexDirection="column"
         >
-          Mastery
-        </Heading>
-        <HStack gap={4}>
-          <Star label="Speed" filled={stars.speed} />
-          <Star label="Range" filled={stars.range} />
-        </HStack>
-      </Stack>
-
-      <Button
-        size="lg"
-        w="full"
-        onClick={onStart}
-        bg="brand.500"
-        color="white"
-        _hover={{ bg: 'brand.600' }}
-        aria-label="Start Challenge"
-      >
-        Start Challenge
-      </Button>
+          <Heading
+            size="sm"
+            color="text.muted"
+            textTransform="uppercase"
+            letterSpacing="wider"
+          >
+            To pass
+          </Heading>
+          <HStack gap={6} flexWrap="wrap">
+            <Threshold label="Speed" value={`≥ ${speedPerMin}/min`} />
+            <Threshold label="Time" value="60 s" />
+          </HStack>
+          <Text fontSize="sm" color="text.muted" flex={1}>
+            {challengePassed
+              ? 'You have already passed this challenge. Try again to beat your time.'
+              : 'Pass to mark this technique as challenge-cleared.'}
+          </Text>
+          <Button
+            size="lg"
+            onClick={onStart}
+            bg="brand.500"
+            color="white"
+            _hover={{ bg: 'brand.600' }}
+            aria-label="Start Challenge"
+            mt="auto"
+          >
+            Start Challenge
+          </Button>
+        </Stack>
+      </Flex>
     </Flex>
   )
 }
@@ -131,18 +121,5 @@ function Threshold({ label, value }: { label: string; value: string }) {
         {value}
       </Text>
     </Box>
-  )
-}
-
-function Star({ label, filled }: { label: string; filled: boolean }) {
-  return (
-    <HStack gap={1}>
-      <Text fontSize="lg" aria-hidden="true">
-        {filled ? '★' : '☆'}
-      </Text>
-      <Text fontSize="sm" color={filled ? 'text.primary' : 'text.muted'}>
-        {label}
-      </Text>
-    </HStack>
   )
 }

@@ -27,8 +27,14 @@ import { mulNear100 } from './mul-near-100'
 import { mulDoubleHalve } from './mul-double-halve'
 import { mulBy99101 } from './mul-by-99-101'
 import { mulFoilMental } from './mul-foil-mental'
-import { mulTimesTable } from './mul-times-table'
-import { mulPerfectSquares } from './mul-perfect-squares'
+import { mulTable2to9 } from './mul-table-2to9'
+import { mulTable10to19 } from './mul-table-10to19'
+import { mulTable20to29 } from './mul-table-20to29'
+import { mulWholeNumbers } from './mul-whole-numbers'
+import { mulSquaresFoundation } from './mul-squares-foundation'
+import { mulSquaresAdvanced } from './mul-squares-advanced'
+import { mulRootsFoundation } from './mul-roots-foundation'
+import { mulRootsPractice } from './mul-roots-practice'
 
 import { divBy5 } from './div-by-5'
 import { divBy25 } from './div-by-25'
@@ -55,7 +61,7 @@ const allContent: readonly TechniqueContent[] = [
   subSpeed2d1d,
   subSpeed2d2d,
   subSpeed3d,
-  // Multiplication (12)
+  // Multiplication (18)
   mulBy11,
   mulBy9,
   mulBy5,
@@ -66,8 +72,14 @@ const allContent: readonly TechniqueContent[] = [
   mulDoubleHalve,
   mulBy99101,
   mulFoilMental,
-  mulTimesTable,
-  mulPerfectSquares,
+  mulTable2to9,
+  mulTable10to19,
+  mulTable20to29,
+  mulWholeNumbers,
+  mulSquaresFoundation,
+  mulSquaresAdvanced,
+  mulRootsFoundation,
+  mulRootsPractice,
   // Division (6)
   divBy5,
   divBy25,

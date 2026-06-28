@@ -43,8 +43,14 @@ import {
   generateMulDoubleHalve,
   generateMulBy99101,
   generateMulFoilMental,
-  generateMulTimesTable,
-  generateMulPerfectSquares,
+  generateMulTable2to9,
+  generateMulTable10to19,
+  generateMulTable20to29,
+  generateMulWholeNumbers,
+  generateMulSquaresFoundation,
+  generateMulSquaresAdvanced,
+  generateMulRootsFoundation,
+  generateMulRootsPractice,
 } from './techniques/multiplication'
 
 // Division
@@ -77,7 +83,7 @@ export const generatorRegistry: Readonly<Record<string, ProblemGenerator>> = {
   'sub-speed-2d2d': generateSubSpeed2d2d,
   'sub-speed-3d': generateSubSpeed3d,
 
-  // Multiplication (12)
+  // Multiplication (18 → 10 tricks + 8 foundations)
   'mul-by-11': generateMulBy11,
   'mul-by-9': generateMulBy9,
   'mul-by-5': generateMulBy5,
@@ -88,8 +94,16 @@ export const generatorRegistry: Readonly<Record<string, ProblemGenerator>> = {
   'mul-double-halve': generateMulDoubleHalve,
   'mul-by-99-101': generateMulBy99101,
   'mul-foil-mental': generateMulFoilMental,
-  'mul-times-table': generateMulTimesTable,
-  'mul-perfect-squares': generateMulPerfectSquares,
+  // Multiplication foundations (times tables)
+  'mul-table-2to9': generateMulTable2to9,
+  'mul-table-10to19': generateMulTable10to19,
+  'mul-table-20to29': generateMulTable20to29,
+  'mul-whole-numbers': generateMulWholeNumbers,
+  // Multiplication foundations (squares & roots)
+  'mul-squares-foundation': generateMulSquaresFoundation,
+  'mul-squares-advanced': generateMulSquaresAdvanced,
+  'mul-roots-foundation': generateMulRootsFoundation,
+  'mul-roots-practice': generateMulRootsPractice,
 
   // Division (6)
   'div-by-5': generateDivBy5,

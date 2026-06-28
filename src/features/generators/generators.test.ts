@@ -31,8 +31,8 @@ function parsePromptNumbers(prompt: string): number[] {
 // ── Registry coverage ─────────────────────────────────────────────────────────
 
 describe('generatorRegistry', () => {
-  it('has exactly 33 registered techniques', () => {
-    expect(registeredTechniqueIds).toHaveLength(33)
+  it('has exactly 39 registered techniques', () => {
+    expect(registeredTechniqueIds).toHaveLength(39)
   })
 
   it('covers all 4 topics', () => {
@@ -244,10 +244,11 @@ describe('arithmetic correctness', () => {
     }
   })
 
-  it('mul-times-table: answer equals a × b', () => {
+  // Multiplication foundations (times tables)
+  it('mul-table-2to9: answer equals a × b', () => {
     for (const difficulty of DIFFICULTIES) {
       for (let i = 0; i < SAMPLES; i++) {
-        const p = generateProblem('mul-times-table', difficulty)
+        const p = generateProblem('mul-table-2to9', difficulty)
         const nums = parsePromptNumbers(p.prompt)
         expect(p.answer).toBe(nums[0] * nums[1])
         expect(nums[0]).toBeGreaterThanOrEqual(2)
@@ -256,13 +257,75 @@ describe('arithmetic correctness', () => {
     }
   })
 
-  it('mul-perfect-squares: answer equals n²', () => {
+  it('mul-table-10to19: answer equals a × b', () => {
     for (const difficulty of DIFFICULTIES) {
       for (let i = 0; i < SAMPLES; i++) {
-        const p = generateProblem('mul-perfect-squares', difficulty)
+        const p = generateProblem('mul-table-10to19', difficulty)
+        const nums = parsePromptNumbers(p.prompt)
+        expect(p.answer).toBe(nums[0] * nums[1])
+      }
+    }
+  })
+
+  it('mul-table-20to29: answer equals a × b', () => {
+    for (const difficulty of DIFFICULTIES) {
+      for (let i = 0; i < SAMPLES; i++) {
+        const p = generateProblem('mul-table-20to29', difficulty)
+        const nums = parsePromptNumbers(p.prompt)
+        expect(p.answer).toBe(nums[0] * nums[1])
+      }
+    }
+  })
+
+  it('mul-whole-numbers: answer equals a × b', () => {
+    for (const difficulty of DIFFICULTIES) {
+      for (let i = 0; i < SAMPLES; i++) {
+        const p = generateProblem('mul-whole-numbers', difficulty)
+        const nums = parsePromptNumbers(p.prompt)
+        expect(p.answer).toBe(nums[0] * nums[1])
+      }
+    }
+  })
+
+  // Multiplication foundations (squares & roots)
+  it('mul-squares-foundation: answer equals n²', () => {
+    for (const difficulty of DIFFICULTIES) {
+      for (let i = 0; i < SAMPLES; i++) {
+        const p = generateProblem('mul-squares-foundation', difficulty)
         const nums = parsePromptNumbers(p.prompt)
         expect(p.answer).toBe(nums[0] * nums[0])
         expect(nums[0]).toBeGreaterThanOrEqual(2)
+      }
+    }
+  })
+
+  it('mul-squares-advanced: answer equals n²', () => {
+    for (const difficulty of DIFFICULTIES) {
+      for (let i = 0; i < SAMPLES; i++) {
+        const p = generateProblem('mul-squares-advanced', difficulty)
+        const nums = parsePromptNumbers(p.prompt)
+        expect(p.answer).toBe(nums[0] * nums[0])
+        expect(nums[0]).toBeGreaterThanOrEqual(21)
+      }
+    }
+  })
+
+  it('mul-roots-foundation: answer equals √n (rounded)', () => {
+    for (const difficulty of DIFFICULTIES) {
+      for (let i = 0; i < SAMPLES; i++) {
+        const p = generateProblem('mul-roots-foundation', difficulty)
+        const nums = parsePromptNumbers(p.prompt)
+        expect(p.answer).toBe(Math.round(Math.sqrt(nums[0])))
+      }
+    }
+  })
+
+  it('mul-roots-practice: answer equals √n (rounded)', () => {
+    for (const difficulty of DIFFICULTIES) {
+      for (let i = 0; i < SAMPLES; i++) {
+        const p = generateProblem('mul-roots-practice', difficulty)
+        const nums = parsePromptNumbers(p.prompt)
+        expect(p.answer).toBe(Math.round(Math.sqrt(nums[0])))
       }
     }
   })

@@ -186,7 +186,7 @@ export default function PracticeConfigScreen() {
             color="white"
             _hover={{ bg: 'brand.600' }}
           >
-            Start →
+            Start
           </Button>
         </Stack>
       </Box>

@@ -15,8 +15,8 @@ import {
 describe('Content Registry — integrity', () => {
   // ── Technique count ──────────────────────────────────────────
 
-  it('has exactly 33 techniques', () => {
-    expect(getAllTechniques()).toHaveLength(33)
+  it('has exactly 39 techniques', () => {
+    expect(getAllTechniques()).toHaveLength(39)
   })
 
   it('has exactly 4 topics', () => {
@@ -45,8 +45,8 @@ describe('Content Registry — integrity', () => {
     expect(getTechniquesByTopic('subtraction')).toHaveLength(7)
   })
 
-  it('multiplication has 12 techniques', () => {
-    expect(getTechniquesByTopic('multiplication')).toHaveLength(12)
+  it('multiplication has 18 techniques', () => {
+    expect(getTechniquesByTopic('multiplication')).toHaveLength(18)
   })
 
   it('division has 6 techniques', () => {
@@ -225,9 +225,9 @@ describe('Content Registry — integrity', () => {
 
   // ── Pact sequence ────────────────────────────────────────────
 
-  it('pact sequence contains all 33 techniques', () => {
+  it('pact sequence contains all 39 techniques', () => {
     const sequence = getPactSequence()
-    expect(sequence).toHaveLength(33)
+    expect(sequence).toHaveLength(39)
   })
 
   it('pact sequence has no duplicates', () => {

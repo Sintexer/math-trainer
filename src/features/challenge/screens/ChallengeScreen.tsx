@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import {
   completeSession,
   selectChallengePassed,
-  selectMasteryStars,
   selectTechniqueProgress,
 } from '@/features/progress'
 import type { SessionSummary } from '@/features/session'
@@ -34,7 +33,6 @@ export default function ChallengeScreen() {
   const configDuration = searchParams.get('duration')
   const durationSeconds = configDuration ? parseInt(configDuration, 10) : undefined
 
-  const liveStars = useAppSelector((s) => selectMasteryStars(s, techniqueId))
   const techniqueProgress = useAppSelector((s) =>
     selectTechniqueProgress(s, techniqueId),
   )
@@ -89,7 +87,6 @@ export default function ChallengeScreen() {
     return (
       <ChallengeEntry
         technique={technique}
-        stars={liveStars}
         challengePassed={challengePassed}
         onStart={() => {
           setPassedBefore(challengePassed)

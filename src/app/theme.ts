@@ -37,7 +37,7 @@ const customConfig = defineConfig({
           value: { base: 'gray.500', _dark: 'gray.400' },
         },
         'border.subtle': {
-          value: { base: 'gray.200', _dark: 'gray.700' },
+          value: { base: 'gray.100', _dark: 'gray.800' },
         },
         'star.speed': {
           value: { base: '#f59e0b', _dark: '#fbbf24' },

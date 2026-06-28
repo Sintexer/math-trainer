@@ -67,13 +67,29 @@ export const learningTopics: LearningTopic[] = [
 
   // ── Multiplication ────────────────────────────────────────────────────────
   {
-    id: 'times-tables',
-    name: 'Times Tables',
+    id: 'mul-foundations',
+    name: 'Multiplication Foundations',
     description:
-      'Master multiplication tables and perfect squares for instant recall — the foundation for all multiplication tricks.',
+      'Build the reflexive recall foundation for multiplication: master tables by range, then combine with special multipliers.',
     techniqueIds: [
-      'mul-times-table',
-      'mul-perfect-squares',
+      'mul-table-2to9',
+      'mul-table-10to19',
+      'mul-table-20to29',
+      'mul-by-5',
+      'mul-whole-numbers',
+    ],
+    hasTheory: false,
+  },
+  {
+    id: 'squares-roots',
+    name: 'Squares & Roots',
+    description:
+      'Master perfect squares and their inverse relationship through square roots. Essential for factoring, estimation, and advanced tricks.',
+    techniqueIds: [
+      'mul-squares-foundation',
+      'mul-squares-advanced',
+      'mul-roots-foundation',
+      'mul-roots-practice',
     ],
     hasTheory: false,
   },

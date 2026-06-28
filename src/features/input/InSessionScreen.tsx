@@ -154,6 +154,8 @@ export function InSessionScreen({
           bg="bg.card"
           p={{ base: 5, md: 8 }}
           overflow="hidden"
+          position="relative"
+          zIndex={2}
           style={{ transition: 'border-color 0.2s ease' }}
         >
           {/* Problem zone — fills space, vertically centered */}
