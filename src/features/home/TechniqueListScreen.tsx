@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Box, HStack, Heading, Stack, Text } from '@chakra-ui/react'
+import { Box, Flex, HStack, Heading, Stack, Text } from '@chakra-ui/react'
 import { getAllLearningTopics } from '@/content'
 import { useAppSelector } from '@/app/hooks'
 import { selectAllTechniqueProgress } from '@/features/progress'
@@ -25,31 +25,33 @@ export default function HomeScreen() {
 
   return (
     // pb="24" leaves room above the fixed constellation FAB
-    <Box p={{ base: 4, md: 8 }} maxW="640px" mx="auto" pb={24}>
-      <Heading size="xl" mb={1}>
-        Math Trainer
-      </Heading>
-      <Text color="text.muted" mb={8}>
-        {totalChallenges} challenges across {topics.length} topics
-      </Text>
+    <Flex direction="column" minH="100dvh" p={{ base: 4, md: 8 }} pb={24}>
+      <Box maxW="640px" mx="auto" w="full">
+        <Heading size="xl" mb={1}>
+          Math Trainer
+        </Heading>
+        <Text color="text.muted" mb={8}>
+          {totalChallenges} challenges across {topics.length} topics
+        </Text>
 
-      <Stack gap={3}>
-        {topics.map((topic) => {
-          const passed = topic.techniqueIds.filter(
-            (id) => allProgress[id]?.challengePassed ?? false,
-          ).length
-          return (
-            <TopicCard
-              key={topic.id}
-              topic={topic}
-              passed={passed}
-              total={topic.techniqueIds.length}
-              onClick={() => navigate(`/topic/${topic.id}`)}
-            />
-          )
-        })}
-      </Stack>
-    </Box>
+        <Stack gap={3}>
+          {topics.map((topic) => {
+            const passed = topic.techniqueIds.filter(
+              (id) => allProgress[id]?.challengePassed ?? false,
+            ).length
+            return (
+              <TopicCard
+                key={topic.id}
+                topic={topic}
+                passed={passed}
+                total={topic.techniqueIds.length}
+                onClick={() => navigate(`/topic/${topic.id}`)}
+              />
+            )
+          })}
+        </Stack>
+      </Box>
+    </Flex>
   )
 }
 

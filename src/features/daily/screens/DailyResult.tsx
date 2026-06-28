@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   Box,
   Button,
+  Flex,
   HStack,
   Heading,
   SimpleGrid,
@@ -42,75 +43,77 @@ export function DailyResult({
   )
 
   return (
-    <Box p={{ base: 4, md: 8 }} maxW="480px" mx="auto">
-      <Stack gap={6}>
-        {/* Header */}
-        <Box>
-          <Text fontSize="sm" color="text.muted" textTransform="uppercase" letterSpacing="wider">
-            Daily Challenge #{challengeNumber}
-          </Text>
-          <Heading size="xl" mt={1}>
-            {result.score === result.attempted ? 'Perfect!' : 'Complete'}
-          </Heading>
-        </Box>
-
-        {/* Stats */}
-        <SimpleGrid columns={3} gap={3}>
-          <Stat label="Correct" value={`${result.score}/${result.attempted}`} />
-          <Stat
-            label="Accuracy"
-            value={`${Math.round((result.score / Math.max(1, result.attempted)) * 100)}%`}
-          />
-          <Stat label="Time" value={`${result.timeSeconds}s`} />
-        </SimpleGrid>
-
-        {/* Emoji grid */}
-        <EmojiGrid problemResults={result.problemResults} />
-
-        {/* Share button */}
-        <CopyShareButton shareText={shareText} />
-
-        {/* Weak technique focus areas */}
-        {weakTechniqueIds.length > 0 && (
-          <Stack
-            gap={2}
-            p={5}
-            borderRadius="lg"
-            borderWidth="2px"
-            borderColor="border.subtle"
-            bg="bg.card"
-          >
-            <Heading
-              size="sm"
-              color="text.muted"
-              textTransform="uppercase"
-              letterSpacing="wider"
-            >
-              Focus areas
+    <Flex direction="column" minH="100dvh" p={{ base: 4, md: 8 }}>
+      <Box maxW="480px" mx="auto" w="full">
+        <Stack gap={6}>
+          {/* Header */}
+          <Box>
+            <Text fontSize="sm" color="text.muted" textTransform="uppercase" letterSpacing="wider">
+              Daily Challenge #{challengeNumber}
+            </Text>
+            <Heading size="xl" mt={1}>
+              {result.score === result.attempted ? 'Perfect!' : 'Complete'}
             </Heading>
-            {weakTechniqueIds.map((id) => {
-              const tech = findTechnique(id)
-              return (
-                <HStack key={id} justify="space-between">
-                  <Text>{tech?.name ?? id}</Text>
-                  <Button size="sm" variant="outline" onClick={() => onNavigate(id)}>
-                    Review
-                  </Button>
-                </HStack>
-              )
-            })}
-          </Stack>
-        )}
+          </Box>
 
-        {/* Countdown to next challenge */}
-        <NextChallengeCountdown />
+          {/* Stats */}
+          <SimpleGrid columns={3} gap={3}>
+            <Stat label="Correct" value={`${result.score}/${result.attempted}`} />
+            <Stat
+              label="Accuracy"
+              value={`${Math.round((result.score / Math.max(1, result.attempted)) * 100)}%`}
+            />
+            <Stat label="Time" value={`${result.timeSeconds}s`} />
+          </SimpleGrid>
 
-        {/* Navigation */}
-        <Button variant="outline" onClick={onBack} aria-label="Back to home">
-          Back to Home
-        </Button>
-      </Stack>
-    </Box>
+          {/* Emoji grid */}
+          <EmojiGrid problemResults={result.problemResults} />
+
+          {/* Share button */}
+          <CopyShareButton shareText={shareText} />
+
+          {/* Weak technique focus areas */}
+          {weakTechniqueIds.length > 0 && (
+            <Stack
+              gap={2}
+              p={5}
+              borderRadius="lg"
+              borderWidth="2px"
+              borderColor="border.subtle"
+              bg="bg.card"
+            >
+              <Heading
+                size="sm"
+                color="text.muted"
+                textTransform="uppercase"
+                letterSpacing="wider"
+              >
+                Focus areas
+              </Heading>
+              {weakTechniqueIds.map((id) => {
+                const tech = findTechnique(id)
+                return (
+                  <HStack key={id} justify="space-between">
+                    <Text>{tech?.name ?? id}</Text>
+                    <Button size="sm" variant="outline" onClick={() => onNavigate(id)}>
+                      Review
+                    </Button>
+                  </HStack>
+                )
+              })}
+            </Stack>
+          )}
+
+          {/* Countdown to next challenge */}
+          <NextChallengeCountdown />
+
+          {/* Navigation */}
+          <Button variant="outline" onClick={onBack} aria-label="Back to home">
+            Back to Home
+          </Button>
+        </Stack>
+      </Box>
+    </Flex>
   )
 }
 

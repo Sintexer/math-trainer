@@ -1,130 +1,148 @@
 import { useState } from 'react'
-import { Box, Button, Heading, HStack, Stack, Text } from '@chakra-ui/react'
-import type { Problem } from '@/shared/types'
-import {
-  AnswerFeedback,
-  AnswerInput,
-  SessionProgress,
-  Timer,
-} from '@/features/input'
+import { Box, Button, Flex, Heading, HStack, Text } from '@chakra-ui/react'
+import type { KeyboardType, Problem } from '@/shared/types'
+import { AnswerFeedback, AnswerInput, formatMmSs } from '@/features/input'
 import { TechniqueReferenceModal } from '@/features/technique-card'
 
 export interface ChallengeInSessionProps {
   problem: Problem
-  attempted: number
-  correct: number
   timeRemainingMs: number
-  totalDurationMs: number
   evaluating: boolean
   lastAnswerCorrect: boolean | null
   lastCorrectAnswer: number | null
   onSubmit: (answer: number) => void
   onAdvance: () => void
+  /** Abandons the session and returns to the entry screen. */
+  onExit: () => void
 }
 
 /**
- * Challenge in-session screen — Phase 7.
+ * Challenge in-session screen.
  *
- * Same input/feedback primitives as DrillInSession, but with a prominent
- * countdown Timer in place of the elapsed display, no total problem count
- * (the user solves as many as they can), and a slightly more intense
- * visual frame (deeper card background).
+ * Header mirrors DrillInSession exactly (× | center | ?) — the only
+ * difference is that the center shows a compact countdown instead of a
+ * problem counter. The card layout is identical to the drill screen.
  */
 export function ChallengeInSession({
   problem,
-  attempted,
-  correct,
   timeRemainingMs,
-  totalDurationMs,
   evaluating,
   lastAnswerCorrect,
   lastCorrectAnswer,
   onSubmit,
   onAdvance,
+  onExit,
 }: ChallengeInSessionProps) {
-  const elapsedMs = Math.max(0, totalDurationMs - Math.max(0, timeRemainingMs))
   const [referenceOpen, setReferenceOpen] = useState(false)
+  const clamped = Math.max(0, timeRemainingMs)
+  const warning = clamped < 10_000
 
   return (
-    <Box p={{ base: 4, md: 8 }} maxW="640px" mx="auto">
-      <Stack gap={6}>
-        <HStack justify="space-between" align="center">
-          <Timer remainingMs={timeRemainingMs} totalMs={totalDurationMs} />
-          <Button
-            size="sm"
-            variant="ghost"
-            aria-label="Open technique reference"
-            onClick={() => setReferenceOpen(true)}
-          >
-            ?
-          </Button>
-        </HStack>
-
-        <SessionProgress attempted={attempted} correct={correct} elapsedMs={elapsedMs} />
-
-        <Box
-          textAlign="center"
-          py={8}
-          px={4}
-          borderRadius="xl"
-          borderWidth="2px"
-          borderColor="border.subtle"
-          bg="bg.card"
-          boxShadow="md"
+    <Flex direction="column" minH="100dvh" p={{ base: 4, md: 8 }} gap={3}>
+      {/* ── Top: exit × | timer | reference ? ── */}
+      <HStack justify="space-between" align="center" flexShrink={0}>
+        <Button
+          size="sm"
+          variant="ghost"
+          aria-label="Exit challenge"
+          onClick={onExit}
+          color="text.muted"
+          fontSize="xl"
+          px={2}
         >
-          <Text
-            fontSize="xs"
-            color="text.muted"
-            textTransform="uppercase"
-            letterSpacing="wider"
-            mb={2}
-          >
-            Problem #{attempted + (evaluating ? 0 : 1)}
-          </Text>
-          <Heading
-            as="div"
-            size="2xl"
-            fontFamily="mono"
-            data-testid="challenge-prompt"
-          >
-            {problem.prompt}
-          </Heading>
-        </Box>
+          ×
+        </Button>
+        <Text
+          role="timer"
+          aria-label={`Time remaining ${formatMmSs(clamped)}`}
+          fontSize="sm"
+          fontWeight="medium"
+          fontFamily="mono"
+          fontVariantNumeric="tabular-nums"
+          color={warning ? 'red.500' : 'text.muted'}
+          data-warning={warning ? 'true' : 'false'}
+        >
+          {formatMmSs(clamped)}
+        </Text>
+        <Button
+          size="sm"
+          variant="ghost"
+          aria-label="Open technique reference"
+          onClick={() => setReferenceOpen(true)}
+        >
+          ?
+        </Button>
+      </HStack>
 
-        {/* Keyed on problem.id — same pattern as DrillInSession. */}
-        <AnswerForm key={problem.id} onSubmit={onSubmit} disabled={evaluating} />
+      {/* ── Card: question + feedback + input ── */}
+      <Flex
+        direction="column"
+        flex={1}
+        borderWidth="1px"
+        borderColor="border.subtle"
+        borderRadius="2xl"
+        bg="bg.card"
+        p={{ base: 5, md: 8 }}
+        overflow="hidden"
+      >
+        {/* Question — grows to fill available card height, vertically centred */}
+        <Flex flex={1} alignItems="center" justifyContent="center">
+          <Box textAlign="center" w="full" maxW="600px" mx="auto">
+            <Heading
+              as="div"
+              size="2xl"
+              fontFamily="mono"
+              data-testid="challenge-prompt"
+            >
+              {problem.prompt}
+            </Heading>
+          </Box>
+        </Flex>
 
-        <Box minH="80px">
-          <AnswerFeedback
-            state={
-              evaluating
-                ? lastAnswerCorrect
-                  ? 'correct'
-                  : 'incorrect'
-                : 'idle'
-            }
-            correctAnswer={lastCorrectAnswer ?? undefined}
-            onDismiss={onAdvance}
-            showNextButton
+        {/* Feedback + input — pinned to the bottom of the card */}
+        <Box flexShrink={0} w="full" maxW="480px" mx="auto">
+          <Box minH="64px" mb={3}>
+            <AnswerFeedback
+              state={
+                evaluating
+                  ? lastAnswerCorrect
+                    ? 'correct'
+                    : 'incorrect'
+                  : 'idle'
+              }
+              correctAnswer={lastCorrectAnswer ?? undefined}
+              onDismiss={onAdvance}
+              showNextButton
+            />
+          </Box>
+          {/* Keyed on problem.id — same remount strategy as DrillInSession. */}
+          <AnswerForm
+            key={problem.id}
+            onSubmit={onSubmit}
+            disabled={evaluating}
+            expectedAnswer={problem.answer}
+            keyboardType={problem.keyboardType}
           />
         </Box>
-      </Stack>
+      </Flex>
 
       <TechniqueReferenceModal
         techniqueId={problem.techniqueId}
         open={referenceOpen}
         onClose={() => setReferenceOpen(false)}
       />
-    </Box>
+    </Flex>
   )
 }
 
 interface AnswerFormProps {
   onSubmit: (answer: number) => void
   disabled?: boolean
+  expectedAnswer?: number
+  keyboardType?: KeyboardType
 }
 
-function AnswerForm({ onSubmit, disabled }: AnswerFormProps) {
+function AnswerForm({ onSubmit, disabled, expectedAnswer, keyboardType }: AnswerFormProps) {
   const [buffer, setBuffer] = useState('')
   return (
     <AnswerInput
@@ -134,6 +152,8 @@ function AnswerForm({ onSubmit, disabled }: AnswerFormProps) {
         setBuffer('')
         onSubmit(value)
       }}
+      expectedAnswer={expectedAnswer}
+      keyboardType={keyboardType}
       disabled={disabled}
     />
   )

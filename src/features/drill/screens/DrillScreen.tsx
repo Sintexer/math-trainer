@@ -45,7 +45,7 @@ export default function DrillScreen() {
   // effect dispatches completeSession exactly once per session.
   const persistedSummaryIdRef = useRef<string | null>(null)
 
-  const { state, elapsedMs, currentProblem, start, submitAnswer, advance, reset } =
+  const { state, currentProblem, start, submitAnswer, advance, reset } =
     useDrillSession({ techniqueId })
 
   useEffect(() => {
@@ -122,21 +122,21 @@ export default function DrillScreen() {
   if (!currentProblem) return null
   const lastAnswer =
     state.status === 'evaluating' ? state.answers[state.answers.length - 1] : null
-  const correctCount = state.answers.filter((a) => a.correct).length
 
   return (
     <DrillInSession
       problem={currentProblem}
-      problemNumber={state.currentIndex + 1}
       attempted={state.answers.length}
-      correct={correctCount}
       totalProblems={state.problems.length}
-      elapsedMs={elapsedMs}
       evaluating={state.status === 'evaluating'}
       lastAnswerCorrect={lastAnswer?.correct ?? null}
       lastCorrectAnswer={lastAnswer?.problem.answer ?? null}
       onSubmit={submitAnswer}
       onAdvance={advance}
+      onExit={() => {
+        persistedSummaryIdRef.current = null
+        reset()
+      }}
     />
   )
 }

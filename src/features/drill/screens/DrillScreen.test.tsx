@@ -57,7 +57,6 @@ describe('DrillScreen', () => {
     renderAt(`/challenge/${TECH}/drill`)
     await user.click(screen.getByRole('button', { name: /Start Drill/i }))
     expect(screen.getByTestId('drill-prompt')).toBeInTheDocument()
-    expect(screen.getByText(/Problem 1 of/i)).toBeInTheDocument()
   })
 
   it('end-to-end: completes a drill, persists summary, shows report with stats', async () => {

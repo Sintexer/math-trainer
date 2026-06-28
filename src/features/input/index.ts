@@ -10,6 +10,10 @@ export type { KeypadProps } from './Keypad'
 export { AnswerInput } from './AnswerInput'
 export type { AnswerInputProps } from './AnswerInput'
 
+// KeyboardType lives in shared/types but is also re-exported here so that
+// session screens can import everything input-related from a single place.
+export type { KeyboardType } from '@/shared/types'
+
 export { useKeyboardDigits } from './useKeyboardDigits'
 export type { UseKeyboardDigitsOptions } from './useKeyboardDigits'
 

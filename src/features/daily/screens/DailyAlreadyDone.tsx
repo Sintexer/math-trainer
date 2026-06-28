@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Box, Button, Heading, Stack, Text } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import type { DailyChallengeResult } from '@/features/progress'
 import { buildShareText } from '../dailyChallenge'
 
@@ -23,48 +23,50 @@ export function DailyAlreadyDone({ result, challengeNumber, onBack }: DailyAlrea
   )
 
   return (
-    <Box p={{ base: 4, md: 8 }} maxW="480px" mx="auto">
-      <Stack gap={6}>
-        <Box>
-          <Text fontSize="sm" color="text.muted" textTransform="uppercase" letterSpacing="wider">
-            Daily Challenge #{challengeNumber}
-          </Text>
-          <Heading size="xl" mt={1}>
-            Already completed
-          </Heading>
-          <Text color="text.muted" mt={1}>
-            {result.date}
-          </Text>
-        </Box>
+    <Flex direction="column" minH="100dvh" p={{ base: 4, md: 8 }}>
+      <Box maxW="480px" mx="auto" w="full">
+        <Stack gap={6}>
+          <Box>
+            <Text fontSize="sm" color="text.muted" textTransform="uppercase" letterSpacing="wider">
+              Daily Challenge #{challengeNumber}
+            </Text>
+            <Heading size="xl" mt={1}>
+              Already completed
+            </Heading>
+            <Text color="text.muted" mt={1}>
+              {result.date}
+            </Text>
+          </Box>
 
-        <Stack
-          gap={3}
-          p={5}
-          borderRadius="lg"
-          borderWidth="2px"
-          borderColor="border.subtle"
-          bg="bg.card"
-        >
-          <Text fontWeight="semibold">Your result</Text>
-          <Text>
-            {result.score}/{result.attempted} correct · {result.timeSeconds}s
-          </Text>
-          <Text fontSize="2xl" letterSpacing="0.15em" aria-label="Result grid">
-            {result.problemResults.map((r, i) => (
-              <span key={i} role="img" aria-label={r.correct ? 'correct' : 'incorrect'}>
-                {r.correct ? '🟩' : '🟥'}
-              </span>
-            ))}
-          </Text>
+          <Stack
+            gap={3}
+            p={5}
+            borderRadius="lg"
+            borderWidth="2px"
+            borderColor="border.subtle"
+            bg="bg.card"
+          >
+            <Text fontWeight="semibold">Your result</Text>
+            <Text>
+              {result.score}/{result.attempted} correct · {result.timeSeconds}s
+            </Text>
+            <Text fontSize="2xl" letterSpacing="0.15em" aria-label="Result grid">
+              {result.problemResults.map((r, i) => (
+                <span key={i} role="img" aria-label={r.correct ? 'correct' : 'incorrect'}>
+                  {r.correct ? '🟩' : '🟥'}
+                </span>
+              ))}
+            </Text>
+          </Stack>
+
+          <CopyShareButton shareText={shareText} />
+
+          <Button variant="outline" onClick={onBack} aria-label="Back to home">
+            Back to Home
+          </Button>
         </Stack>
-
-        <CopyShareButton shareText={shareText} />
-
-        <Button variant="outline" onClick={onBack} aria-label="Back to home">
-          Back to Home
-        </Button>
-      </Stack>
-    </Box>
+      </Box>
+    </Flex>
   )
 }
 

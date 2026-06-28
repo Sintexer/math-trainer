@@ -4,6 +4,7 @@ import {
   Badge,
   Box,
   Button,
+  Flex,
   HStack,
   Heading,
   Stack,
@@ -50,56 +51,58 @@ export default function TopicHubScreen() {
 
   if (!topic) {
     return (
-      <Box p={8}>
+      <Flex direction="column" minH="100dvh" p={8}>
         <Text color="text.muted">Topic not found: {topicId}</Text>
         <Button mt={4} onClick={() => navigate('/')}>
           ← Back
         </Button>
-      </Box>
+      </Flex>
     )
   }
 
   return (
-    <Box p={{ base: 4, md: 8 }} maxW="800px" mx="auto">
-      <Button
-        size="sm"
-        variant="ghost"
-        onClick={() => navigate('/')}
-        mb={4}
-        aria-label="Back to home"
-      >
-        ← Back
-      </Button>
+    <Flex direction="column" minH="100dvh" p={{ base: 4, md: 8 }}>
+      <Box maxW="800px" mx="auto" w="full">
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => navigate('/')}
+          mb={4}
+          aria-label="Back to home"
+        >
+          ← Back
+        </Button>
 
-      <Heading size="xl" mb={1}>
-        {topic.name}
-      </Heading>
-      <Text color="text.muted" mb={6}>
-        {topic.description}
-      </Text>
+        <Heading size="xl" mb={1}>
+          {topic.name}
+        </Heading>
+        <Text color="text.muted" mb={6}>
+          {topic.description}
+        </Text>
 
-      <Stack gap={3}>
-        {techniques.map((technique) => {
-          const progress = allProgress[technique.id]
-          const challengePassed = progress?.challengePassed ?? false
-          const lastDrill =
-            progress?.sessions.filter((s: SessionSummary) => s.type === 'drill').at(-1) ?? null
+        <Stack gap={3}>
+          {techniques.map((technique) => {
+            const progress = allProgress[technique.id]
+            const challengePassed = progress?.challengePassed ?? false
+            const lastDrill =
+              progress?.sessions.filter((s: SessionSummary) => s.type === 'drill').at(-1) ?? null
 
-          return (
-            <ChallengeCard
-              key={technique.id}
-              technique={technique}
-              challengePassed={challengePassed}
-              lastDrill={lastDrill}
-              showTheory={topic.hasTheory ?? true}
-              onReadTheory={() => navigate(`/challenge/${technique.id}/theory`)}
-              onPractice={() => navigate(`/challenge/${technique.id}/drill`)}
-              onChallenge={() => navigate(`/challenge/${technique.id}`)}
-            />
-          )
-        })}
-      </Stack>
-    </Box>
+            return (
+              <ChallengeCard
+                key={technique.id}
+                technique={technique}
+                challengePassed={challengePassed}
+                lastDrill={lastDrill}
+                showTheory={topic.hasTheory ?? true}
+                onReadTheory={() => navigate(`/challenge/${technique.id}/theory`)}
+                onPractice={() => navigate(`/challenge/${technique.id}/drill`)}
+                onChallenge={() => navigate(`/challenge/${technique.id}`)}
+              />
+            )
+          })}
+        </Stack>
+      </Box>
+    </Flex>
   )
 }
 

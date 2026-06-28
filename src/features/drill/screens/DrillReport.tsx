@@ -1,4 +1,4 @@
-import { Box, Button, HStack, Heading, SimpleGrid, Stack, Text } from '@chakra-ui/react'
+import { Box, Button, Flex, HStack, Heading, SimpleGrid, Stack, Text } from '@chakra-ui/react'
 import type { MasteryStars, Technique } from '@/shared/types'
 import type { SessionSummary } from '@/features/session'
 import { findTechnique } from '@/content'
@@ -28,42 +28,24 @@ export function DrillReport({
   onTryAgain,
 }: DrillReportProps) {
   return (
-    <Box p={{ base: 4, md: 8 }} maxW="640px" mx="auto">
-      <Heading size="xl" mb={1}>
-        Drill complete
-      </Heading>
-      <Text color="text.muted" mb={6}>
-        {technique.name}
-      </Text>
-
-      <SimpleGrid columns={{ base: 2, md: 4 }} gap={3} mb={6}>
-        <Stat label="Correct" value={`${summary.correct}/${summary.attempted}`} />
-        <Stat label="Accuracy" value={`${summary.accuracyPct}%`} />
-        <Stat label="Speed" value={`${summary.speedPerMin}/min`} />
-        <Stat label="XP" value={`+${xpEarned}`} highlight />
-      </SimpleGrid>
-
-      <Stack
-        gap={3}
-        p={5}
-        borderRadius="lg"
-        borderWidth="2px"
-        borderColor="border.subtle"
-        bg="bg.card"
-        mb={6}
-      >
-        <Heading size="sm" color="text.muted" textTransform="uppercase" letterSpacing="wider">
-          Mastery
+    <Flex direction="column" minH="100dvh" p={{ base: 4, md: 8 }}>
+      <Box maxW="640px" mx="auto" w="full">
+        <Heading size="xl" mb={1}>
+          Drill complete
         </Heading>
-        <HStack gap={4}>
-          <StarRow label="Speed" before={starsBefore.speed} after={starsAfter.speed} />
-          <StarRow label="Range" before={starsBefore.range} after={starsAfter.range} />
-        </HStack>
-      </Stack>
+        <Text color="text.muted" mb={6}>
+          {technique.name}
+        </Text>
 
-      {summary.weakTechniqueIds.length > 0 && (
+        <SimpleGrid columns={{ base: 2, md: 4 }} gap={3} mb={6}>
+          <Stat label="Correct" value={`${summary.correct}/${summary.attempted}`} />
+          <Stat label="Accuracy" value={`${summary.accuracyPct}%`} />
+          <Stat label="Speed" value={`${summary.speedPerMin}/min`} />
+          <Stat label="XP" value={`+${xpEarned}`} highlight />
+        </SimpleGrid>
+
         <Stack
-          gap={2}
+          gap={3}
           p={5}
           borderRadius="lg"
           borderWidth="2px"
@@ -72,42 +54,62 @@ export function DrillReport({
           mb={6}
         >
           <Heading size="sm" color="text.muted" textTransform="uppercase" letterSpacing="wider">
-            Focus areas
+            Mastery
           </Heading>
-          {summary.weakTechniqueIds.map((id) => {
-            const tech = findTechnique(id)
-            return (
-              <HStack key={id} justify="space-between">
-                <Text>{tech?.name ?? id}</Text>
-                <Button size="sm" variant="outline" onClick={() => onReview(id)}>
-                  Review
-                </Button>
-              </HStack>
-            )
-          })}
+          <HStack gap={4}>
+            <StarRow label="Speed" before={starsBefore.speed} after={starsAfter.speed} />
+            <StarRow label="Range" before={starsBefore.range} after={starsAfter.range} />
+          </HStack>
         </Stack>
-      )}
 
-      <Stack direction={{ base: 'column', md: 'row' }} gap={3}>
-        <Button
-          flex={1}
-          onClick={onBackToMap}
-          variant="outline"
-          aria-label="Back to map"
-        >
-          Back to Map
-        </Button>
-        <Button
-          flex={1}
-          onClick={onTryAgain}
-          bg="brand.500"
-          color="white"
-          _hover={{ bg: 'brand.600' }}
-        >
-          Try Again
-        </Button>
-      </Stack>
-    </Box>
+        {summary.weakTechniqueIds.length > 0 && (
+          <Stack
+            gap={2}
+            p={5}
+            borderRadius="lg"
+            borderWidth="2px"
+            borderColor="border.subtle"
+            bg="bg.card"
+            mb={6}
+          >
+            <Heading size="sm" color="text.muted" textTransform="uppercase" letterSpacing="wider">
+              Focus areas
+            </Heading>
+            {summary.weakTechniqueIds.map((id) => {
+              const tech = findTechnique(id)
+              return (
+                <HStack key={id} justify="space-between">
+                  <Text>{tech?.name ?? id}</Text>
+                  <Button size="sm" variant="outline" onClick={() => onReview(id)}>
+                    Review
+                  </Button>
+                </HStack>
+              )
+            })}
+          </Stack>
+        )}
+
+        <Stack direction={{ base: 'column', md: 'row' }} gap={3}>
+          <Button
+            flex={1}
+            onClick={onBackToMap}
+            variant="outline"
+            aria-label="Back to map"
+          >
+            Back to Map
+          </Button>
+          <Button
+            flex={1}
+            onClick={onTryAgain}
+            bg="brand.500"
+            color="white"
+            _hover={{ bg: 'brand.600' }}
+          >
+            Try Again
+          </Button>
+        </Stack>
+      </Box>
+    </Flex>
   )
 }
 

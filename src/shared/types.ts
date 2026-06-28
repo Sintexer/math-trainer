@@ -3,6 +3,14 @@
 
 export type Difficulty = 'easy' | 'medium' | 'hard'
 
+/**
+ * The type of virtual keyboard to surface for a problem.
+ * 'numeric'   — digits 0–9, backspace, submit (default for all current problems)
+ * 'decimal'   — numeric + decimal point (future: fraction/decimal answers)
+ * 'algebraic' — numeric + variable keys (future: algebra problems)
+ */
+export type KeyboardType = 'numeric' | 'decimal' | 'algebraic'
+
 export const ALL_DIFFICULTIES: readonly Difficulty[] = ['easy', 'medium', 'hard'] as const
 
 export type TopicId = 'addition' | 'subtraction' | 'multiplication' | 'division'
@@ -14,6 +22,8 @@ export interface Problem {
   difficulty: Difficulty
   prompt: string
   answer: number
+  /** Virtual keyboard variant to show. Defaults to 'numeric'. */
+  keyboardType?: KeyboardType
   // Populated after the user answers:
   userAnswer?: number
   correct?: boolean

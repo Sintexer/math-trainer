@@ -47,7 +47,6 @@ export default function ChallengeScreen() {
     state,
     currentProblem,
     timeRemainingMs,
-    totalDurationMs,
     start,
     submitAnswer,
     advance,
@@ -129,20 +128,20 @@ export default function ChallengeScreen() {
   if (!currentProblem) return null
   const lastAnswer =
     state.status === 'evaluating' ? state.answers[state.answers.length - 1] : null
-  const correctCount = state.answers.filter((a) => a.correct).length
 
   return (
     <ChallengeInSession
       problem={currentProblem}
-      attempted={state.answers.length}
-      correct={correctCount}
       timeRemainingMs={timeRemainingMs}
-      totalDurationMs={totalDurationMs}
       evaluating={state.status === 'evaluating'}
       lastAnswerCorrect={lastAnswer?.correct ?? null}
       lastCorrectAnswer={lastAnswer?.problem.answer ?? null}
       onSubmit={submitAnswer}
       onAdvance={advance}
+      onExit={() => {
+        persistedSummaryIdRef.current = null
+        reset()
+      }}
     />
   )
 }

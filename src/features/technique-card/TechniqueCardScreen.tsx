@@ -4,6 +4,7 @@ import {
   Badge,
   Box,
   Button,
+  Flex,
   HStack,
   Heading,
   Stack,
@@ -39,7 +40,7 @@ export default function TechniqueCardScreen() {
 
   if (!technique || !content) {
     return (
-      <Box p={8}>
+      <Flex direction="column" minH="100dvh" p={8}>
         <Heading size="lg">Unknown technique</Heading>
         <Text mt={2} color="text.muted">
           No technique with id <code>{techniqueId}</code>.
@@ -47,7 +48,7 @@ export default function TechniqueCardScreen() {
         <Button mt={4} onClick={() => navigate('/')}>
           Back to map
         </Button>
-      </Box>
+      </Flex>
     )
   }
 
@@ -58,34 +59,36 @@ export default function TechniqueCardScreen() {
   }
 
   return (
-    <Box p={{ base: 4, md: 8 }} maxW="720px" mx="auto">
-      <Button
-        size="sm"
-        variant="ghost"
-        onClick={() => {
-          const topicId = getLearningTopicForTechnique(technique.id)?.id
-          navigate(topicId ? `/topic/${topicId}` : '/')
-        }}
-        mb={4}
-        aria-label="Back to topic"
-      >
-        ← Back
-      </Button>
+    <Flex direction="column" minH="100dvh" p={{ base: 4, md: 8 }}>
+      <Box maxW="720px" mx="auto" w="full">
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => {
+            const topicId = getLearningTopicForTechnique(technique.id)?.id
+            navigate(topicId ? `/topic/${topicId}` : '/')
+          }}
+          mb={4}
+          aria-label="Back to topic"
+        >
+          ← Back
+        </Button>
 
-      <Stack gap={2} mb={6}>
-        <Heading size="xl">{technique.name}</Heading>
-        <HStack gap={2}>
-          <Badge>{technique.topicId}</Badge>
-          <Badge colorPalette="purple">{technique.difficulty}</Badge>
-          {alreadyRead && <Badge colorPalette="green">Read</Badge>}
-        </HStack>
-      </Stack>
+        <Stack gap={2} mb={6}>
+          <Heading size="xl">{technique.name}</Heading>
+          <HStack gap={2}>
+            <Badge>{technique.topicId}</Badge>
+            <Badge colorPalette="purple">{technique.difficulty}</Badge>
+            {alreadyRead && <Badge colorPalette="green">Read</Badge>}
+          </HStack>
+        </Stack>
 
-      <TechniqueSlideViewer
-        slides={content.slides}
-        completeLabel={alreadyRead ? 'Done' : 'Got it'}
-        onComplete={onComplete}
-      />
-    </Box>
+        <TechniqueSlideViewer
+          slides={content.slides}
+          completeLabel={alreadyRead ? 'Done' : 'Got it'}
+          onComplete={onComplete}
+        />
+      </Box>
+    </Flex>
   )
 }
