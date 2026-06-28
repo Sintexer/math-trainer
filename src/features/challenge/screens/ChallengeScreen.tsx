@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Box, Button, Heading, Text } from '@chakra-ui/react'
 import { findTechnique } from '@/content'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
@@ -25,10 +25,14 @@ import { ChallengeResult } from './ChallengeResult'
  */
 export default function ChallengeScreen() {
   const { techniqueId = '' } = useParams<{ techniqueId: string }>()
+  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
   const technique = useMemo(() => findTechnique(techniqueId), [techniqueId])
+
+  const configDuration = searchParams.get('duration')
+  const durationSeconds = configDuration ? parseInt(configDuration, 10) : undefined
 
   const liveStars = useAppSelector((s) => selectMasteryStars(s, techniqueId))
   const techniqueProgress = useAppSelector((s) =>
@@ -51,7 +55,7 @@ export default function ChallengeScreen() {
     submitAnswer,
     advance,
     reset,
-  } = useChallengeSession({ techniqueId })
+  } = useChallengeSession({ techniqueId, durationSeconds })
 
   useEffect(() => {
     if (state.status !== 'complete' || !state.summary || !technique) return

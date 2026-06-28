@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import type { Difficulty } from '@/shared/types'
 import { Box, Button, Heading, Text } from '@chakra-ui/react'
 import { findTechnique } from '@/content'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
@@ -23,10 +24,16 @@ import { DrillReport } from './DrillReport'
  */
 export default function DrillScreen() {
   const { techniqueId = '' } = useParams<{ techniqueId: string }>()
+  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
   const technique = useMemo(() => findTechnique(techniqueId), [techniqueId])
+
+  const configCount = searchParams.get('count')
+  const configDifficulty = searchParams.get('difficulty') as Difficulty | null
+  const problemCount = configCount ? parseInt(configCount, 10) : undefined
+  const difficulty = configDifficulty ?? undefined
 
   const liveStars = useAppSelector((s) => selectMasteryStars(s, techniqueId))
   const techniqueProgress = useAppSelector((s) =>
@@ -45,7 +52,7 @@ export default function DrillScreen() {
   const persistedSummaryIdRef = useRef<string | null>(null)
 
   const { state, currentProblem, start, submitAnswer, advance, reset } =
-    useDrillSession({ techniqueId })
+    useDrillSession({ techniqueId, problemCount, difficulty })
 
   // Auto-start the drill the moment the technique is known and we're idle.
   // This skips the DrillEntry screen so the user goes straight into practice.

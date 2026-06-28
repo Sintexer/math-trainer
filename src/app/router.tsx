@@ -7,6 +7,11 @@ import { TechniqueCardScreen } from '@/features/technique-card'
 import { TopicHubScreen } from '@/features/topic'
 import { HomeScreen } from '@/features/home'
 import { DailyScreen } from '@/features/daily'
+import { FlashScreen } from '@/features/flash'
+import { PracticeConfigScreen } from '@/features/practice-config'
+import { TopicChallengeScreen } from '@/features/topic-challenge'
+import { PracticeBuilderScreen } from '@/features/practice-builder'
+import { CustomSessionScreen } from '@/features/custom-session'
 
 // HashRouter lives in App.tsx — it is intentionally NOT here. The app deploys
 // to GitHub Pages which serves static files and cannot rewrite arbitrary paths
@@ -37,7 +42,15 @@ export default function AppRouter() {
       <Route path="/challenge/:techniqueId" element={<ChallengeScreen />} />
       <Route path="/challenge/:techniqueId/theory" element={<TechniqueCardScreen />} />
       <Route path="/challenge/:techniqueId/drill" element={<DrillScreen />} />
-      {/* /challenge/:techniqueId/flash — Flash mode (coming soon, not yet implemented) */}
+      <Route path="/challenge/:techniqueId/flash" element={<FlashScreen />} />
+      <Route path="/challenge/:techniqueId/config" element={<PracticeConfigScreen />} />
+
+      {/* Topic-level challenge (all techniques in a topic) */}
+      <Route path="/topic/:topicId/challenge" element={<TopicChallengeScreen />} />
+
+      {/* Custom practice builder (multi-topic / multi-technique) */}
+      <Route path="/practice/builder" element={<PracticeBuilderScreen />} />
+      <Route path="/practice/session" element={<CustomSessionScreen />} />
 
       <Route path="/daily" element={<DailyScreen />} />
       <Route path="/profile" element={<Placeholder name="Profile" />} />

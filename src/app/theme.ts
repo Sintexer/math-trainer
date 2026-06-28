@@ -5,16 +5,16 @@ const customConfig = defineConfig({
     tokens: {
       colors: {
         brand: {
-          50: { value: '#f0f4ff' },
-          100: { value: '#dce4ff' },
-          200: { value: '#b9c8ff' },
-          300: { value: '#8aa3ff' },
-          400: { value: '#5a78ff' },
-          500: { value: '#3a54f5' },
-          600: { value: '#2a3dd4' },
-          700: { value: '#1e2da3' },
-          800: { value: '#162075' },
-          900: { value: '#0d1347' },
+          50: { value: '#f0fdf4' },
+          100: { value: '#dcfce7' },
+          200: { value: '#bbf7d0' },
+          300: { value: '#86efac' },
+          400: { value: '#4ade80' },
+          500: { value: '#16a34a' },
+          600: { value: '#15803d' },
+          700: { value: '#166534' },
+          800: { value: '#14532d' },
+          900: { value: '#052e16' },
         },
       },
       fonts: {

@@ -26,3 +26,6 @@ export { formatMmSs } from './formatMmSs'
 
 export { SessionProgress } from './SessionProgress'
 export type { SessionProgressProps } from './SessionProgress'
+
+export { InSessionScreen } from './InSessionScreen'
+export type { InSessionScreenProps } from './InSessionScreen'

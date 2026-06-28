@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Flex, Heading, SimpleGrid, Stack, Text } from '@chakra-ui/react'
+import { Flex, Heading, SimpleGrid, Stack, Text, Box } from '@chakra-ui/react'
 import { getAllLearningTopics } from '@/content'
 import { useAppSelector } from '@/app/hooks'
 import { selectAllTechniqueProgress } from '@/features/progress'
@@ -48,6 +48,7 @@ export default function HomeScreen() {
             />
           )
         })}
+        <CustomPracticeCard onClick={() => navigate('/practice/builder')} />
       </SimpleGrid>
     </Flex>
   )
@@ -60,6 +61,34 @@ interface TopicCardProps {
   passed: number
   total: number
   onClick: () => void
+}
+
+function CustomPracticeCard({ onClick }: { onClick: () => void }) {
+  return (
+    <Stack
+      gap={2}
+      p={5}
+      minH="130px"
+      borderRadius="xl"
+      borderWidth="2px"
+      borderStyle="dashed"
+      borderColor="border.subtle"
+      bg="bg.card"
+      cursor="pointer"
+      _hover={{ bg: 'bg.app' }}
+      onClick={onClick}
+      role="button"
+      aria-label="Open custom practice builder"
+    >
+      <Text fontWeight="bold" fontSize="lg">
+        Custom Practice
+      </Text>
+      <Text fontSize="sm" color="text.muted" flex={1}>
+        Build your own session across any topics and techniques
+      </Text>
+      <Box />
+    </Stack>
+  )
 }
 
 function TopicCard({ topic, passed, total, onClick }: TopicCardProps) {

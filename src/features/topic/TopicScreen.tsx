@@ -23,17 +23,18 @@ const DIFFICULTY_PALETTE: Record<string, string> = {
   hard: 'red',
 }
 
-/**
- * TopicHubScreen — the hub for a single learning topic.
- *
- * Renders one ChallengeCard per technique listed in the topic's `techniqueIds`
- * array. Adding a new technique to a topic's data is the only change needed to
- * make it appear here — no UI code changes required.
- *
- * Architecture note: a "Flash" training mode card will be added to each
- * ChallengeCard once that feature is implemented. The card component is
- * designed to accommodate an additional button row without layout changes.
- */
+/** Technique IDs that support Flash (mental speed) training. */
+const FLASH_TECHNIQUE_IDS = new Set([
+  'add-speed-1d2d',
+  'add-speed-2d2d',
+  'add-speed-3d',
+  'sub-speed-2d1d',
+  'sub-speed-2d2d',
+  'sub-speed-3d',
+  'mul-times-table',
+  'mul-perfect-squares',
+])
+
 export default function TopicHubScreen() {
   const { topicId = '' } = useParams<{ topicId: string }>()
   const navigate = useNavigate()
@@ -74,12 +75,24 @@ export default function TopicHubScreen() {
         ← Back
       </Button>
       <Box maxW="800px" mx="auto" w="full">
-        <Heading size="xl" mb={1}>
-          {topic.name}
-        </Heading>
-        <Text color="text.muted" mb={6}>
-          {topic.description}
-        </Text>
+        <Flex justify="space-between" align="flex-start" mb={1} gap={3} flexWrap="wrap">
+          <Box>
+            <Heading size="xl" mb={1}>
+              {topic.name}
+            </Heading>
+            <Text color="text.muted" mb={6}>
+              {topic.description}
+            </Text>
+          </Box>
+          <Button
+            size="sm"
+            variant="outline"
+            flexShrink={0}
+            onClick={() => navigate(`/topic/${topicId}/challenge`)}
+          >
+            Topic Test →
+          </Button>
+        </Flex>
 
         <SimpleGrid minChildWidth="220px" gap={4}>
           {techniques.map((technique) => {
@@ -95,8 +108,11 @@ export default function TopicHubScreen() {
                 challengePassed={challengePassed}
                 lastDrill={lastDrill}
                 showTheory={topic.hasTheory ?? true}
+                showFlash={FLASH_TECHNIQUE_IDS.has(technique.id)}
                 onReadTheory={() => navigate(`/challenge/${technique.id}/theory`)}
                 onPractice={() => navigate(`/challenge/${technique.id}/drill`)}
+                onFlash={() => navigate(`/challenge/${technique.id}/flash`)}
+                onCustom={() => navigate(`/challenge/${technique.id}/config`)}
                 onChallenge={() => navigate(`/challenge/${technique.id}`)}
               />
             )
@@ -113,10 +129,12 @@ interface ChallengeCardProps {
   technique: Technique
   challengePassed: boolean
   lastDrill: SessionSummary | null
-  /** When false, the "Read Theory" button is omitted (speed/repetition topics). */
   showTheory: boolean
+  showFlash: boolean
   onReadTheory: () => void
   onPractice: () => void
+  onFlash: () => void
+  onCustom: () => void
   onChallenge: () => void
 }
 
@@ -125,8 +143,11 @@ function ChallengeCard({
   challengePassed,
   lastDrill,
   showTheory,
+  showFlash,
   onReadTheory,
   onPractice,
+  onFlash,
+  onCustom,
   onChallenge,
 }: ChallengeCardProps) {
   return (
@@ -170,6 +191,14 @@ function ChallengeCard({
         )}
         <Button size="sm" variant="outline" w="full" onClick={onPractice}>
           Practice
+        </Button>
+        {showFlash && (
+          <Button size="sm" variant="outline" w="full" onClick={onFlash}>
+            ⚡ Flash
+          </Button>
+        )}
+        <Button size="sm" variant="ghost" w="full" onClick={onCustom} fontSize="xs">
+          Custom…
         </Button>
         <Button
           size="sm"

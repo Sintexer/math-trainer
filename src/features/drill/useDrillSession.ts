@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
-import type { Problem } from '@/shared/types'
+import type { Difficulty, Problem } from '@/shared/types'
 import {
   createIdleState,
   sessionReducer,
@@ -7,7 +7,7 @@ import {
   type SessionConfig,
   type SessionState,
 } from '@/features/session'
-import { generateMixedProblems, defaultRng, type Rng } from '@/features/generators'
+import { generateMixedProblems, generateProblems, defaultRng, type Rng } from '@/features/generators'
 
 /** Default number of problems in a Drill session. */
 export const DEFAULT_DRILL_PROBLEM_COUNT = 15
@@ -17,7 +17,15 @@ const ELAPSED_TICK_MS = 200
 
 export interface UseDrillSessionOptions {
   techniqueId: string
+  /**
+   * Override the techniques used for problem generation. When provided,
+   * `generateMixedProblems` draws from this list instead of `[techniqueId]`.
+   * Useful for topic-level challenges that span multiple techniques.
+   */
+  techniqueIds?: string[]
   problemCount?: number
+  /** When set to a specific difficulty, all problems use that difficulty instead of a mixed distribution. */
+  difficulty?: Difficulty | 'mixed'
   /** Injectable wall-clock source. Defaults to Date.now in production. */
   now?: () => number
   /** Injectable RNG for tests. Defaults to defaultRng. */
@@ -60,7 +68,9 @@ function drillReducer(state: SessionState, action: DrillAction): SessionState {
  */
 export function useDrillSession({
   techniqueId,
+  techniqueIds,
   problemCount = DEFAULT_DRILL_PROBLEM_COUNT,
+  difficulty,
   now: nowFn = Date.now,
   rng = defaultRng,
 }: UseDrillSessionOptions): UseDrillSessionApi {
@@ -83,10 +93,14 @@ export function useDrillSession({
   const start = useCallback(() => {
     const now = nowFn()
     setStartedAt(now)
-    const problems = generateMixedProblems([techniqueId], problemCount, rng)
+    const ids = techniqueIds ?? [techniqueId]
+    const problems =
+      difficulty && difficulty !== 'mixed' && ids.length === 1
+        ? generateProblems(ids[0], difficulty, problemCount, rng)
+        : generateMixedProblems(ids, problemCount, rng)
     const config: SessionConfig = { type: 'drill', techniqueId, problemCount }
     dispatch({ type: 'start', config, problems, now })
-  }, [techniqueId, problemCount, rng, nowFn])
+  }, [techniqueId, techniqueIds, problemCount, difficulty, rng, nowFn])
 
   const submitAnswer = useCallback(
     (answer: number) => {

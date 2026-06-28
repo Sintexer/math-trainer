@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { describe, it, expect, vi, afterEach } from 'vitest'
+import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Provider } from 'react-redux'
 import { MemoryRouter, Routes, Route } from 'react-router-dom'
@@ -27,20 +27,25 @@ function renderAt(path: string) {
   return { ...view, store }
 }
 
+afterEach(() => {
+  vi.useRealTimers()
+})
+
 /**
- * Drive a single drill problem: type a wrong answer, submit, click Next.
- * Returns once we are either back on a new problem prompt or on the report.
+ * Drive a single drill problem: type a wrong answer, submit, then advance
+ * past the auto-dismiss delay using fake timers.
  */
 async function answerWrongAndContinue(user: ReturnType<typeof userEvent.setup>) {
   await user.keyboard('999{Enter}')
-  // The explicit Next button bypasses the AnswerFeedback auto-dismiss delay
-  // so the integration test does not depend on real or fake timers.
-  const next = await screen.findByRole('button', { name: /Next problem/i })
-  await user.click(next)
+  // Advance past the incorrect auto-dismiss delay (1500ms in InSessionScreen).
+  await act(async () => {
+    vi.advanceTimersByTime(1600)
+  })
 }
 
 describe('DrillScreen', () => {
   it('auto-starts and shows the first problem immediately', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true })
     renderAt(`/challenge/${TECH}/drill`)
     await waitFor(() =>
       expect(screen.getByTestId('drill-prompt')).toBeInTheDocument(),
@@ -53,7 +58,8 @@ describe('DrillScreen', () => {
   })
 
   it('end-to-end: completes a drill, persists summary, shows report with stats', async () => {
-    const user = userEvent.setup()
+    vi.useFakeTimers({ shouldAdvanceTime: true })
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
     const { store } = renderAt(`/challenge/${TECH}/drill`)
 
     // Wait for auto-start
@@ -80,7 +86,8 @@ describe('DrillScreen', () => {
   })
 
   it('persists XP earned (first-session bonus = 100, +0 from 0% correctness)', async () => {
-    const user = userEvent.setup()
+    vi.useFakeTimers({ shouldAdvanceTime: true })
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
     const { store } = renderAt(`/challenge/${TECH}/drill`)
     await waitFor(() => expect(screen.getByTestId('drill-prompt')).toBeInTheDocument())
     for (let i = 0; i < 15; i++) await answerWrongAndContinue(user)
@@ -90,7 +97,8 @@ describe('DrillScreen', () => {
   })
 
   it('Back-to-Map navigates to "/"', async () => {
-    const user = userEvent.setup()
+    vi.useFakeTimers({ shouldAdvanceTime: true })
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
     renderAt(`/challenge/${TECH}/drill`)
     await waitFor(() => expect(screen.getByTestId('drill-prompt')).toBeInTheDocument())
     for (let i = 0; i < 15; i++) await answerWrongAndContinue(user)
@@ -99,7 +107,8 @@ describe('DrillScreen', () => {
   })
 
   it('Try Again restarts a new session immediately', async () => {
-    const user = userEvent.setup()
+    vi.useFakeTimers({ shouldAdvanceTime: true })
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
     renderAt(`/challenge/${TECH}/drill`)
     await waitFor(() => expect(screen.getByTestId('drill-prompt')).toBeInTheDocument())
     for (let i = 0; i < 15; i++) await answerWrongAndContinue(user)
