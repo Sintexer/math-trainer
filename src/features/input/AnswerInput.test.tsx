@@ -92,6 +92,6 @@ describe('AnswerInput', () => {
     render(<Wrapper onSubmit={onSubmit} disabled />)
     await user.keyboard('5{Enter}')
     expect(onSubmit).not.toHaveBeenCalled()
-    expect(screen.getByRole('status', { name: 'Current answer' })).toHaveTextContent('—')
+    expect(screen.getByRole('status', { name: 'Current answer' })).toHaveTextContent('|')
   })
 })

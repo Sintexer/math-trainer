@@ -1,1 +1,1 @@
-export { default as TopicScreen } from './TopicScreen'
+export { default as TopicHubScreen } from './TopicScreen'

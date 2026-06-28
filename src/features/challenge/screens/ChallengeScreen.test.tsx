@@ -18,9 +18,9 @@ function renderAt(path: string) {
         <MemoryRouter initialEntries={[path]}>
           <Routes>
             <Route path="/" element={<div data-testid="map">map</div>} />
-            <Route path="/topic/:techniqueId/drill" element={<div data-testid="drill">drill</div>} />
+            <Route path="/challenge/:techniqueId/drill" element={<div data-testid="drill">drill</div>} />
             <Route
-              path="/topic/:techniqueId/challenge"
+              path="/challenge/:techniqueId"
               element={<ChallengeScreen />}
             />
           </Routes>
@@ -46,7 +46,7 @@ describe('ChallengeScreen', () => {
   const makeUser = () => userEvent.setup()
 
   it('renders the entry screen with technique name and pass thresholds', () => {
-    renderAt(`/topic/${TECH}/challenge`)
+    renderAt(`/challenge/${TECH}`)
     expect(screen.getByRole('heading', { name: /Multiply by 11/i })).toBeInTheDocument()
     expect(screen.getByText(/To pass/i)).toBeInTheDocument()
     // mul-by-11 threshold: 7/min (no accuracy threshold any more)
@@ -54,46 +54,14 @@ describe('ChallengeScreen', () => {
     expect(screen.getByRole('button', { name: /Start Challenge/i })).toBeInTheDocument()
   })
 
-  it('soft-nudges users without drill history; nudge disappears after a drill is recorded', () => {
-    const { store } = renderAt(`/topic/${TECH}/challenge`)
-    expect(screen.getByText(/complete a few Drills first/i)).toBeInTheDocument()
-
-    // Inject a synthetic drill session and re-render — the nudge should be gone.
-    act(() => {
-      store.dispatch({
-        type: 'progress/completeSession',
-        payload: {
-          summary: {
-            id: 'drill-1',
-            type: 'drill',
-            techniqueId: TECH,
-            date: new Date().toISOString(),
-            correct: 5,
-            attempted: 10,
-            accuracyPct: 50,
-            speedPerMin: 4,
-            xpEarned: 0,
-            weakTechniqueIds: [],
-            techniqueBreakdown: {},
-            difficultiesAttempted: ['easy'],
-            passed: false,
-          },
-          thresholds: { speedPerMin: 7 },
-        },
-      })
-    })
-
-    expect(screen.queryByText(/complete a few Drills first/i)).not.toBeInTheDocument()
-  })
-
   it('shows an error screen for an unknown technique', () => {
-    renderAt('/topic/bogus-id/challenge')
+    renderAt('/challenge/bogus-id')
     expect(screen.getByText(/Unknown technique/i)).toBeInTheDocument()
   })
 
   it('Start CTA transitions to the in-session screen with timer and first problem', async () => {
     const user = makeUser()
-    renderAt(`/topic/${TECH}/challenge`)
+    renderAt(`/challenge/${TECH}`)
     await user.click(screen.getByRole('button', { name: /Start Challenge/i }))
     expect(screen.getByTestId('challenge-prompt')).toBeInTheDocument()
     expect(screen.getByRole('timer')).toBeInTheDocument()
@@ -101,7 +69,7 @@ describe('ChallengeScreen', () => {
 
   it('shows the fail result when the timer expires with no answers', async () => {
     const user = makeUser()
-    const { store } = renderAt(`/topic/${TECH}/challenge`)
+    const { store } = renderAt(`/challenge/${TECH}`)
     await user.click(screen.getByRole('button', { name: /Start Challenge/i }))
 
     // Advance well past the 60s configured duration.
@@ -124,7 +92,7 @@ describe('ChallengeScreen', () => {
 
   it('Back to Map navigates to "/"', async () => {
     const user = makeUser()
-    renderAt(`/topic/${TECH}/challenge`)
+    renderAt(`/challenge/${TECH}`)
     await user.click(screen.getByRole('button', { name: /Start Challenge/i }))
     await act(async () => {
       vi.advanceTimersByTime(61_000)
@@ -136,7 +104,7 @@ describe('ChallengeScreen', () => {
 
   it('Try Drills navigates to the drill route on fail', async () => {
     const user = makeUser()
-    renderAt(`/topic/${TECH}/challenge`)
+    renderAt(`/challenge/${TECH}`)
     await user.click(screen.getByRole('button', { name: /Start Challenge/i }))
     await act(async () => {
       vi.advanceTimersByTime(61_000)
@@ -148,7 +116,7 @@ describe('ChallengeScreen', () => {
 
   it('Try Again resets back to the entry screen', async () => {
     const user = makeUser()
-    renderAt(`/topic/${TECH}/challenge`)
+    renderAt(`/challenge/${TECH}`)
     await user.click(screen.getByRole('button', { name: /Start Challenge/i }))
     await act(async () => {
       vi.advanceTimersByTime(61_000)

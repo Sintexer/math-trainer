@@ -76,7 +76,7 @@ function WorkedSlideView({ slide }: { slide: WorkedSlide }) {
         p={3}
         borderRadius="md"
         bg="bg.card"
-        borderWidth="1px"
+        borderWidth="2px"
         borderColor="border.subtle"
       >
         <Text fontFamily="mono" fontSize="lg">
@@ -154,7 +154,7 @@ function TryItSlideView({ slide }: { slide: TryItSlide }) {
           p={4}
           borderRadius="md"
           bg="bg.card"
-          borderWidth="1px"
+          borderWidth="2px"
           borderColor="border.subtle"
         >
           <Text fontSize="sm" color="text.muted">

@@ -25,10 +25,10 @@ export function SessionProgress({
   const counterLabel =
     typeof totalProblems === 'number' ? `${attempted} / ${totalProblems}` : `${attempted}`
 
-  const ratio =
-    typeof totalProblems === 'number' && totalProblems > 0
-      ? Math.min(1, attempted / totalProblems)
-      : null
+  // const ratio =
+  //   typeof totalProblems === 'number' && totalProblems > 0
+  //     ? Math.min(1, attempted / totalProblems)
+  //     : null
 
   return (
     <VStack w="full" gap={2} align="stretch">
@@ -37,26 +37,26 @@ export function SessionProgress({
         <Stat label="Accuracy" value={`${accuracy.toFixed(0)}%`} />
         <Stat label="Speed" value={`${speed.toFixed(1)}/min`} />
       </HStack>
-      {ratio !== null && (
-        <Box
-          h="6px"
-          bg="border.subtle"
-          borderRadius="full"
-          overflow="hidden"
-          aria-label="Session progress"
-          role="progressbar"
-          aria-valuenow={Math.round(ratio * 100)}
-          aria-valuemin={0}
-          aria-valuemax={100}
-        >
-          <Box
-            h="full"
-            bg="brand.500"
-            width={`${ratio * 100}%`}
-            transition="width 0.2s ease"
-          />
-        </Box>
-      )}
+      {/*{ratio !== null && (*/}
+      {/*  <Box*/}
+      {/*    h="6px"*/}
+      {/*    bg="border.subtle"*/}
+      {/*    borderRadius="full"*/}
+      {/*    overflow="hidden"*/}
+      {/*    aria-label="Session progress"*/}
+      {/*    role="progressbar"*/}
+      {/*    aria-valuenow={Math.round(ratio * 100)}*/}
+      {/*    aria-valuemin={0}*/}
+      {/*    aria-valuemax={100}*/}
+      {/*  >*/}
+      {/*    <Box*/}
+      {/*      h="full"*/}
+      {/*      bg="brand.500"*/}
+      {/*      width={`${ratio * 100}%`}*/}
+      {/*      transition="width 0.2s ease"*/}
+      {/*    />*/}
+      {/*  </Box>*/}
+      {/*)}*/}
     </VStack>
   )
 }

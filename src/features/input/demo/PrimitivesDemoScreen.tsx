@@ -115,7 +115,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
       <Heading size="sm" mb={3} color="text.muted" textTransform="uppercase" letterSpacing="wider">
         {title}
       </Heading>
-      <Box p={4} borderRadius="lg" borderWidth="1px" borderColor="border.subtle" bg="bg.card">
+      <Box p={4} borderRadius="lg" borderWidth="2px" borderColor="border.subtle" bg="bg.card">
         {children}
       </Box>
     </Box>

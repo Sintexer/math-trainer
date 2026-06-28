@@ -1,1 +1,1 @@
-export { default as TechniqueListScreen } from './TechniqueListScreen'
+export { default as HomeScreen } from './TechniqueListScreen'

@@ -6,7 +6,7 @@
  * the individual content files.
  */
 
-import type { Technique, Topic, TopicId, ConstellationGraph, MasteryThresholds } from '@/shared/types'
+import type { Technique, Topic, TopicId, ConstellationGraph, MasteryThresholds, LearningTopic } from '@/shared/types'
 import { topics } from './topics'
 import {
   additionTechniques,
@@ -15,6 +15,7 @@ import {
   divisionTechniques,
 } from './techniques'
 import { constellationGraph } from './graph'
+import { learningTopics } from './learning-topics'
 
 export {
   getAllTechniqueContent,
@@ -38,6 +39,26 @@ const techniqueMap = new Map<string, Technique>(
 const topicMap = new Map<TopicId, Topic>(
   topics.map((t) => [t.id, t])
 )
+
+// ── Learning topic registry ────────────────────────────────────
+
+const learningTopicMap = new Map<string, LearningTopic>(
+  learningTopics.map((lt) => [lt.id, lt])
+)
+
+/**
+ * Index of techniqueId → the ID of the first LearningTopic that lists it.
+ * Used to resolve "which topic hub should I navigate to?" for a given technique.
+ * If a technique appears in multiple topics, the first listing wins for routing.
+ */
+const techniqueToLearningTopicId = new Map<string, string>()
+for (const lt of learningTopics) {
+  for (const tid of lt.techniqueIds) {
+    if (!techniqueToLearningTopicId.has(tid)) {
+      techniqueToLearningTopicId.set(tid, lt.id)
+    }
+  }
+}
 
 // ── Public API ─────────────────────────────────────────────────
 
@@ -95,6 +116,35 @@ export function getConstellationGraph(): ConstellationGraph {
 /** Mastery thresholds for a given technique ID. */
 export function getMasteryThresholds(techniqueId: string): MasteryThresholds {
   return getTechnique(techniqueId).masteryThresholds
+}
+
+// ── Learning topic API ─────────────────────────────────────────
+
+/** All learning topic definitions in display order. */
+export function getAllLearningTopics(): LearningTopic[] {
+  return learningTopics
+}
+
+/** Look up a learning topic by ID. Throws if not found. */
+export function getLearningTopic(id: string): LearningTopic {
+  const lt = learningTopicMap.get(id)
+  if (!lt) throw new Error(`LearningTopic not found: "${id}"`)
+  return lt
+}
+
+/** Look up a learning topic by ID without throwing — returns undefined if missing. */
+export function findLearningTopic(id: string): LearningTopic | undefined {
+  return learningTopicMap.get(id)
+}
+
+/**
+ * Returns the first LearningTopic that contains the given techniqueId, or
+ * undefined if no topic lists it. Useful for resolving navigation targets
+ * (e.g. constellation node tap → navigate to that technique's topic hub).
+ */
+export function getLearningTopicForTechnique(techniqueId: string): LearningTopic | undefined {
+  const topicId = techniqueToLearningTopicId.get(techniqueId)
+  return topicId ? learningTopicMap.get(topicId) : undefined
 }
 
 /**

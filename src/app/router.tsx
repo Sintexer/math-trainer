@@ -4,8 +4,9 @@ import PrimitivesDemoScreen from '@/features/input/demo/PrimitivesDemoScreen'
 import { DrillScreen } from '@/features/drill'
 import { ChallengeScreen } from '@/features/challenge'
 import { TechniqueCardScreen } from '@/features/technique-card'
-import { TopicScreen } from '@/features/topic'
-import { TechniqueListScreen } from '@/features/home'
+import { TopicHubScreen } from '@/features/topic'
+import { HomeScreen } from '@/features/home'
+import { DailyScreen } from '@/features/daily'
 
 // HashRouter lives in App.tsx — it is intentionally NOT here. The app deploys
 // to GitHub Pages which serves static files and cannot rewrite arbitrary paths
@@ -26,18 +27,19 @@ function Placeholder({ name }: { name: string }) {
 export default function AppRouter() {
   return (
     <Routes>
-      <Route path="/" element={<TechniqueListScreen />} />
-      <Route path="/topic/:techniqueId" element={<TopicScreen />} />
-      <Route
-        path="/topic/:techniqueId/technique"
-        element={<TechniqueCardScreen />}
-      />
-      <Route path="/topic/:techniqueId/drill" element={<DrillScreen />} />
-      <Route
-        path="/topic/:techniqueId/challenge"
-        element={<ChallengeScreen />}
-      />
-      <Route path="/daily" element={<Placeholder name="Daily Challenge" />} />
+      {/* Home — learning topic cards */}
+      <Route path="/" element={<HomeScreen />} />
+
+      {/* Topic hub — groups one or more challenges by sub-domain */}
+      <Route path="/topic/:topicId" element={<TopicHubScreen />} />
+
+      {/* Individual challenge routes — flat, no topic context needed */}
+      <Route path="/challenge/:techniqueId" element={<ChallengeScreen />} />
+      <Route path="/challenge/:techniqueId/theory" element={<TechniqueCardScreen />} />
+      <Route path="/challenge/:techniqueId/drill" element={<DrillScreen />} />
+      {/* /challenge/:techniqueId/flash — Flash mode (coming soon, not yet implemented) */}
+
+      <Route path="/daily" element={<DailyScreen />} />
       <Route path="/profile" element={<Placeholder name="Profile" />} />
       <Route path="/settings" element={<Placeholder name="Settings" />} />
       {/* Dev-only preview of Phase 5 input primitives. Mounted in all builds

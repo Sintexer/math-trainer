@@ -1,29 +1,27 @@
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Badge, Box, HStack, Heading, Stack, Text } from '@chakra-ui/react'
-import { getAllTechniques, getAllTopics, getTechniquesByTopic } from '@/content'
+import { Box, HStack, Heading, Stack, Text } from '@chakra-ui/react'
+import { getAllLearningTopics } from '@/content'
 import { useAppSelector } from '@/app/hooks'
 import { selectAllTechniqueProgress } from '@/features/progress'
-import { DEFAULT_MASTERY_STARS } from '@/shared/types'
-import type { MasteryStars, Technique } from '@/shared/types'
-
-const DIFFICULTY_PALETTE: Record<string, string> = {
-  easy: 'green',
-  medium: 'orange',
-  hard: 'red',
-}
+import type { LearningTopic } from '@/shared/types'
 
 /**
- * TechniqueListScreen — Phase 11.
+ * HomeScreen — the app entry point.
  *
- * Default home screen showing all 25 techniques grouped by topic.
- * The constellation map is accessible via the fixed GraphMapButton overlay.
+ * Shows all learning topics as tappable cards. Each card displays a progress
+ * indicator (challenges passed / total) so learners can track progress at a
+ * glance before drilling down into a topic hub.
  */
-export default function TechniqueListScreen() {
+export default function HomeScreen() {
   const navigate = useNavigate()
-  const topics = useMemo(() => getAllTopics(), [])
-  const totalCount = useMemo(() => getAllTechniques().length, [])
+  const topics = useMemo(() => getAllLearningTopics(), [])
   const allProgress = useAppSelector(selectAllTechniqueProgress)
+
+  const totalChallenges = useMemo(
+    () => topics.reduce((sum, t) => sum + t.techniqueIds.length, 0),
+    [topics],
+  )
 
   return (
     // pb="24" leaves room above the fixed constellation FAB
@@ -32,43 +30,22 @@ export default function TechniqueListScreen() {
         Math Trainer
       </Heading>
       <Text color="text.muted" mb={8}>
-        {totalCount} mental math techniques across {topics.length} topics
+        {totalChallenges} challenges across {topics.length} topics
       </Text>
 
-      <Stack gap={8}>
+      <Stack gap={3}>
         {topics.map((topic) => {
-          const techniques = getTechniquesByTopic(topic.id)
+          const passed = topic.techniqueIds.filter(
+            (id) => allProgress[id]?.challengePassed ?? false,
+          ).length
           return (
-            <Box key={topic.id}>
-              <Text
-                fontSize="xs"
-                fontWeight="semibold"
-                textTransform="uppercase"
-                letterSpacing="wider"
-                color="text.muted"
-                mb={2}
-              >
-                {topic.name}
-              </Text>
-
-              {/* Techniques list — single card with dividers between rows */}
-              <Box
-                borderWidth="1px"
-                borderColor="border.subtle"
-                borderRadius="lg"
-                overflow="hidden"
-              >
-                {techniques.map((technique, idx) => (
-                  <TechniqueRow
-                    key={technique.id}
-                    technique={technique}
-                    stars={allProgress[technique.id]?.stars ?? DEFAULT_MASTERY_STARS}
-                    isLast={idx === techniques.length - 1}
-                    onClick={() => navigate(`/topic/${technique.id}`)}
-                  />
-                ))}
-              </Box>
-            </Box>
+            <TopicCard
+              key={topic.id}
+              topic={topic}
+              passed={passed}
+              total={topic.techniqueIds.length}
+              onClick={() => navigate(`/topic/${topic.id}`)}
+            />
           )
         })}
       </Stack>
@@ -76,58 +53,56 @@ export default function TechniqueListScreen() {
   )
 }
 
-// ── Sub-components ─────────────────────────────────────────────────────────────
+// ── Sub-components ────────────────────────────────────────────────────────────
 
-interface TechniqueRowProps {
-  technique: Technique
-  stars: MasteryStars
-  isLast: boolean
+interface TopicCardProps {
+  topic: LearningTopic
+  passed: number
+  total: number
   onClick: () => void
 }
 
-function TechniqueRow({ technique, stars, isLast, onClick }: TechniqueRowProps) {
+function TopicCard({ topic, passed, total, onClick }: TopicCardProps) {
+  const allDone = passed === total && total > 0
+
   return (
     <HStack
-      gap={3}
-      px={4}
-      minH="56px"
+      gap={4}
+      px={5}
+      py={4}
+      borderRadius="lg"
+      borderWidth="2px"
+      borderColor={allDone ? 'green.300' : 'border.subtle'}
+      bg={allDone ? 'green.50' : 'bg.card'}
       cursor="pointer"
-      bg="bg.card"
-      borderBottomWidth={isLast ? '0' : '1px'}
-      borderColor="border.subtle"
-      _hover={{ bg: 'bg.app' }}
+      _hover={{ bg: allDone ? 'green.100' : 'bg.app' }}
       onClick={onClick}
       role="button"
-      aria-label={`Open ${technique.name}`}
+      aria-label={`Open ${topic.name}`}
     >
-      {/* Left: name + difficulty */}
-      <Box flex={1} py={3}>
-        <Text fontWeight="medium" lineClamp={1}>
-          {technique.name}
+      {/* Left: name + description */}
+      <Stack gap={0.5} flex={1} minW={0}>
+        <Text fontWeight="semibold" lineClamp={1}>
+          {topic.name}
         </Text>
-        <Badge colorPalette={DIFFICULTY_PALETTE[technique.difficulty]} size="sm" mt={0.5}>
-          {technique.difficulty}
-        </Badge>
+        <Text fontSize="sm" color="text.muted" lineClamp={1}>
+          {topic.description}
+        </Text>
+      </Stack>
+
+      {/* Right: progress badge */}
+      <Box flexShrink={0} textAlign="right">
+        <Text
+          fontSize="sm"
+          fontWeight="semibold"
+          color={allDone ? 'green.600' : passed > 0 ? 'brand.500' : 'text.muted'}
+        >
+          {passed}/{total}
+        </Text>
+        <Text fontSize="xs" color="text.muted">
+          passed
+        </Text>
       </Box>
-
-      {/* Right: 2 mastery star dots */}
-      <HStack gap={1} flexShrink={0} aria-label="Mastery stars">
-        <StarDot filled={stars.speed} color="star.speed" label="Speed" />
-        <StarDot filled={stars.range} color="star.range" label="Range" />
-      </HStack>
     </HStack>
-  )
-}
-
-function StarDot({ filled, color, label }: { filled: boolean; color: string; label: string }) {
-  return (
-    <Text
-      fontSize="sm"
-      color={filled ? color : 'text.muted'}
-      aria-label={`${label}: ${filled ? 'earned' : 'not earned'}`}
-      aria-hidden="false"
-    >
-      {filled ? '★' : '☆'}
-    </Text>
   )
 }

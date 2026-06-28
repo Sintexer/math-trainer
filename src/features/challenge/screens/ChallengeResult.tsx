@@ -89,7 +89,7 @@ export function ChallengeResult({
           mb={6}
           p={5}
           borderRadius="lg"
-          borderWidth="1px"
+          borderWidth="2px"
           borderColor="border.subtle"
           bg="bg.card"
         >
@@ -105,7 +105,7 @@ export function ChallengeResult({
           gap={2}
           p={5}
           borderRadius="lg"
-          borderWidth="1px"
+          borderWidth="2px"
           borderColor="border.subtle"
           bg="bg.card"
           mb={6}

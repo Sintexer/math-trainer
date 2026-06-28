@@ -26,7 +26,7 @@ export function AnswerInput({
   onSubmit,
   maxDigits = 4,
   disabled = false,
-  placeholder = '—',
+  placeholder = '|',
 }: AnswerInputProps) {
   const handleDigit = useCallback(
     (digit: number) => {

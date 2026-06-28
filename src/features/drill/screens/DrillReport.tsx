@@ -47,7 +47,7 @@ export function DrillReport({
         gap={3}
         p={5}
         borderRadius="lg"
-        borderWidth="1px"
+        borderWidth="2px"
         borderColor="border.subtle"
         bg="bg.card"
         mb={6}
@@ -66,7 +66,7 @@ export function DrillReport({
           gap={2}
           p={5}
           borderRadius="lg"
-          borderWidth="1px"
+          borderWidth="2px"
           borderColor="border.subtle"
           bg="bg.card"
           mb={6}

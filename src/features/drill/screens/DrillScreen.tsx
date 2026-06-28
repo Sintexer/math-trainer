@@ -7,7 +7,6 @@ import {
   completeSession,
   selectMasteryStars,
   selectTechniqueProgress,
-  selectTechniqueRead,
 } from '@/features/progress'
 import type { SessionSummary } from '@/features/session'
 import { useDrillSession } from '../useDrillSession'
@@ -33,9 +32,6 @@ export default function DrillScreen() {
   const liveStars = useAppSelector((s) => selectMasteryStars(s, techniqueId))
   const techniqueProgress = useAppSelector((s) =>
     selectTechniqueProgress(s, techniqueId),
-  )
-  const techniqueRead = useAppSelector((s) =>
-    selectTechniqueRead(s, techniqueId),
   )
 
   // Snapshot the user's stars at the moment they tap "Start Drill" so the
@@ -89,12 +85,10 @@ export default function DrillScreen() {
         technique={technique}
         stars={liveStars}
         lastSession={lastSession}
-        techniqueRead={techniqueRead}
         onStart={() => {
           setStarsBefore(liveStars)
           start()
         }}
-        onReadTechnique={() => navigate(`/topic/${technique.id}/technique`)}
         onBack={() => navigate(-1)}
       />
     )
@@ -114,7 +108,7 @@ export default function DrillScreen() {
         starsBefore={starsBefore}
         xpEarned={summaryWithXp?.xpEarned ?? 0}
         onBackToMap={() => navigate('/')}
-        onReview={(id) => navigate(`/topic/${id}/drill`)}
+        onReview={(id) => navigate(`/challenge/${id}/drill`)}
         onTryAgain={() => {
           setStarsBefore(liveStars)
           persistedSummaryIdRef.current = null

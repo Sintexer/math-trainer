@@ -82,6 +82,23 @@ export const selectGlobalStats = createSelector(
 export const selectDailyChallengeResult = (state: RootState, date: string) =>
   state.progress.dailyChallenges[date] ?? null
 
+// ── Topic-level aggregate ────────────────────────────────────
+
+/**
+ * Counts how many techniques in a topic have their challenge passed.
+ * Takes the topic's `techniqueIds` array directly so callers don't need to
+ * import content — keeps the selector self-contained.
+ */
+export function selectTopicProgress(
+  state: RootState,
+  techniqueIds: readonly string[],
+): { passed: number; total: number } {
+  const passed = techniqueIds.filter(
+    (id) => state.progress.techniqueProgress[id]?.challengePassed ?? false,
+  ).length
+  return { passed, total: techniqueIds.length }
+}
+
 // ── Cross-topic weak techniques ──────────────────────────────
 
 /**

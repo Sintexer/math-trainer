@@ -7,10 +7,7 @@ export interface DrillEntryProps {
   stars: MasteryStars
   /** Most recent drill session for this technique, if any. */
   lastSession: SessionSummary | null
-  /** Whether the user has marked the technique card as read. */
-  techniqueRead: boolean
   onStart: () => void
-  onReadTechnique: () => void
   onBack: () => void
 }
 
@@ -18,9 +15,7 @@ export function DrillEntry({
   technique,
   stars,
   lastSession,
-  techniqueRead,
   onStart,
-  onReadTechnique,
   onBack,
 }: DrillEntryProps) {
   return (
@@ -50,7 +45,7 @@ export function DrillEntry({
         gap={3}
         p={5}
         borderRadius="lg"
-        borderWidth="1px"
+        borderWidth="2px"
         borderColor="border.subtle"
         bg="bg.card"
         mb={6}
@@ -74,26 +69,6 @@ export function DrillEntry({
           </Text>
         )}
       </Stack>
-
-      {!techniqueRead && (
-        <Box
-          mb={4}
-          p={3}
-          borderRadius="md"
-          bg="orange.50"
-          borderWidth="1px"
-          borderColor="orange.200"
-          color="orange.900"
-        >
-          <Text fontSize="sm" mb={2}>
-            You haven't read this technique yet. The drill works, but it's
-            easier once you've seen the trick.
-          </Text>
-          <Button size="xs" variant="outline" onClick={onReadTechnique}>
-            Read the technique
-          </Button>
-        </Box>
-      )}
 
       <Button
         size="lg"

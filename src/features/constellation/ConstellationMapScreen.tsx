@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Box, Button, Text } from '@chakra-ui/react'
-import { getAllTechniques, getConstellationGraph } from '@/content'
+import { getAllTechniques, getConstellationGraph, getLearningTopicForTechnique } from '@/content'
 import { useAppSelector } from '@/app/hooks'
 import { selectAllTechniqueProgress } from '@/features/progress'
 import { DEFAULT_MASTERY_STARS } from '@/shared/types'
@@ -271,7 +271,8 @@ export default function ConstellationMapScreen({ onNavigate }: { onNavigate?: ()
     (techniqueId: string) => {
       if (!pan.current.hasMoved) {
         onNavigate?.()
-        navigate(`/topic/${techniqueId}`)
+        const topicId = getLearningTopicForTechnique(techniqueId)?.id
+        navigate(topicId ? `/topic/${topicId}` : '/')
       }
     },
     [navigate, onNavigate],

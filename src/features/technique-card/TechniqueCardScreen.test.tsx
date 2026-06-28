@@ -19,11 +19,11 @@ function renderAt(path: string) {
           <Routes>
             <Route path="/" element={<div data-testid="map">map</div>} />
             <Route
-              path="/topic/:techniqueId"
+              path="/topic/:topicId"
               element={<div data-testid="topic">topic</div>}
             />
             <Route
-              path="/topic/:techniqueId/technique"
+              path="/challenge/:techniqueId/theory"
               element={<TechniqueCardScreen />}
             />
           </Routes>
@@ -47,7 +47,7 @@ async function clickThroughTo(label: string | RegExp) {
 
 describe('TechniqueCardScreen', () => {
   it('renders the technique name and slide viewer', () => {
-    renderAt(`/topic/${TECH}/technique`)
+    renderAt(`/challenge/${TECH}/theory`)
     expect(
       screen.getByRole('heading', { name: /Multiply by 11/i }),
     ).toBeInTheDocument()
@@ -55,12 +55,12 @@ describe('TechniqueCardScreen', () => {
   })
 
   it('shows an error screen for an unknown technique', () => {
-    renderAt('/topic/bogus-id/technique')
+    renderAt('/challenge/bogus-id/theory')
     expect(screen.getByText(/Unknown technique/i)).toBeInTheDocument()
   })
 
   it('"Got it" dispatches markTechniqueRead and navigates back to topic', async () => {
-    const { store } = renderAt(`/topic/${TECH}/technique`)
+    const { store } = renderAt(`/challenge/${TECH}/theory`)
     const user = await clickThroughTo(/Got it/i)
     await user.click(screen.getByRole('button', { name: /Got it/i }))
     expect(store.getState().progress.techniqueProgress[TECH]?.techniqueRead).toBe(
@@ -75,14 +75,14 @@ describe('TechniqueCardScreen', () => {
     render(
       <Provider store={store}>
         <ChakraProvider value={defaultSystem}>
-          <MemoryRouter initialEntries={[`/topic/${TECH}/technique`]}>
+          <MemoryRouter initialEntries={[`/challenge/${TECH}/theory`]}>
             <Routes>
               <Route
-                path="/topic/:techniqueId/technique"
+                path="/challenge/:techniqueId/theory"
                 element={<TechniqueCardScreen />}
               />
               <Route
-                path="/topic/:techniqueId"
+                path="/topic/:topicId"
                 element={<div data-testid="topic">topic</div>}
               />
             </Routes>

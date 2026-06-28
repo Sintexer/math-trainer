@@ -18,7 +18,7 @@ function renderAt(path: string) {
         <MemoryRouter initialEntries={[path]}>
           <Routes>
             <Route path="/" element={<div data-testid="map">map</div>} />
-            <Route path="/topic/:techniqueId/drill" element={<DrillScreen />} />
+            <Route path="/challenge/:techniqueId/drill" element={<DrillScreen />} />
           </Routes>
         </MemoryRouter>
       </ChakraProvider>
@@ -41,20 +41,20 @@ async function answerWrongAndContinue(user: ReturnType<typeof userEvent.setup>) 
 
 describe('DrillScreen', () => {
   it('renders the entry screen first with technique name + Start CTA', () => {
-    renderAt(`/topic/${TECH}/drill`)
+    renderAt(`/challenge/${TECH}/drill`)
     expect(screen.getByRole('heading', { name: /Multiply by 11/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Start Drill/i })).toBeInTheDocument()
     expect(screen.getByText(/No drill attempts yet/i)).toBeInTheDocument()
   })
 
   it('shows an error screen for an unknown technique', () => {
-    renderAt('/topic/bogus-id/drill')
+    renderAt('/challenge/bogus-id/drill')
     expect(screen.getByText(/Unknown technique/i)).toBeInTheDocument()
   })
 
   it('Start CTA transitions to the in-session screen showing the first problem', async () => {
     const user = userEvent.setup()
-    renderAt(`/topic/${TECH}/drill`)
+    renderAt(`/challenge/${TECH}/drill`)
     await user.click(screen.getByRole('button', { name: /Start Drill/i }))
     expect(screen.getByTestId('drill-prompt')).toBeInTheDocument()
     expect(screen.getByText(/Problem 1 of/i)).toBeInTheDocument()
@@ -62,7 +62,7 @@ describe('DrillScreen', () => {
 
   it('end-to-end: completes a drill, persists summary, shows report with stats', async () => {
     const user = userEvent.setup()
-    const { store } = renderAt(`/topic/${TECH}/drill`)
+    const { store } = renderAt(`/challenge/${TECH}/drill`)
 
     await user.click(screen.getByRole('button', { name: /Start Drill/i }))
 
@@ -88,7 +88,7 @@ describe('DrillScreen', () => {
 
   it('persists XP earned (first-session bonus = 100, +0 from 0% correctness)', async () => {
     const user = userEvent.setup()
-    const { store } = renderAt(`/topic/${TECH}/drill`)
+    const { store } = renderAt(`/challenge/${TECH}/drill`)
     await user.click(screen.getByRole('button', { name: /Start Drill/i }))
     for (let i = 0; i < 15; i++) await answerWrongAndContinue(user)
     await screen.findByRole('heading', { name: /Drill complete/i })
@@ -98,7 +98,7 @@ describe('DrillScreen', () => {
 
   it('Back-to-Map navigates to "/"', async () => {
     const user = userEvent.setup()
-    renderAt(`/topic/${TECH}/drill`)
+    renderAt(`/challenge/${TECH}/drill`)
     await user.click(screen.getByRole('button', { name: /Start Drill/i }))
     for (let i = 0; i < 15; i++) await answerWrongAndContinue(user)
     await user.click(await screen.findByRole('button', { name: /Back to Map/i }))
@@ -107,7 +107,7 @@ describe('DrillScreen', () => {
 
   it('Try Again resets back to the entry screen', async () => {
     const user = userEvent.setup()
-    renderAt(`/topic/${TECH}/drill`)
+    renderAt(`/challenge/${TECH}/drill`)
     await user.click(screen.getByRole('button', { name: /Start Drill/i }))
     for (let i = 0; i < 15; i++) await answerWrongAndContinue(user)
     await user.click(await screen.findByRole('button', { name: /Try Again/i }))

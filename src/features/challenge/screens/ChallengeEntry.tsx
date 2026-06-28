@@ -5,32 +5,21 @@ export interface ChallengeEntryProps {
   technique: Technique
   stars: MasteryStars
   challengePassed: boolean
-  /** Whether the user has any prior drill sessions for this technique. */
-  hasDrillHistory: boolean
-  /** Whether the user has marked the technique card as read. */
-  techniqueRead: boolean
   onStart: () => void
-  onReadTechnique: () => void
   onBack: () => void
 }
 
 /**
  * Challenge entry screen — Phase 7.
  *
- * Mirrors the DrillEntry structure but communicates the *exam* nature of
- * the upcoming session: pass thresholds are front-and-center, the Start CTA
- * uses the same primary visual but with a sharper label, and we soft-nudge
- * users with no drill history to warm up first (no hard block — see
- * ROADMAP §7.1).
+ * Communicates the exam nature of the upcoming session: pass thresholds are
+ * front-and-center and current mastery is visible at a glance.
  */
 export function ChallengeEntry({
   technique,
   stars,
   challengePassed,
-  hasDrillHistory,
-  techniqueRead,
   onStart,
-  onReadTechnique,
   onBack,
 }: ChallengeEntryProps) {
   const { speedPerMin } = technique.masteryThresholds
@@ -63,7 +52,7 @@ export function ChallengeEntry({
         gap={3}
         p={5}
         borderRadius="lg"
-        borderWidth="1px"
+        borderWidth="2px"
         borderColor="border.subtle"
         bg="bg.card"
         mb={4}
@@ -91,7 +80,7 @@ export function ChallengeEntry({
         gap={2}
         p={5}
         borderRadius="lg"
-        borderWidth="1px"
+        borderWidth="2px"
         borderColor="border.subtle"
         bg="bg.card"
         mb={6}
@@ -109,42 +98,6 @@ export function ChallengeEntry({
           <Star label="Range" filled={stars.range} />
         </HStack>
       </Stack>
-
-      {!techniqueRead && (
-        <Box
-          mb={4}
-          p={3}
-          borderRadius="md"
-          bg="orange.50"
-          borderWidth="1px"
-          borderColor="orange.200"
-          color="orange.900"
-        >
-          <Text fontSize="sm" mb={2}>
-            You haven't read this technique yet. The challenge is harder
-            without the trick — consider reading first.
-          </Text>
-          <Button size="xs" variant="outline" onClick={onReadTechnique}>
-            Read the technique
-          </Button>
-        </Box>
-      )}
-
-      {!hasDrillHistory && (
-        <Box
-          mb={4}
-          p={3}
-          borderRadius="md"
-          bg="orange.50"
-          borderWidth="1px"
-          borderColor="orange.200"
-          color="orange.900"
-        >
-          <Text fontSize="sm">
-            Recommended: complete a few Drills first to warm up.
-          </Text>
-        </Box>
-      )}
 
       <Button
         size="lg"

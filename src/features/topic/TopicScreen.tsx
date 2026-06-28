@@ -6,64 +6,52 @@ import {
   Button,
   HStack,
   Heading,
-  SimpleGrid,
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { findTechnique, getMasteryThresholds } from '@/content'
+import { findLearningTopic, findTechnique } from '@/content'
 import { useAppSelector } from '@/app/hooks'
-import {
-  MASTERY_WINDOW,
-  selectChallengePassed,
-  selectMasteryStars,
-  selectTechniqueProgress,
-  selectTechniqueRead,
-} from '@/features/progress'
-import type { MasteryStars } from '@/shared/types'
+import { selectAllTechniqueProgress } from '@/features/progress'
+import type { SessionSummary } from '@/features/session'
+import type { Technique } from '@/shared/types'
+
+const DIFFICULTY_PALETTE: Record<string, string> = {
+  easy: 'green',
+  medium: 'orange',
+  hard: 'red',
+}
 
 /**
- * TopicScreen — Phase 9.
+ * TopicHubScreen — the hub for a single learning topic.
  *
- * The central hub for a single technique. Shows mastery state at a glance
- * and provides entry points to all three tiers (Technique card, Drill,
- * Challenge). Drill and Challenge cards show a soft-lock indicator when the
- * technique hasn't been read yet, but the CTAs remain navigable — the
- * entry screens handle the nudge.
+ * Renders one ChallengeCard per technique listed in the topic's `techniqueIds`
+ * array. Adding a new technique to a topic's data is the only change needed to
+ * make it appear here — no UI code changes required.
+ *
+ * Architecture note: a "Flash" training mode card will be added to each
+ * ChallengeCard once that feature is implemented. The card component is
+ * designed to accommodate an additional button row without layout changes.
  */
-export default function TopicScreen() {
-  const { techniqueId = '' } = useParams<{ techniqueId: string }>()
+export default function TopicHubScreen() {
+  const { topicId = '' } = useParams<{ topicId: string }>()
   const navigate = useNavigate()
 
-  const technique = useMemo(() => findTechnique(techniqueId), [techniqueId])
-  const thresholds = useMemo(
-    () => (technique ? getMasteryThresholds(techniqueId) : null),
-    [technique, techniqueId],
+  const topic = useMemo(() => findLearningTopic(topicId), [topicId])
+
+  const allProgress = useAppSelector(selectAllTechniqueProgress)
+
+  const techniques = useMemo(
+    () =>
+      (topic?.techniqueIds ?? [])
+        .map((id) => findTechnique(id))
+        .filter((t): t is Technique => t !== undefined),
+    [topic],
   )
 
-  const stars = useAppSelector((s) => selectMasteryStars(s, techniqueId))
-  const techniqueRead = useAppSelector((s) => selectTechniqueRead(s, techniqueId))
-  const challengePassed = useAppSelector((s) => selectChallengePassed(s, techniqueId))
-  const progress = useAppSelector((s) => selectTechniqueProgress(s, techniqueId))
-
-  // Rolling averages over last MASTERY_WINDOW drill sessions — mirrors the
-  // star computation in progressSlice so the numbers stay consistent.
-  const recentDrills = useMemo(
-    () => progress?.sessions.filter((s) => s.type === 'drill').slice(-MASTERY_WINDOW) ?? [],
-    [progress],
-  )
-  const avgSpeed =
-    recentDrills.length > 0
-      ? recentDrills.reduce((sum, s) => sum + s.speedPerMin, 0) / recentDrills.length
-      : 0
-  const difficultiesCovered = progress?.difficultiesCovered ?? []
-  const hasDrillHistory = recentDrills.length > 0
-  const lastDrillSession =
-    progress?.sessions.filter((s) => s.type === 'drill').at(-1) ?? null
-
-  if (!technique || !thresholds) {
+  if (!topic) {
     return (
       <Box p={8}>
-        <Text color="text.muted">Technique not found: {techniqueId}</Text>
+        <Text color="text.muted">Topic not found: {topicId}</Text>
         <Button mt={4} onClick={() => navigate('/')}>
           ← Back
         </Button>
@@ -78,235 +66,135 @@ export default function TopicScreen() {
         variant="ghost"
         onClick={() => navigate('/')}
         mb={4}
-        aria-label="Back"
+        aria-label="Back to home"
       >
         ← Back
       </Button>
 
-      {/* Header */}
       <Heading size="xl" mb={1}>
-        {technique.name}
+        {topic.name}
       </Heading>
-      <HStack mb={3} gap={2} flexWrap="wrap">
-        <Badge>{technique.topicId}</Badge>
-        <Badge colorPalette="purple">{technique.difficulty}</Badge>
-      </HStack>
       <Text color="text.muted" mb={6}>
-        {technique.description}
+        {topic.description}
       </Text>
 
-      {/* Mastery panel — rolling avg vs threshold, one item per star */}
-      <Box
-        p={5}
-        borderRadius="lg"
-        borderWidth="1px"
-        borderColor="border.subtle"
-        bg="bg.card"
-        mb={6}
-      >
-        <Heading
-          size="sm"
-          color="text.muted"
-          textTransform="uppercase"
-          letterSpacing="wider"
-          mb={3}
-        >
-          Mastery
-        </Heading>
-        <HStack gap={{ base: 4, md: 8 }} flexWrap="wrap">
-          <MasteryItem
-            label="Speed"
-            filled={stars.speed}
-            tokenColor="star.speed"
-            current={avgSpeed > 0 ? `${avgSpeed.toFixed(1)}/min` : '—'}
-            target={`need ${thresholds.speedPerMin}/min`}
-          />
-          <MasteryItem
-            label="Range"
-            filled={stars.range}
-            tokenColor="star.range"
-            current={`${difficultiesCovered.length}/3`}
-            target="need all 3 difficulties"
-          />
-        </HStack>
-      </Box>
+      <Stack gap={3}>
+        {techniques.map((technique) => {
+          const progress = allProgress[technique.id]
+          const challengePassed = progress?.challengePassed ?? false
+          const lastDrill =
+            progress?.sessions.filter((s: SessionSummary) => s.type === 'drill').at(-1) ?? null
 
-      {/* Three tier cards — stack on mobile, row on desktop */}
-      <SimpleGrid columns={{ base: 1, md: 3 }} gap={4}>
-        <TierCard
-          icon="📖"
-          title="Technique"
-          status={techniqueRead ? 'Read ✓' : 'Not read yet'}
-          statusHighlight={techniqueRead}
-          description="Learn the mental trick behind this technique."
-          ctaLabel={techniqueRead ? 'Read again' : 'Read now'}
-          locked={false}
-          accent={false}
-          onClick={() => navigate(`/topic/${techniqueId}/technique`)}
-        />
-        <TierCard
-          icon="🏋️"
-          title="Drill"
-          status={
-            !techniqueRead
-              ? 'Read technique first'
-              : lastDrillSession
-                ? `Last: ${lastDrillSession.speedPerMin}/min · ${lastDrillSession.accuracyPct}%`
-                : 'No sessions yet'
-          }
-          statusHighlight={false}
-          description="Build speed and accuracy through repeated practice."
-          ctaLabel="Start Drill"
-          locked={!techniqueRead}
-          accent={false}
-          stars={stars}
-          onClick={() => navigate(`/topic/${techniqueId}/drill`)}
-        />
-        <TierCard
-          icon="⚡"
-          title="Challenge"
-          status={
-            !techniqueRead
-              ? 'Read technique first'
-              : challengePassed
-                ? 'Passed ✓'
-                : hasDrillHistory
-                  ? 'Ready to test'
-                  : 'Warm up with drills first'
-          }
-          statusHighlight={challengePassed}
-          description={`Pass ≥${thresholds.speedPerMin}/min to clear this technique.`}
-          ctaLabel={challengePassed ? 'Try Again' : 'Start Challenge'}
-          locked={!techniqueRead}
-          accent={challengePassed}
-          onClick={() => navigate(`/topic/${techniqueId}/challenge`)}
-        />
-      </SimpleGrid>
+          return (
+            <ChallengeCard
+              key={technique.id}
+              technique={technique}
+              challengePassed={challengePassed}
+              lastDrill={lastDrill}
+              showTheory={topic.hasTheory ?? true}
+              onReadTheory={() => navigate(`/challenge/${technique.id}/theory`)}
+              onPractice={() => navigate(`/challenge/${technique.id}/drill`)}
+              onChallenge={() => navigate(`/challenge/${technique.id}`)}
+            />
+          )
+        })}
+      </Stack>
     </Box>
   )
 }
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-interface MasteryItemProps {
-  label: string
-  filled: boolean
-  tokenColor: string
-  current: string
-  target: string
+interface ChallengeCardProps {
+  technique: Technique
+  challengePassed: boolean
+  lastDrill: SessionSummary | null
+  /** When false, the "Read Theory" button is omitted (speed/repetition topics). */
+  showTheory: boolean
+  onReadTheory: () => void
+  onPractice: () => void
+  onChallenge: () => void
 }
 
-function MasteryItem({ label, filled, tokenColor, current, target }: MasteryItemProps) {
+function ChallengeCard({
+  technique,
+  challengePassed,
+  lastDrill,
+  showTheory,
+  onReadTheory,
+  onPractice,
+  onChallenge,
+}: ChallengeCardProps) {
   return (
-    <Stack gap={0.5} minW="110px">
-      <HStack gap={1.5}>
-        <Text fontSize="lg" color={filled ? tokenColor : 'text.muted'} aria-hidden="true">
-          {filled ? '★' : '☆'}
-        </Text>
-        <Text fontSize="sm" fontWeight="semibold">
-          {label}
-        </Text>
+    <Stack
+      gap={3}
+      p={5}
+      borderRadius="lg"
+      borderWidth="2px"
+      borderColor={challengePassed ? 'green.300' : 'border.subtle'}
+      bg={challengePassed ? 'green.50' : 'bg.card'}
+    >
+      {/* Header row */}
+      <HStack justify="space-between" align="flex-start" flexWrap="wrap" gap={2}>
+        <Stack gap={1} flex={1} minW={0}>
+          <Text fontWeight="semibold" lineClamp={1}>
+            {technique.name}
+          </Text>
+          <HStack gap={2} flexWrap="wrap">
+            <Badge colorPalette={DIFFICULTY_PALETTE[technique.difficulty]} size="sm">
+              {technique.difficulty}
+            </Badge>
+            {challengePassed && (
+              <Badge colorPalette="green" size="sm">
+                Passed ✓
+              </Badge>
+            )}
+          </HStack>
+        </Stack>
+        {lastDrill && (
+          <Text fontSize="xs" color="text.muted" flexShrink={0} pt={0.5}>
+            Last: {lastDrill.speedPerMin}/min · {lastDrill.accuracyPct}%
+          </Text>
+        )}
       </HStack>
-      <Text
-        fontSize="sm"
-        fontWeight={filled ? 'bold' : 'normal'}
-        color={filled ? tokenColor : 'text.primary'}
-      >
-        {current}
-      </Text>
-      {!filled && (
-        <Text fontSize="xs" color="text.muted">
-          {target}
-        </Text>
-      )}
+
+      {/* Action buttons
+          Layout: [Read Theory] [Practice] occupy the left, [Challenge →] on the right.
+          On narrow screens all three wrap naturally in the HStack. */}
+      <HStack gap={2} flexWrap="wrap">
+        {showTheory && (
+          <Button
+            size="sm"
+            variant="outline"
+            minH="40px"
+            onClick={onReadTheory}
+            flexShrink={0}
+          >
+            Read Theory
+          </Button>
+        )}
+        <Button
+          size="sm"
+          variant="outline"
+          minH="40px"
+          onClick={onPractice}
+          flexShrink={0}
+        >
+          Practice
+        </Button>
+        <Button
+          size="sm"
+          minH="40px"
+          ml="auto"
+          onClick={onChallenge}
+          bg="brand.500"
+          color="white"
+          _hover={{ bg: 'brand.600' }}
+          flexShrink={0}
+        >
+          {challengePassed ? 'Retry Challenge' : 'Start Challenge →'}
+        </Button>
+      </HStack>
     </Stack>
-  )
-}
-
-interface TierCardProps {
-  icon: string
-  title: string
-  status: string
-  statusHighlight: boolean
-  description: string
-  ctaLabel: string
-  locked: boolean
-  accent: boolean
-  stars?: MasteryStars
-  onClick: () => void
-}
-
-function TierCard({
-  icon,
-  title,
-  status,
-  statusHighlight,
-  description,
-  ctaLabel,
-  locked,
-  accent,
-  stars,
-  onClick,
-}: TierCardProps) {
-  const borderColor = accent ? 'green.300' : locked ? 'orange.200' : 'border.subtle'
-  const bg = accent ? 'green.50' : locked ? 'bg.app' : 'bg.card'
-  const statusColor = statusHighlight ? 'green.600' : locked ? 'orange.500' : 'text.muted'
-
-  return (
-    <Stack gap={3} p={5} borderRadius="lg" borderWidth="1px" borderColor={borderColor} bg={bg} h="full">
-      <Text fontSize="2xl" aria-hidden="true">
-        {icon}
-      </Text>
-      <Box>
-        <Heading size="md" mb={1}>
-          {title}
-        </Heading>
-        <Text fontSize="sm" color={statusColor}>
-          {status}
-        </Text>
-      </Box>
-      {/* flex="1" expands the description so the CTA button sits at the card bottom */}
-      <Text fontSize="sm" color="text.muted" flex={1}>
-        {description}
-      </Text>
-      {stars && (
-        <HStack gap={3}>
-          <StarIndicator label="Speed" filled={stars.speed} tokenColor="star.speed" />
-          <StarIndicator label="Range" filled={stars.range} tokenColor="star.range" />
-        </HStack>
-      )}
-      <Button
-        size="sm"
-        w="full"
-        minH="44px"
-        onClick={onClick}
-        bg="brand.500"
-        color="white"
-        _hover={{ bg: 'brand.600' }}
-      >
-        {ctaLabel}
-      </Button>
-    </Stack>
-  )
-}
-
-function StarIndicator({
-  label,
-  filled,
-  tokenColor,
-}: {
-  label: string
-  filled: boolean
-  tokenColor: string
-}) {
-  return (
-    <HStack gap={1} aria-label={`${label}: ${filled ? 'earned' : 'not earned'}`}>
-      <Text fontSize="sm" color={filled ? tokenColor : 'text.muted'} aria-hidden="true">
-        {filled ? '★' : '☆'}
-      </Text>
-      <Text fontSize="xs" color={filled ? 'text.primary' : 'text.muted'}>
-        {label}
-      </Text>
-    </HStack>
   )
 }

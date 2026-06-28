@@ -9,7 +9,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { findTechnique, getTechniqueContent } from '@/content'
+import { findTechnique, getTechniqueContent, getLearningTopicForTechnique } from '@/content'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import { markTechniqueRead, selectTechniqueRead } from '@/features/progress'
 import { TechniqueSlideViewer } from './TechniqueSlideViewer'
@@ -53,7 +53,8 @@ export default function TechniqueCardScreen() {
 
   const onComplete = () => {
     if (!alreadyRead) dispatch(markTechniqueRead(technique.id))
-    navigate(`/topic/${technique.id}`)
+    const topicId = getLearningTopicForTechnique(technique.id)?.id
+    navigate(topicId ? `/topic/${topicId}` : '/')
   }
 
   return (
@@ -61,7 +62,10 @@ export default function TechniqueCardScreen() {
       <Button
         size="sm"
         variant="ghost"
-        onClick={() => navigate(`/topic/${technique.id}`)}
+        onClick={() => {
+          const topicId = getLearningTopicForTechnique(technique.id)?.id
+          navigate(topicId ? `/topic/${topicId}` : '/')
+        }}
         mb={4}
         aria-label="Back to topic"
       >

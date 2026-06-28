@@ -40,15 +40,13 @@ describe('SessionProgress', () => {
     expect(screen.getByText('0.0/min')).toBeInTheDocument()
   })
 
-  it('exposes a progressbar with the correct aria value', () => {
+  it('does not render a progressbar (progress bar was removed from this component)', () => {
     renderProgress({ attempted: 5, correct: 5, totalProblems: 10, elapsedMs: 30_000 })
-    const bar = screen.getByRole('progressbar')
-    expect(bar).toHaveAttribute('aria-valuenow', '50')
+    expect(screen.queryByRole('progressbar')).toBeNull()
   })
 
-  it('caps progress at 100% when attempted exceeds total', () => {
+  it('does not render a progressbar when attempted exceeds total', () => {
     renderProgress({ attempted: 20, correct: 18, totalProblems: 10, elapsedMs: 60_000 })
-    const bar = screen.getByRole('progressbar')
-    expect(bar).toHaveAttribute('aria-valuenow', '100')
+    expect(screen.queryByRole('progressbar')).toBeNull()
   })
 })

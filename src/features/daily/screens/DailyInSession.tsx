@@ -1,10 +1,9 @@
 import { useState } from 'react'
-import { Box, Button, Flex, Heading, HStack, Stack, Text, VStack } from '@chakra-ui/react'
+import { Box, Flex, Heading, HStack, Stack, Text, VStack } from '@chakra-ui/react'
 import type { Problem } from '@/shared/types'
 import { AnswerFeedback, AnswerInput, SessionProgress } from '@/features/input'
-import { TechniqueReferenceModal } from '@/features/technique-card'
 
-export interface DrillInSessionProps {
+export interface DailyInSessionProps {
   problem: Problem
   /** 1-based index of the displayed problem. */
   problemNumber: number
@@ -12,17 +11,20 @@ export interface DrillInSessionProps {
   correct: number
   totalProblems: number
   elapsedMs: number
-  /** Whether the engine is in 'evaluating' state (feedback visible). */
   evaluating: boolean
-  /** The most recent answer record (if any) for feedback rendering. */
   lastAnswerCorrect: boolean | null
-  /** The correct answer to reveal on a wrong submission. */
   lastCorrectAnswer: number | null
   onSubmit: (answer: number) => void
   onAdvance: () => void
 }
 
-export function DrillInSession({
+/**
+ * In-session screen for the Daily Challenge.
+ * Mirrors DrillInSession but omits the technique reference button — daily
+ * challenge problems span multiple techniques and there is no single card to
+ * reference.
+ */
+export function DailyInSession({
   problem,
   problemNumber,
   attempted,
@@ -34,8 +36,7 @@ export function DrillInSession({
   lastCorrectAnswer,
   onSubmit,
   onAdvance,
-}: DrillInSessionProps) {
-  const [referenceOpen, setReferenceOpen] = useState(false)
+}: DailyInSessionProps) {
   return (
     <Box p={{ base: 4, md: 8 }} mx="auto">
       <Stack gap={6}>
@@ -46,24 +47,14 @@ export function DrillInSession({
             totalProblems={totalProblems}
             elapsedMs={elapsedMs}
           />
-          <Button
-            size="sm"
-            variant="ghost"
-            aria-label="Open technique reference"
-            onClick={() => setReferenceOpen(true)}
-          >
-            ?
-          </Button>
+          <Text fontSize="xs" color="text.muted" fontVariantNumeric="tabular-nums">
+            Daily Challenge
+          </Text>
         </HStack>
 
         <Flex justifyContent="center" alignContent="center">
           <VStack maxW="640px">
-            <Box
-              textAlign="center"
-              py={8}
-              px={4}
-              borderRadius="xl"
-            >
+            <Box textAlign="center" py={8} px={4} borderRadius="xl">
               <Text
                 fontSize="xs"
                 color="text.muted"
@@ -73,15 +64,13 @@ export function DrillInSession({
               >
                 Problem {problemNumber} of {totalProblems}
               </Text>
-              <Heading as="div" size="2xl" fontFamily="mono" data-testid="drill-prompt">
+              <Heading as="div" size="2xl" fontFamily="mono" data-testid="daily-prompt">
                 {problem.prompt}
               </Heading>
             </Box>
 
             <Box maxW="320px">
-              {/* Keyed on problem.id so the digit buffer naturally resets when
-            the engine advances. This avoids a setState-in-effect pattern
-            (forbidden by react-hooks/set-state-in-effect in v7). */}
+              {/* Key on problem.id so the digit buffer resets automatically on advance. */}
               <AnswerForm key={problem.id} onSubmit={onSubmit} disabled={evaluating} />
             </Box>
 
@@ -96,12 +85,6 @@ export function DrillInSession({
           </VStack>
         </Flex>
       </Stack>
-
-      <TechniqueReferenceModal
-        techniqueId={problem.techniqueId}
-        open={referenceOpen}
-        onClose={() => setReferenceOpen(false)}
-      />
     </Box>
   )
 }
@@ -118,9 +101,6 @@ function AnswerForm({ onSubmit, disabled }: AnswerFormProps) {
       value={buffer}
       onChange={setBuffer}
       onSubmit={(value) => {
-        // Clear the buffer immediately on submit so the feedback overlay
-        // does not show a stale typed value, even though the AnswerForm
-        // also remounts on the next problem id change.
         setBuffer('')
         onSubmit(value)
       }}

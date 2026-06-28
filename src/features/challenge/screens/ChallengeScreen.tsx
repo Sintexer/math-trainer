@@ -8,7 +8,6 @@ import {
   selectChallengePassed,
   selectMasteryStars,
   selectTechniqueProgress,
-  selectTechniqueRead,
 } from '@/features/progress'
 import type { SessionSummary } from '@/features/session'
 import { useChallengeSession } from '../useChallengeSession'
@@ -36,7 +35,6 @@ export default function ChallengeScreen() {
     selectTechniqueProgress(s, techniqueId),
   )
   const challengePassed = useAppSelector((s) => selectChallengePassed(s, techniqueId))
-  const techniqueRead = useAppSelector((s) => selectTechniqueRead(s, techniqueId))
 
   // Snapshot challengePassed at session start so the result screen can tell
   // whether THIS run is what flipped the flag (used for the "first time"
@@ -85,21 +83,15 @@ export default function ChallengeScreen() {
 
   // ── Entry ──────────────────────────────────────────────────────────
   if (state.status === 'idle') {
-    const hasDrillHistory = (techniqueProgress?.sessions ?? []).some(
-      (s) => s.type === 'drill',
-    )
     return (
       <ChallengeEntry
         technique={technique}
         stars={liveStars}
         challengePassed={challengePassed}
-        hasDrillHistory={hasDrillHistory}
-        techniqueRead={techniqueRead}
         onStart={() => {
           setPassedBefore(challengePassed)
           start()
         }}
-        onReadTechnique={() => navigate(`/topic/${technique.id}/technique`)}
         onBack={() => navigate(-1)}
       />
     )
@@ -122,13 +114,13 @@ export default function ChallengeScreen() {
         passed={passed}
         justPassedFirstTime={passed && !passedBefore}
         onBackToMap={() => navigate('/')}
-        onTryDrills={() => navigate(`/topic/${techniqueId}/drill`)}
+        onTryDrills={() => navigate(`/challenge/${techniqueId}/drill`)}
         onTryAgain={() => {
           setPassedBefore(challengePassed)
           persistedSummaryIdRef.current = null
           reset()
         }}
-        onReview={(id) => navigate(`/topic/${id}/drill`)}
+        onReview={(id) => navigate(`/challenge/${id}/drill`)}
       />
     )
   }

@@ -230,7 +230,7 @@ export function generateAddColumnGrouping(difficulty: Difficulty, rng: Rng): Pro
 
 /**
  * Pure speed drill: one single-digit operand + one multi-digit operand.
- * Order is randomised so learners don't fixate on a fixed pattern.
+ * Order is randomized so learners don't fixate on a fixed pattern.
  */
 export function generateAddSpeed1d2d(difficulty: Difficulty, rng: Rng): Problem {
   let small: number, large: number
@@ -238,15 +238,15 @@ export function generateAddSpeed1d2d(difficulty: Difficulty, rng: Rng): Problem 
   switch (difficulty) {
     case 'easy':
       small = rng.int(1, 9)
-      large = rng.int(10, 49)
+      large = rng.int(11, 36)
       break
     case 'medium':
       small = rng.int(1, 9)
-      large = rng.int(50, 89)
+      large = rng.int(11, 89)
       break
     case 'hard':
       small = rng.int(1, 9)
-      large = rng.int(90, 199)
+      large = rng.int(11, 99)
       break
   }
 
@@ -271,8 +271,8 @@ export function generateAddSpeed2d2d(difficulty: Difficulty, rng: Rng): Problem 
 
   switch (difficulty) {
     case 'easy':
-      a = rng.int(10, 49)
-      b = rng.int(10, 49)
+      a = rng.int(10, 36)
+      b = rng.int(10, 37)
       break
     case 'medium':
       a = rng.int(10, 79)
