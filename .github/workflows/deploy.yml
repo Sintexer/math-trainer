@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Test and Build
 
 on:
   push:
@@ -7,13 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  build-and-deploy:
+  test-and-build:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
 
     steps:
       - uses: actions/checkout@v4
@@ -30,9 +25,3 @@ jobs:
       - name: Build
         run: bun run build
 
-      - name: Deploy to GitHub Pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          bun run deploy
