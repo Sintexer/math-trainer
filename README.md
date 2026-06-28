@@ -5,6 +5,8 @@ Pick a technique, drill it until it's automatic, then unlock the next star
 on your personal constellation. Built with React 19, TypeScript, Chakra UI
 v3, and Redux Toolkit; deployed to GitHub Pages as a static SPA.
 
+**Live app:** [sintexer.github.io/math-trainer](https://sintexer.github.io/math-trainer/#/)
+
 See [`VISION.md`](./VISION.md) for the product vision and
 [`ROADMAP.md`](./ROADMAP.md) for the phased build plan.
 
@@ -62,6 +64,9 @@ The session engine and the Daily Challenge are fully deterministic:
 
 ## Deployment
 
-The app is a fully static SPA. `bun run deploy` builds to `dist/` and
-publishes to the `gh-pages` branch via [`gh-pages`](https://www.npmjs.com/package/gh-pages).
+**Live app:** [https://sintexer.github.io/math-trainer/#/](https://sintexer.github.io/math-trainer/#/)
+
+The app is a fully static SPA. Pushes to `main` build and deploy via GitHub
+Actions; locally, `bun run deploy` builds to `dist/` and publishes to the
+`gh-pages` branch via [`gh-pages`](https://www.npmjs.com/package/gh-pages).
 The Vite base path is `/math-trainer/` to match the GitHub Pages URL.
