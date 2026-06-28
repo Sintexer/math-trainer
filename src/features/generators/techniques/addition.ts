@@ -237,15 +237,15 @@ export function generateAddSpeed1d2d(difficulty: Difficulty, rng: Rng): Problem 
 
   switch (difficulty) {
     case 'easy':
-      small = rng.int(1, 9)
+      small = rng.int(2, 9)
       large = rng.int(11, 36)
       break
     case 'medium':
-      small = rng.int(1, 9)
+      small = rng.int(2, 9)
       large = rng.int(11, 89)
       break
     case 'hard':
-      small = rng.int(1, 9)
+      small = rng.int(2, 9)
       large = rng.int(11, 99)
       break
   }
@@ -271,16 +271,16 @@ export function generateAddSpeed2d2d(difficulty: Difficulty, rng: Rng): Problem 
 
   switch (difficulty) {
     case 'easy':
-      a = rng.int(10, 36)
-      b = rng.int(10, 37)
+      a = rng.int(11, 36)
+      b = rng.int(11, 37)
       break
     case 'medium':
-      a = rng.int(10, 79)
-      b = rng.int(10, 79)
+      a = rng.int(11, 79)
+      b = rng.int(11, 79)
       break
     case 'hard':
-      a = rng.int(10, 99)
-      b = rng.int(10, 99)
+      a = rng.int(11, 99)
+      b = rng.int(11, 99)
       break
   }
 
@@ -303,16 +303,16 @@ export function generateAddSpeed3d(difficulty: Difficulty, rng: Rng): Problem {
   switch (difficulty) {
     case 'easy':
       // Sum will generally stay below 800
-      a = rng.int(100, 399)
-      b = rng.int(100, 399)
+      a = rng.int(101, 399)
+      b = rng.int(101, 399)
       break
     case 'medium':
-      a = rng.int(100, 599)
-      b = rng.int(100, 499)
+      a = rng.int(101, 599)
+      b = rng.int(101, 499)
       break
     case 'hard':
-      a = rng.int(100, 799)
-      b = rng.int(100, 699)
+      a = rng.int(101, 799)
+      b = rng.int(101, 699)
       break
   }
 
